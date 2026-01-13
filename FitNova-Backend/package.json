@@ -5,7 +5,11 @@
   "main": "server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "seed:foods": "node src/seeds/seedFoods.js",
+    "seed:exercises": "node src/seeds/seedExercises.js",
+    "seed:all": "npm run seed:foods && npm run seed:exercises",
+    "seed:krish": "node src/seeds/seedKrishData.js"
   },
   "keywords": [
     "fitness",

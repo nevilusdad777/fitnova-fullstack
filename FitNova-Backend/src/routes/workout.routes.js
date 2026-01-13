@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { getWeeklyPlan, createWorkout, updateWorkout, logWorkout, getTodayWorkout } = require('../controllers/workout.controller');
+const { getWeeklyPlan, createWorkout, updateWorkout, logWorkout, getTodayWorkout, getWorkoutHistory } = require('../controllers/workout.controller');
 const { protect } = require('../middlewares/auth.middleware');
 const { body } = require('express-validator');
 
 router.get('/weekly', protect, getWeeklyPlan);
 router.get('/today', protect, getTodayWorkout);
+router.get('/history', protect, getWorkoutHistory);
 
 router.post('/create', protect, [
   body('day').isIn(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']).withMessage('Valid day is required'),

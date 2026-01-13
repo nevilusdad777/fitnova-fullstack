@@ -30,6 +30,7 @@ app.use('/user', userRoutes);
 app.use('/tracker', trackerRoutes);
 app.use('/workout', workoutRoutes);
 app.use('/exercises', require('./routes/exercise.routes'));
+app.use('/food', require('./routes/food.routes'));
 app.use('/diet', dietRoutes);
 
 // Error handling

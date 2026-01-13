@@ -9,7 +9,12 @@ const foodSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ['veg', 'non-veg']
+    enum: ['protein', 'carbs', 'vegetables', 'fruits', 'dairy', 'fats', 'snacks', 'beverages', 'grains']
+  },
+  isVegetarian: {
+    type: Boolean,
+    required: true,
+    default: true
   },
   calories: {
     type: Number,
@@ -31,6 +36,11 @@ const foodSchema = new mongoose.Schema({
     required: true,
     min: 0
   },
+  fiber: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
   servingSize: {
     type: Number,
     required: true,
@@ -38,12 +48,28 @@ const foodSchema = new mongoose.Schema({
   },
   servingUnit: {
     type: String,
-    required: true
+    required: true,
+    enum: ['g', 'ml', 'cup', 'piece', 'tbsp', 'tsp', 'oz']
+  },
+  verified: {
+    type: Boolean,
+    default: false
+  },
+  apiSource: {
+    type: String,
+    enum: ['USDA', 'manual', 'user'],
+    default: 'manual'
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   }
 }, {
   timestamps: true
 });
 
 foodSchema.index({ name: 'text' });
+foodSchema.index({ category: 1 });
+foodSchema.index({ isVegetarian: 1 });
 
 module.exports = mongoose.model('Food', foodSchema);

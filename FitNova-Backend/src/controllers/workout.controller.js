@@ -104,6 +104,60 @@ const logWorkout = async (req, res) => {
   }
 };
 
+const getWorkoutHistory = async (req, res) => {
+  try {
+    const days = parseInt(req.query.days) || 30;
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+
+    const workouts = await Workout.find({
+      user: req.user._id,
+      date: {
+        $gte: startDate.toISOString().split('T')[0],
+        $lte: endDate.toISOString().split('T')[0]
+      }
+    }).sort({ date: -1 });
+
+    // Calculate body part frequency
+    const bodyPartStats = {};
+    let totalCaloriesBurned = 0;
+    
+    workouts.forEach(workout => {
+      if (!workout.isRestDay && workout.exercises) {
+        workout.exercises.forEach(exercise => {
+          // Extract body part from exercise name or workout name
+          const workoutName = workout.name?.toLowerCase() || '';
+          let bodyPart = 'other';
+          
+          if (workoutName.includes('chest')) bodyPart = 'chest';
+          else if (workoutName.includes('back')) bodyPart = 'back';
+          else if (workoutName.includes('leg')) bodyPart = 'legs';
+          else if (workoutName.includes('shoulder')) bodyPart = 'shoulders';
+          else if (workoutName.includes('arm')) bodyPart = 'arms';
+          else if (workoutName.includes('abs') || workoutName.includes('core')) bodyPart = 'abs';
+          else if (workoutName.includes('cardio')) bodyPart = 'cardio';
+          
+          bodyPartStats[bodyPart] = (bodyPartStats[bodyPart] || 0) + 1;
+        });
+        totalCaloriesBurned += workout.totalCaloriesBurned || 0;
+      }
+    });
+
+    res.json({
+      workouts,
+      analytics: {
+        totalWorkouts: workouts.filter(w => !w.isRestDay).length,
+        totalCaloriesBurned,
+        bodyPartFrequency: bodyPartStats,
+        periodDays: days
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const getTodayWorkout = async (req, res) => {
   try {
     const today = new Date();
@@ -127,5 +181,6 @@ module.exports = {
   createWorkout,
   updateWorkout,
   logWorkout,
-  getTodayWorkout
+  getTodayWorkout,
+  getWorkoutHistory
 };
