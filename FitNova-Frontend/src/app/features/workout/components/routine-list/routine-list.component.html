@@ -1,0 +1,88 @@
+<div class="routine-list-container fade-in">
+    <div class="header">
+        <div>
+            <h2>My Workout Routines</h2>
+            <p>Create and manage your custom workout routines</p>
+        </div>
+        <button class="btn-create" (click)="onCreateRoutine()">
+            <lucide-icon [img]="Plus" [size]="20"></lucide-icon>
+            Create Routine
+        </button>
+    </div>
+
+    <!-- Body Part Filters -->
+    <div class="filters">
+        <button 
+            *ngFor="let part of bodyParts"
+            class="filter-chip"
+            [class.active]="part === 'All' ? !selectedBodyPart() : selectedBodyPart() === part"
+            (click)="filterByBodyPart(part)">
+            {{ part }}
+        </button>
+    </div>
+
+    <!-- Routines Grid -->
+    <div class="routines-grid" *ngIf="!isLoading() && filteredRoutines().length > 0">
+        <div *ngFor="let routine of filteredRoutines()" class="routine-card">
+            <div class="routine-header">
+                <h3>{{ routine.name }}</h3>
+                <div class="actions">
+                    <button class="btn-icon" (click)="onEditRoutine(routine)" title="Edit">
+                        <lucide-icon [img]="Edit" [size]="18"></lucide-icon>
+                    </button>
+                    <button class="btn-icon delete" (click)="onDeleteRoutine(routine, $event)" title="Delete">
+                        <lucide-icon [img]="Trash2" [size]="18"></lucide-icon>
+                    </button>
+                </div>
+            </div>
+
+            <p class="description" *ngIf="routine.description">{{ routine.description }}</p>
+
+            <div class="body-parts">
+                <span 
+                    *ngFor="let part of routine.targetBodyParts" 
+                    class="body-part-badge"
+                    [style.background-color]="getBodyPartColor(part)">
+                    {{ part }}
+                </span>
+            </div>
+
+            <div class="routine-stats">
+                <div class="stat">
+                    <lucide-icon [img]="Dumbbell" [size]="16"></lucide-icon>
+                    <span>{{ routine.exercises.length }} exercises</span>
+                </div>
+                <div class="stat">
+                    <lucide-icon [img]="Calendar" [size]="16"></lucide-icon>
+                    <span>~{{ routine.estimatedDuration }} min</span>
+                </div>
+                <div class="stat">
+                    <lucide-icon [img]="Flame" [size]="16"></lucide-icon>
+                    <span>~{{ routine.estimatedCalories }} cal</span>
+                </div>
+            </div>
+
+            <button class="btn-start" (click)="onStartRoutine(routine)">
+                <lucide-icon [img]="Play" [size]="18"></lucide-icon>
+                Start Workout
+            </button>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading() && filteredRoutines().length === 0">
+        <lucide-icon [img]="Dumbbell" [size]="64" [strokeWidth]="1.5"></lucide-icon>
+        <h3>{{ selectedBodyPart() ? 'No routines found' : 'No routines yet' }}</h3>
+        <p>{{ selectedBodyPart() ? 'Try a different body part filter' : 'Create your first workout routine to get started' }}</p>
+        <button class="btn-create" (click)="onCreateRoutine()" *ngIf="!selectedBodyPart()">
+            <lucide-icon [img]="Plus" [size]="20"></lucide-icon>
+            Create Your First Routine
+        </button>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="isLoading()">
+        <div class="spinner"></div>
+        <p>Loading routines...</p>
+    </div>
+</div>

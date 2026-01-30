@@ -1,0 +1,32 @@
+<div class="progress-charts-container">
+  <h2 class="section-heading">
+    <lucide-icon [img]="BarChart3" [size]="28"></lucide-icon>
+    Progress Charts
+  </h2>
+
+  <div class="charts-grid">
+    <!-- Weight Chart -->
+    <app-card class="chart-card">
+      <div class="chart-wrapper">
+        <canvas 
+          baseChart
+          [data]="weightChartData()"
+          [options]="weightChartOptions()"
+          type="line">
+        </canvas>
+      </div>
+    </app-card>
+
+    <!-- Calories Chart -->
+    <app-card class="chart-card">
+      <div class="chart-wrapper">
+        <canvas 
+          baseChart
+          [data]="caloriesChartData()"
+          [options]="caloriesChartOptions()"
+          type="bar">
+        </canvas>
+      </div>
+    </app-card>
+  </div>
+</div>

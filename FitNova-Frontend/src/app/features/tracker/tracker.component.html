@@ -1,0 +1,125 @@
+<div class="tracker-page fade-in">
+    <div class="layout-container">
+        <!-- Sidebar Navigation -->
+        <aside class="tracker-sidebar glass-panel">
+            <div class="sidebar-header">
+                <h2>Tracker Station</h2>
+                <p>Monitor your metrics.</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item" [class.active]="currentView() === 'overview'"
+                    (click)="currentView.set('overview')">
+                    <lucide-icon [img]="BarChart2" [size]="20"></lucide-icon>
+                    <span>Dashboard</span>
+                </button>
+                <div class="nav-divider"></div>
+                <button class="nav-item" [class.active]="currentView() === 'water'" (click)="currentView.set('water')">
+                    <lucide-icon [img]="Droplets" [size]="20"></lucide-icon>
+                    <span>Water Log</span>
+                </button>
+                <button class="nav-item" [class.active]="currentView() === 'weight'"
+                    (click)="currentView.set('weight')">
+                    <lucide-icon [img]="Scale" [size]="20"></lucide-icon>
+                    <span>Weight Log</span>
+                </button>
+                <button class="nav-item" [class.active]="currentView() === 'bmi'" (click)="currentView.set('bmi')">
+                    <lucide-icon [img]="Calculator" [size]="20"></lucide-icon>
+                    <span>BMI Tool</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="tracker-main">
+            <div class="content-header mobile-only">
+                <h1>{{ currentView() === 'overview' ? 'Progress Dashboard' : 
+                       (currentView() === 'water' ? 'Water Tracker' : 
+                       (currentView() === 'weight' ? 'Weight History' : 'BMI Tool')) }}</h1>
+            </div>
+
+            <div class="view-container fade-in">
+                <!-- DASHBOARD OVERVIEW -->
+                <div class="dashboard-view" *ngIf="currentView() === 'overview'">
+                    <header class="dashboard-header">
+                        <h1>Your Progress</h1>
+                        <p class="subtitle">Here's what's happening today.</p>
+                    </header>
+
+                    <!-- Key Metrics Cards -->
+                    <div class="metrics-grid">
+                        <div class="metric-card glass-panel">
+                            <div class="metric-icon water-icon">
+                                <lucide-icon [img]="Droplets" [size]="24"></lucide-icon>
+                            </div>
+                            <div class="metric-info">
+                                <span class="metric-label">Water Intake</span>
+                                <span class="metric-value">{{ todayWater() }}<small>L</small></span>
+                                <span class="metric-sub">Goal: {{ waterGoal() }}L</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card glass-panel">
+                            <div class="metric-icon weight-icon">
+                                <lucide-icon [img]="Scale" [size]="24"></lucide-icon>
+                            </div>
+                            <div class="metric-info">
+                                <span class="metric-label">Current Weight</span>
+                                <span class="metric-value">{{ currentWeight() }}<small>kg</small></span>
+                                <span class="metric-sub" [class.text-success]="weekChange() < 0" [class.text-danger]="weekChange() > 0">
+                                    {{ weekChange() > 0 ? '+' : '' }}{{ weekChange() }}kg this week
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card glass-panel">
+                            <div class="metric-icon bmi-icon">
+                                <lucide-icon [img]="Activity" [size]="24"></lucide-icon>
+                            </div>
+                            <div class="metric-info">
+                                <span class="metric-label">BMI Score</span>
+                                <span class="metric-value">24.2</span>
+                                <span class="metric-sub text-success">Normal Weight</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Charts Area -->
+                    <app-progress-charts class="dashboard-chart"></app-progress-charts>
+
+                    <!-- Recent Activity / Quick Links -->
+                    <div class="quick-links-grid">
+                        <div class="quick-link-card glass-panel" (click)="currentView.set('bmi')">
+                            <div class="link-content">
+                                <h3>Calculate BMI</h3>
+                                <p>Check your body mass index manually.</p>
+                            </div>
+                            <lucide-icon [img]="ChevronRight" [size]="20"></lucide-icon>
+                        </div>
+                        <div class="quick-link-card glass-panel" (click)="currentView.set('weight')">
+                            <div class="link-content">
+                                <h3>Log Weight</h3>
+                                <p>Update your latest weight entry.</p>
+                            </div>
+                            <lucide-icon [img]="ChevronRight" [size]="20"></lucide-icon>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DEDICATED VIEWS -->
+                <div class="tool-view" *ngIf="currentView() === 'water'">
+                    <app-water-tracker [viewMode]="'full'"></app-water-tracker>
+                </div>
+
+                <div class="tool-view" *ngIf="currentView() === 'weight'">
+                    <app-weight-tracker (weightUpdated)="refreshDashboard()"></app-weight-tracker>
+                    <app-progress-charts class="mt-xl"></app-progress-charts>
+                </div>
+
+                <div class="tool-view" *ngIf="currentView() === 'bmi'">
+                    <app-bmi-calculator></app-bmi-calculator>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>

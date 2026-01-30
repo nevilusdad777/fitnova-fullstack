@@ -1,0 +1,87 @@
+<div class="workout-page fade-in">
+    <div class="layout-container">
+        <!-- Sidebar Navigation (Desktop) / Top Nav (Mobile) -->
+        <aside class="workout-sidebar glass-panel">
+            <div class="sidebar-header">
+                <h2>Workout Station</h2>
+                <p>Train smarter.</p>
+            </div>
+
+            <nav class="sidebar-nav">
+        <button class="nav-item" [class.active]="currentView() === 'schedule'" (click)="showSchedule()"
+                aria-label="View weekly schedule">
+          <lucide-icon [img]="CalendarDays" [size]="20"></lucide-icon>
+          <span>Weekly Schedule</span>
+        </button>
+        <button class="nav-item" [class.active]="currentView() === 'routines' || currentView() === 'routine-builder'" (click)="showRoutines()"
+                aria-label="My workout routines">
+          <lucide-icon [img]="ListChecks" [size]="20"></lucide-icon>
+          <span>My Routines</span>
+        </button>
+        <button class="nav-item" [class.active]="currentView() === 'categories'" (click)="showCategories()"
+                aria-label="Browse exercise categories">
+          <lucide-icon [img]="Dumbbell" [size]="20"></lucide-icon>
+          <span>Exercise Library</span>
+        </button>
+        <button class="nav-item" [class.active]="currentView() === 'generator'" (click)="showGenerator()"
+                aria-label="Generate workout plan">
+          <lucide-icon [img]="Sparkles" [size]="20"></lucide-icon>
+          <span>Generate Plan</span>
+        </button>
+        <button class="nav-item" [class.active]="currentView() === 'history'" (click)="showHistory()"
+                aria-label="View workout history">
+          <lucide-icon [img]="History" [size]="20"></lucide-icon>
+          <span>History</span>
+        </button>
+      </nav>
+
+            <div class="quick-stats">
+                <h3>Quick Stats</h3>
+                <div class="stat-row">
+                    <lucide-icon [img]="Activity" [size]="16" class="text-primary"></lucide-icon>
+                    <span>{{ todayCaloriesBurned() }} kcal burned</span>
+                </div>
+                <div class="stat-row">
+                    <lucide-icon [img]="TrendingUp" [size]="16" class="text-success"></lucide-icon>
+                    <span>{{ weeklyWorkouts() }} workouts this week</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="workout-main">
+            <div class="workout-content-scroll">
+                <!-- Session View (Overlay) -->
+                <app-workout-session *ngIf="isSessionActive()"
+                    (sessionEnded)="endWorkoutSession($event)"></app-workout-session>
+
+                <ng-container *ngIf="!isSessionActive()">
+                    <div class="content-header mobile-only">
+                        <h1>{{ currentView() === 'categories' ? 'Browse Exercises' : 'Weekly Schedule' }}</h1>
+                    </div>
+
+                    <div class="view-container fade-in">
+                        <app-weekly-schedule *ngIf="currentView() === 'schedule'"
+                            (workoutStarted)="startWorkoutSession()"></app-weekly-schedule>
+                        <app-routine-list *ngIf="currentView() === 'routines'"
+                            (createRoutine)="showRoutineBuilder()"
+                            (editRoutine)="onEditRoutine($event)"
+                            (startRoutine)="onStartRoutineFromList($event)">
+                        </app-routine-list>
+                        <app-routine-builder *ngIf="currentView() === 'routine-builder'"
+                            [routine]="editingRoutine()"
+                            (saved)="onRoutineSaved()"
+                            (cancelled)="onRoutineCancelled()">
+                        </app-routine-builder>
+                        <app-workout-history *ngIf="currentView() === 'history'"></app-workout-history>
+                        <app-workout-plan-generator *ngIf="currentView() === 'generator'" (planGenerated)="onPlanGenerated()"></app-workout-plan-generator>
+                        <app-exercise-list *ngIf="currentView() === 'categories'" [selectedCategory]="selectedCategory()"
+                            (categorySelected)="selectCategory($event)" (startSession)="startWorkoutSession()" 
+                            (addToRoutineEvent)="onAddExerciseToRoutine($event)">
+                        </app-exercise-list>
+                    </div>
+                </ng-container>
+            </div>
+        </main>
+    </div>
+</div>

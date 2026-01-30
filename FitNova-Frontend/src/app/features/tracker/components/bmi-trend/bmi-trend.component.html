@@ -1,0 +1,64 @@
+<app-card class="bmi-trend-card">
+  <div class="bmi-header">
+    <h2 class="section-heading">
+      <lucide-icon [img]="TrendingUp" [size]="28"></lucide-icon>
+      BMI Trend Analysis
+    </h2>
+  </div>
+
+  <div class="bmi-content-grid">
+    <!-- Current BMI Display -->
+    <div class="bmi-current">
+      <div class="bmi-circle" [style.border-color]="bmiColor()">
+        <div class="bmi-value">{{ currentBMI() }}</div>
+        <div class="bmi-label">BMI</div>
+      </div>
+      <div class="bmi-info">
+        <app-badge 
+          [text]="bmiCategory()" 
+          [variant]="getBMIVariant()">
+        </app-badge>
+        <p class="bmi-description">{{ getBMIDescription() }}</p>
+      </div>
+    </div>
+
+    <!-- BMI Chart -->
+    <div class="bmi-chart">
+      <div class="chart-wrapper">
+        <canvas 
+          baseChart
+          [data]="bmiChartData()"
+          [options]="bmiChartOptions()"
+          type="line">
+        </canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- BMI Categories Reference -->
+  <div class="bmi-reference">
+    <h4 class="reference-title">BMI Categories</h4>
+    <div class="reference-grid">
+      <div class="reference-item">
+        <div class="reference-color" style="background: #3b82f6;"></div>
+        <span class="reference-range">< 18.5</span>
+        <span class="reference-label">Underweight</span>
+      </div>
+      <div class="reference-item">
+        <div class="reference-color" style="background: #10b981;"></div>
+        <span class="reference-range">18.5 - 24.9</span>
+        <span class="reference-label">Normal</span>
+      </div>
+      <div class="reference-item">
+        <div class="reference-color" style="background: #f59e0b;"></div>
+        <span class="reference-range">25 - 29.9</span>
+        <span class="reference-label">Overweight</span>
+      </div>
+      <div class="reference-item">
+        <div class="reference-color" style="background: #ef4444;"></div>
+        <span class="reference-range">≥ 30</span>
+        <span class="reference-label">Obese</span>
+      </div>
+    </div>
+  </div>
+</app-card>

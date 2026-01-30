@@ -1,0 +1,103 @@
+<div class="weekly-schedule-container fade-in">
+    <div class="schedule-header">
+        <div class="header-content">
+            <h2>Weekly Workout Schedule</h2>
+            <p *ngIf="!activePlan()">No active workout plan. Generate one to get started!</p>
+            <p *ngIf="activePlan()">Stay consistent and crush your goals! 💪</p>
+        </div>
+    </div>
+
+    <div class="week-timeline" *ngIf="!isLoading()">
+        <div *ngFor="let day of weekSchedule()" 
+             class="timeline-day"
+             [class.is-today]="day.isToday"
+             [class.is-rest]="day.isRestDay"
+             [class.is-workout]="!day.isRestDay">
+            
+            <!-- Day Card -->
+            <div class="day-card">
+                <!-- Day Header with Badge -->
+                <div class="card-header">
+                    <div class="day-label">
+                        <div class="day-name">{{ day.dayName }}</div>
+                        <div class="day-date">{{ day.date }}</div>
+                    </div>
+                    <div class="status-badges">
+                        <span class="today-badge" *ngIf="day.isToday">TODAY</span>
+                        <span class="rest-badge" *ngIf="day.isRestDay">REST</span>
+                    </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body">
+                    <!-- Rest Day -->
+                    <div *ngIf="day.isRestDay" class="rest-content">
+                        <div class="rest-visual">
+                            <div class="rest-icon-wrapper">
+                                <lucide-icon [img]="Circle" [size]="32" [strokeWidth]="1.5"></lucide-icon>
+                            </div>
+                            <div class="rest-label">Rest & Recover</div>
+                        </div>
+                        <p class="rest-message">Give your muscles time to rebuild stronger</p>
+                    </div>
+
+                    <!-- Workout Day -->
+                    <div *ngIf="!day.isRestDay" class="workout-content">
+                        <div class="workout-header">
+                            <lucide-icon [img]="Dumbbell" [size]="20"></lucide-icon>
+                            <h4>{{ day.workoutName }}</h4>
+                        </div>
+                        
+                        <div class="workout-stats">
+                            <div class="stat-badge">
+                                <lucide-icon [img]="CheckCircle" [size]="14"></lucide-icon>
+                                <span>{{ day.exercises?.length }} exercises</span>
+                            </div>
+                        </div>
+
+                        <div class="exercise-list" *ngIf="day.exercises && day.exercises.length > 0">
+                            <div *ngFor="let ex of day.exercises.slice(0, 4)" class="exercise-item">
+                                <span class="exercise-bullet">●</span>
+                                <span class="exercise-name">{{ ex.name }}</span>
+                            </div>
+                            <div *ngIf="day.exercises.length > 4" class="more-indicator">
+                                +{{ day.exercises.length - 4 }} more exercises
+                            </div>
+                        </div>
+
+                        <button *ngIf="day.exercises && day.exercises.length > 0" 
+                                class="action-btn"
+                                [class.primary]="day.isToday"
+                                (click)="startWorkout(day)">
+                            <lucide-icon [img]="Play" [size]="16"></lucide-icon>
+                            <span>{{ day.isToday ? 'Start Now' : 'Preview' }}</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Progress Indicator -->
+                <div class="card-footer" *ngIf="!day.isRestDay">
+                    <div class="progress-bar">
+                        <div class="progress-fill" [style.width]="'0%'"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Connector -->
+            <div class="timeline-connector" *ngIf="day.dayOfWeek < 6"></div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading() && weekSchedule().length === 0" class="empty-state">
+        <lucide-icon [img]="CalendarDays" [size]="64" [strokeWidth]="1.5"></lucide-icon>
+        <h3>No Schedule Yet</h3>
+        <p>Generate a workout plan to see your weekly schedule</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading()" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading your schedule...</p>
+    </div>
+</div>

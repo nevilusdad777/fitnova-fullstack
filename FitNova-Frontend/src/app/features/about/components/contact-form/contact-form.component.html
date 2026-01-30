@@ -1,0 +1,62 @@
+<div class="contact-card glass-panel fade-in">
+    <div class="card-header">
+        <h3>Get in Touch</h3>
+        <p>Have questions or feedback? We'd love to hear from you.</p>
+    </div>
+
+    <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form" *ngIf="!isSuccess()">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" formControlName="name" placeholder="John Doe"
+                    [class.error]="contactForm.get('name')?.touched && contactForm.get('name')?.invalid">
+                <span class="error-msg" *ngIf="contactForm.get('name')?.touched && contactForm.get('name')?.invalid">
+                    Name is required (min 2 chars)
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" formControlName="email" placeholder="john@example.com"
+                    [class.error]="contactForm.get('email')?.touched && contactForm.get('email')?.invalid">
+                <span class="error-msg" *ngIf="contactForm.get('email')?.touched && contactForm.get('email')?.invalid">
+                    Please enter a valid email
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="subject">Subject</label>
+            <select id="subject" formControlName="subject"
+                [class.error]="contactForm.get('subject')?.touched && contactForm.get('subject')?.invalid">
+                <option value="" disabled>Select a subject</option>
+                <option value="support">Support</option>
+                <option value="feedback">Feedback</option>
+                <option value="partnership">Partnership</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" formControlName="message" rows="4" placeholder="How can we help you?"
+                [class.error]="contactForm.get('message')?.touched && contactForm.get('message')?.invalid"></textarea>
+            <span class="error-msg" *ngIf="contactForm.get('message')?.touched && contactForm.get('message')?.invalid">
+                Message is required (min 10 chars)
+            </span>
+        </div>
+
+        <button type="submit" class="submit-btn" [disabled]="isSubmitting()">
+            <lucide-icon [img]="Send" [size]="18" *ngIf="!isSubmitting()"></lucide-icon>
+            <span class="loader" *ngIf="isSubmitting()"></span>
+            {{ isSubmitting() ? 'Sending...' : 'Send Message' }}
+        </button>
+    </form>
+
+    <div class="success-message fade-in" *ngIf="isSuccess()">
+        <lucide-icon [img]="CheckCircle" [size]="48" class="success-icon"></lucide-icon>
+        <h4>Message Sent!</h4>
+        <p>Thank you for reaching out. We'll get back to you shortly.</p>
+        <button class="btn-outline" (click)="isSuccess.set(false)">Send Another</button>
+    </div>
+</div>

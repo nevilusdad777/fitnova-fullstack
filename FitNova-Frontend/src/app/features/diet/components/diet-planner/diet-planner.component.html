@@ -1,0 +1,88 @@
+<div class="diet-planner-container fade-in">
+  <!-- Generator Panel -->
+  <div class="planner-controls glass-panel">
+    <div class="planner-header-mini">
+      <h3>Custom Plan Generator</h3>
+    </div>
+
+    <div class="controls-grid">
+      <div class="control-group">
+        <label>Goal</label>
+        <div class="toggle-group">
+          <button [class.active]="fitnessGoal() === 'Weight Loss'"
+            (click)="fitnessGoal.set('Weight Loss')">Loss</button>
+          <button [class.active]="fitnessGoal() === 'Maintain'" (click)="fitnessGoal.set('Maintain')">Maintain</button>
+          <button [class.active]="fitnessGoal() === 'Weight Gain'"
+            (click)="fitnessGoal.set('Weight Gain')">Gain</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label>Diet</label>
+        <div class="toggle-group">
+          <button [class.active]="foodPreference() === 'Veg'" (click)="foodPreference.set('Veg')">Veg</button>
+          <button [class.active]="foodPreference() === 'Non-Veg'"
+            (click)="foodPreference.set('Non-Veg')">Non-Veg</button>
+          <button [class.active]="foodPreference() === 'Both'" (click)="foodPreference.set('Both')">Both</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label>Calories: {{ dailyCalorieTarget() }}</label>
+        <input type="range" min="1200" max="4000" step="100" [ngModel]="dailyCalorieTarget()"
+          (ngModelChange)="dailyCalorieTarget.set($event)" class="range-slider">
+      </div>
+
+      <div class="control-actions">
+        <button class="btn-generate" (click)="generatePlan()">
+          <lucide-icon [img]="Sparkles" [size]="18"></lucide-icon>
+          Generate
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Plan Display -->
+  <div class="plan-result" *ngIf="generatedPlan() as plan">
+    <div class="plan-summary-header">
+      <div class="header-left">
+          <h4>Your Daily Plan</h4>
+          <span class="summary-badge">{{ plan.totalCalories }} kcal</span>
+      </div>
+      <button class="btn-save" (click)="savePlan()" [disabled]="isSaving()">
+        <lucide-icon [img]="Download" [size]="16"></lucide-icon>
+        {{ isSaving() ? 'Saving...' : 'Save to Log' }}
+      </button>
+    </div>
+
+    <div class="meal-timeline">
+      <div class="timeline-item" *ngFor="let meal of plan.meals; let i = index; let last = last"
+        [style.animation-delay]="i * 100 + 'ms'">
+        <div class="time-marker">
+          <div class="time-dot"></div>
+          <div class="time-line" *ngIf="!last"></div>
+        </div>
+
+        <div class="meal-content-card">
+          <div class="meal-header">
+            <span class="meal-type">{{ meal.mealType }}</span>
+            <span class="meal-cals">{{ meal.calories }} kcal</span>
+          </div>
+
+          <div class="meal-foods">
+            <div class="food-row" *ngFor="let food of meal.foods">
+              <span class="bullet">•</span>
+              <span class="food-text">{{ food.name }} ({{ food.serving }})</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-planner" *ngIf="!generatedPlan()">
+    <lucide-icon [img]="Sparkles" [size]="48" class="ghost-icon"></lucide-icon>
+    <p>Set your preferences to generate a plan</p>
+  </div>
+</div>

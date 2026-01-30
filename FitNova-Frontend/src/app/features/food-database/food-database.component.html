@@ -1,0 +1,98 @@
+<div class="food-database-page">
+  <div class="page-header">
+    <h1>Food Database</h1>
+    <p>Browse and add foods to your meals</p>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="filters">
+    <div class="search-box">
+      <lucide-icon [img]="Search" [size]="20"></lucide-icon>
+      <input 
+        type="text" 
+        placeholder="Search foods..." 
+        [(ngModel)]="searchQuery">
+    </div>
+
+    <div class="filter-buttons">
+      <button 
+        [class.active]="vegFilter() === 'all'"
+        (click)="vegFilter.set('all')">All</button>
+      <button 
+        [class.active]="vegFilter() === 'veg'"
+        (click)="vegFilter.set('veg')">🥗 Veg</button>
+      <button 
+        [class.active]="vegFilter() === 'non-veg'"
+        (click)="vegFilter.set('non-veg')">🍗 Non-Veg</button>
+    </div>
+  </div>
+
+  <!-- Food Grid -->
+  <div class="food-grid">
+    <div *ngFor="let food of filteredFoods()" class="food-card" (click)="openModal(food)">
+      <div class="food-header">
+        <h3>{{ food.name }}</h3>
+        <span class="badge" [class.veg]="food.isVegetarian" [class.nonveg]="!food.isVegetarian">
+          {{ food.isVegetarian ? 'Veg' : 'Non-Veg' }}
+        </span>
+      </div>
+      <div class="food-macros">
+        <div class="macro">{{ food.calories }} kcal</div>
+        <div class="macro">P: {{ food.protein }}g</div>
+        <div class="macro">C: {{ food.carbs }}g</div>
+        <div class="macro">F: {{ food.fat }}g</div>
+      </div>
+      <div class="food-serving">Per {{ food.servingSize }} {{ food.servingUnit }}</div>
+    </div>
+  </div>
+
+  <!-- Add to Meal Modal -->
+  <div class="modal-overlay" *ngIf="selectedFood()" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Add {{ selectedFood()?.name }}</h2>
+        <button class="close-btn" (click)="closeModal()">
+          <lucide-icon [img]="X" [size]="20"></lucide-icon>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Meal Type</label>
+          <select [(ngModel)]="selectedMealType">
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snack">Snacks</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Quantity (servings)</label>
+          <input 
+            type="number" 
+            [(ngModel)]="quantity"
+            min="0.1"
+            step="0.5">
+        </div>
+
+        <div class="nutrition-preview">
+          <h4>Total Nutrition</h4>
+          <div class="preview-grid">
+            <div>Calories: {{ (selectedFood()?.calories || 0) * quantity() }} kcal</div>
+            <div>Protein: {{ ((selectedFood()?.protein || 0) * quantity()).toFixed(1) }}g</div>
+            <div>Carbs: {{ ((selectedFood()?.carbs || 0) * quantity()).toFixed(1) }}g</div>
+            <div>Fat: {{ ((selectedFood()?.fat || 0) * quantity()).toFixed(1) }}g</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeModal()">Cancel</button>
+        <button class="btn-primary" (click)="addToMeal()" [disabled]="isAdding()">
+          {{ isAdding() ? 'Adding...' : 'Add to Meal' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

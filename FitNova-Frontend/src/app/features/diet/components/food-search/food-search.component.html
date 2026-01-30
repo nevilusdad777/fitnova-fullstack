@@ -1,0 +1,149 @@
+<div class="food-search-container fade-in">
+    <!-- Search Bar & Filters -->
+    <div class="search-controls">
+        <div class="search-box">
+            <lucide-icon [img]="Search" [size]="20" class="search-icon"></lucide-icon>
+            <input type="text" placeholder="Search foods (e.g., 'Apple', 'Chicken')..." [value]="searchQuery()"
+                (input)="onSearchChange($event)" class="search-input">
+        </div>
+
+        <div class="filters-row">
+            <div class="filter-pills">
+                <button class="filter-pill" [class.active]="foodTypeFilter() === 'All'" (click)="setFoodTypeFilter('All')">All</button>
+                <button class="filter-pill" [class.active]="foodTypeFilter() === 'Veg'" (click)="setFoodTypeFilter('Veg')">🥗 Veg</button>
+                <button class="filter-pill" [class.active]="foodTypeFilter() === 'Non-Veg'" (click)="setFoodTypeFilter('Non-Veg')">🍗 Non-Veg</button>
+            </div>
+
+            <select class="filter-select" [value]="selectedCategory()" (change)="setCategory($any($event.target).value)">
+                <option value="All">All Categories</option>
+                <option *ngFor="let cat of categories" [value]="cat" [hidden]="cat === 'All'">{{ cat }}</option>
+            </select>
+
+            <select class="filter-select" [value]="sortField()" (change)="setSortField($any($event.target).value)">
+                <option *ngFor="let field of sortFields" [value]="field.value">Sort: {{ field.label }}</option>
+            </select>
+
+            <select class="filter-select" [value]="sortDirection()" (change)="setSortDirection($any($event.target).value)">
+                <option value="desc">High to Low</option>
+                <option value="asc">Low to High</option>
+            </select>
+
+            <button class="btn-reset" (click)="resetFilters()" title="Reset Filters">
+                <lucide-icon [img]="Filter" [size]="16"></lucide-icon> Reset
+            </button>
+        </div>
+    </div>
+
+    <!-- Results Grid -->
+    <div class="food-grid-container">
+        <div class="results-header" *ngIf="filteredFoods().length > 0">
+            <span>{{ filteredFoods().length }} foods found</span>
+        </div>
+
+        <div class="food-grid" *ngIf="filteredFoods().length > 0; else emptyState">
+            <div *ngFor="let food of filteredFoods()" class="food-card" (click)="selectFood(food)">
+                <div class="food-image" *ngIf="food.image">
+                    <img [src]="food.image" [alt]="food.name" loading="lazy" (error)="handleImageError(food)">
+                </div>
+                <!-- Fallback/Placeholder if no image -->
+                <div class="food-image placeholder" *ngIf="!food.image">
+                    <span>{{ food.name.charAt(0) }}</span>
+                </div>
+
+                <div class="food-card-content">
+                    <div class="food-card-header">
+                        <h3 class="food-name">{{ food.name }}</h3>
+                        <app-badge [text]="food.isVegetarian ? 'Veg' : 'Non-Veg'"
+                            [variant]="food.isVegetarian ? 'success' : 'danger'"></app-badge>
+                    </div>
+    
+                    <div class="food-meta">
+                        <div class="meta-row">
+                            <span class="calories">{{ food.calories }} kcal</span>
+                            <span class="dot">•</span>
+                            <span class="serving">{{ food.servingSize }} {{ food.servingUnit }}</span>
+                        </div>
+                    </div>
+    
+                    <div class="food-macros-mini">
+                        <div class="macro-pill p">
+                            <span class="label">P</span>
+                            <span class="val">{{ food.protein }}g</span>
+                        </div>
+                        <div class="macro-pill c">
+                            <span class="label">C</span>
+                            <span class="val">{{ food.carbs }}g</span>
+                        </div>
+                        <div class="macro-pill f">
+                            <span class="label">F</span>
+                            <span class="val">{{ food.fat }}g</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ng-template #emptyState>
+            <div class="empty-state">
+                <lucide-icon [img]="Search" [size]="48"></lucide-icon>
+                <p>No foods found matching "{{ searchQuery() }}"</p>
+            </div>
+        </ng-template>
+    </div>
+
+    <!-- Compact Inline Modal -->
+    <div class="quick-add-modal" *ngIf="selectedFood()" [@slideIn]>
+        <div class="quick-modal-content">
+            <button class="quick-close" (click)="closeModal()">×</button>
+            
+            <div class="modal-image-banner" *ngIf="selectedFood()?.image">
+                <img [src]="selectedFood()!.image" [alt]="selectedFood()!.name" (error)="handleImageError(selectedFood()!)">
+            </div>
+
+            <div class="quick-header">
+                <h4>{{ selectedFood()!.name }}</h4>
+                <div class="modal-badges">
+                    <app-badge [text]="selectedFood()!.isVegetarian ? 'Vegetarian' : 'Non-Veg'" 
+                              [variant]="selectedFood()!.isVegetarian ? 'success' : 'danger'"></app-badge>
+                    <span class="source-badge">{{ selectedFood()!.apiSource || 'Internal' }}</span>
+                </div>
+                
+                <div class="macros-grid-large">
+                    <div class="macro-box">
+                        <span class="label">Calories</span>
+                        <span class="value cal">{{ (selectedFood()!.calories * (amountInput / (selectedFood()!.servingSize || 1))) | number:'1.0-0' }}</span>
+                    </div>
+                    <div class="macro-box">
+                        <span class="label">Protein</span>
+                        <span class="value">{{ (selectedFood()!.protein * (amountInput / (selectedFood()!.servingSize || 1))) | number:'1.0-1' }}g</span>
+                    </div>
+                    <div class="macro-box">
+                        <span class="label">Carbs</span>
+                        <span class="value">{{ (selectedFood()!.carbs * (amountInput / (selectedFood()!.servingSize || 1))) | number:'1.0-1' }}g</span>
+                    </div>
+                    <div class="macro-box">
+                        <span class="label">Fat</span>
+                        <span class="value">{{ (selectedFood()!.fat * (amountInput / (selectedFood()!.servingSize || 1))) | number:'1.0-1' }}g</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-form">
+                <select [(ngModel)]="selectedMealType" class="quick-select">
+                    <option value="Breakfast">🌅 Breakfast</option>
+                    <option value="Lunch">☀️ Lunch</option>
+                    <option value="Dinner">🌙 Dinner</option>
+                    <option value="Snacks">🍿 Snacks</option>
+                </select>
+
+                <input type="number" [(ngModel)]="amountInput" min="0" class="quick-input" 
+                       placeholder="Amount ({{ selectedFood()!.servingUnit }})">
+
+                <div class="quick-actions">
+                    <button class="quick-btn cancel" (click)="closeModal()">Cancel</button>
+                    <button class="quick-btn add" (click)="addToMeal()">Add to Journal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

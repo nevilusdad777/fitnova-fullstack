@@ -1,0 +1,182 @@
+/* Profile Page Theme - Purple Tinted Cards in Light Mode Only */
+.profile-page {
+    height: calc(100vh - var(--header-height));
+    overflow: hidden;
+    background: var(--bg-profile);
+    background-attachment: fixed;
+    position: relative;
+    transition: background 0.5s ease;
+}
+
+/* Light mode only - Purple-tinted cards */
+html:not([data-theme="dark"]) .profile-page {
+    --card-bg: #faf5ff;
+    --bg-secondary: #f3e8ff;
+    --border-color: #e9d5ff;
+    --card-glass-bg: rgba(250, 245, 255, 0.9);
+    --sidebar-bg: rgba(253, 250, 255, 0.95);
+}
+
+.profile-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 85% 60%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    animation: float 15s ease-in-out infinite;
+}
+
+.layout-container {
+    display: flex;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+/* Sidebar Styling */
+.profile-sidebar {
+    width: 300px;
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    background: var(--sidebar-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
+    animation: slideInRight 0.3s ease-out reverse;
+}
+
+.sidebar-header h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.sidebar-header p {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    margin: 0;
+    font-weight: 500;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    flex: 1;
+}
+
+.sidebar-footer {
+    padding-top: var(--space-lg);
+    border-top: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 0.65rem 1rem;
+    border-radius: 12px;
+    background: transparent;
+    border: 2px solid transparent;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: left;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.nav-item:hover::before {
+    left: 100%;
+}
+
+.nav-item:hover {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(99, 102, 241, 0.1));
+    border-color: rgba(139, 92, 246, 0.3);
+    color: #8b5cf6;
+    transform: translateX(4px);
+}
+
+.nav-item.active {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    color: white;
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+    transform: scale(1.02);
+}
+
+.nav-item.logout:hover {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+}
+
+/* Main Content */
+.profile-main {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-2xl);
+    position: relative;
+    background: var(--content-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.mobile-only {
+    display: none;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .profile-sidebar {
+        display: none;
+    }
+
+    .profile-page {
+        height: auto;
+        overflow: visible;
+    }
+
+    .layout-container {
+        flex-direction: column;
+    }
+
+    .profile-main {
+        padding: var(--space-md);
+    }
+
+    .mobile-only {
+        display: block;
+        margin-bottom: var(--space-lg);
+    }
+    
+    .mobile-only h1 {
+        font-size: var(--font-size-xl);
+        color: var(--color-text-primary);
+    }
+}

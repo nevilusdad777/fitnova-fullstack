@@ -1,0 +1,439 @@
+
+.exercise-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.categories-nav {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+}
+
+.category-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.category-btn:hover {
+    background-color: var(--color-surface-hover);
+}
+
+.category-btn.active {
+    background-color: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.exercises-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.exercise-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.exercise-card:hover {
+    border-color: var(--color-primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.exercise-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.exercise-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.add-btn-small {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: var(--color-surface-hover);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.add-btn-small:hover {
+    background-color: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+    transform: scale(1.1);
+}
+
+.exercise-visual {
+    width: 100%;
+    height: 180px;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border);
+}
+
+.exercise-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.exercise-desc {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex-grow: 1; /* Pushes meta to bottom */
+}
+
+.exercise-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+.difficulty-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.difficulty-badge.success {
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+}
+
+.difficulty-badge.warning {
+    background-color: var(--color-warning-bg);
+    color: var(--color-warning);
+}
+
+.difficulty-badge.danger {
+    background-color: var(--color-danger-bg);
+    color: var(--color-danger);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--color-text-muted);
+}
+
+.difficulty-nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.difficulty-btn {
+    padding: 6px 14px;
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.difficulty-btn:hover {
+    background-color: var(--color-surface-hover);
+    border-color: var(--color-text-muted);
+}
+
+.difficulty-btn.active {
+    background-color: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+/* Modal Styles */
+.exercise-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    padding: 20px;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.exercise-modal-content {
+    background-color: var(--color-surface);
+    border-radius: 16px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid var(--color-border);
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.close-modal-btn:hover {
+    background-color: var(--color-surface-hover);
+    color: var(--color-text-primary);
+}
+
+.modal-header {
+    padding: 24px 24px 0;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--color-text-primary);
+    margin-bottom: 8px;
+}
+
+.modal-body {
+    padding: 0 24px 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.modal-visual {
+    width: 100%;
+    height: 300px;
+    background-color: white; /* GIFs standard bg */
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; /* Prevent squishing */
+}
+
+.modal-visual img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+
+.modal-info {
+    color: var(--color-text-secondary);
+}
+
+.modal-desc {
+    line-height: 1.6;
+    margin-bottom: 24px;
+    font-size: 1rem;
+}
+
+.modal-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+    background-color: var(--color-surface-hover);
+    padding: 16px;
+    border-radius: 12px;
+}
+
+.benefit-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background-color: rgba(59, 130, 246, 0.1); /* Primary with opacity */
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.benefit-box lucide-icon {
+    color: var(--color-primary);
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
+.benefit-box p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+}
+
+.valueHighlight {
+    font-size: 0.95rem; /* Slightly smaller to fit if text is long */
+    font-weight: 700;
+    color: var(--color-primary);
+    text-align: center;
+}
+
+.stat-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.stat-box .label {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-box .value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.instructions-section {
+    margin-bottom: 24px;
+}
+
+.instructions-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    color: var(--color-text-primary);
+}
+
+.instructions-section ol {
+    padding-left: 20px;
+    margin: 0;
+}
+
+.instructions-section li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.modal-footer {
+    padding: 24px;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    justify-content: flex-end;
+    background-color: var(--color-surface);
+    flex-shrink: 0;
+}
+
+.add-to-routine-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.add-to-routine-btn:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-1px);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 600px) {
+    .modal-visual {
+        height: 220px;
+    }
+    
+    .exercise-modal-content {
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+    }
+
+    .modal-footer {
+        border-radius: 0;
+    }
+}

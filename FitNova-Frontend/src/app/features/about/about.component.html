@@ -1,0 +1,297 @@
+<!-- FitNova About Page - Redesigned -->
+
+<!-- Navigation -->
+<nav class="navbar" [class.scrolled]="isScrolled">
+    <div class="nav-content">
+        <div class="nav-brand" routerLink="/landing">
+            <img src="/images/fitnova-logo-main.png" alt="FitNova" class="nav-logo">
+            <span class="brand-name">FitNova</span>
+        </div>
+        <div class="nav-menu">
+            <a routerLink="/landing" fragment="features" class="nav-link">Features</a>
+            <a routerLink="/landing" fragment="how-it-works" class="nav-link">How It Works</a>
+            <a routerLink="/about" class="nav-link active">About</a>
+            <a routerLink="/auth/login" class="nav-link">Login</a>
+            <a routerLink="/auth/register" class="btn-signup">Sign Up Free</a>
+        </div>
+    </div>
+</nav>
+
+<div class="about-container">
+    <!-- Hero Section -->
+    <section class="about-hero">
+        <div class="hero-background">
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <lucide-icon [img]="Heart" [size]="16"></lucide-icon>
+                <span>Our Story</span>
+            </div>
+            <h1 class="hero-title">
+                Empowering Your
+                <span class="gradient-text">Fitness Journey</span>
+            </h1>
+            <p class="hero-description">
+                FitNova was born from a simple belief: everyone deserves access to powerful, 
+                intuitive tools that make fitness tracking effortless and transformative.
+            </p>
+        </div>
+        <div class="hero-image-wrapper">
+            <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1200&q=80" 
+                 alt="Team Spirit" class="hero-image">
+        </div>
+    </section>
+
+
+    <!-- Company Story Section -->
+    <section class="story-section">
+        <div class="container">
+            <div class="story-content">
+                <div class="section-badge">THE FITNOVA STORY</div>
+                <h2 class="section-title">Where <span class="gradient-text-accent">Innovation</span> Meets Fitness</h2>
+                <div class="story-grid">
+                    <div class="story-text">
+                        <p class="lead-text">
+                            Founded in 2024, FitNova emerged from a vision to revolutionize how people approach 
+                            fitness and wellness. We recognized that traditional fitness tracking was either too 
+                            complex or too simplistic—never striking the perfect balance.
+                        </p>
+                        <p class="story-paragraph">
+                            Our team of fitness enthusiasts, data scientists, and software engineers came together 
+                            with a shared mission: <strong>create a platform that makes fitness tracking intuitive, 
+                            comprehensive, and genuinely helpful</strong>. We believe that technology should empower 
+                            your fitness journey, not complicate it.
+                        </p>
+                        <p class="story-paragraph">
+                            Today, FitNova serves over <strong>15,000+ active users</strong>, helping them log 
+                            workouts, plan nutrition, and achieve their health goals with unprecedented clarity 
+                            and precision.
+                        </p>
+                    </div>
+                    <div class="story-visual">
+                        <div class="visual-card">
+                            <img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=600&q=80" 
+                                 alt="Team Collaboration" class="visual-image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Vision Section -->
+    <section class="mission-vision-section">
+        <div class="container">
+            <div class="mission-vision-grid">
+                <div class="mission-card">
+                    <div class="card-icon">
+                        <lucide-icon [img]="Target" [size]="48"></lucide-icon>
+                    </div>
+                    <h3>Our Mission</h3>
+                    <p>
+                        To provide accessible, data-driven fitness tools that empower individuals 
+                        to take control of their health journey. We strive to make fitness tracking 
+                        effortless, accurate, and motivating for everyone—from beginners to athletes.
+                    </p>
+                </div>
+                <div class="vision-card">
+                    <div class="card-icon">
+                        <lucide-icon [img]="Rocket" [size]="48"></lucide-icon>
+                    </div>
+                    <h3>Our Vision</h3>
+                    <p>
+                        To become the world's most trusted fitness companion, where millions of users 
+                        achieve their goals through intelligent insights, community support, and 
+                        cutting-edge technology that adapts to their unique needs.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Values Section -->
+    <section class="values-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">CORE VALUES</div>
+                <h2 class="section-title">What <span class="gradient-text-accent">Drives Us</span></h2>
+                <p class="section-subtitle">The principles that guide everything we build</p>
+            </div>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon-wrapper">
+                        <lucide-icon [img]="TrendingUp" [size]="32"></lucide-icon>
+                    </div>
+                    <h4>Innovation First</h4>
+                    <p>
+                        We constantly push boundaries to deliver cutting-edge features that make 
+                        fitness tracking smarter and more effective.
+                    </p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon-wrapper">
+                        <lucide-icon [img]="Users" [size]="32"></lucide-icon>
+                    </div>
+                    <h4>User-Centric Design</h4>
+                    <p>
+                        Every feature is designed with you in mind. Your feedback shapes our 
+                        roadmap and drives continuous improvement.
+                    </p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon-wrapper">
+                        <lucide-icon [img]="CheckCircle" [size]="32"></lucide-icon>
+                    </div>
+                    <h4>Data Privacy</h4>
+                    <p>
+                        Your personal health data is sacred. We employ industry-leading security 
+                        to protect your information.
+                    </p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon-wrapper">
+                        <lucide-icon [img]="Heart" [size]="32"></lucide-icon>
+                    </div>
+                    <h4>Community Support</h4>
+                    <p>
+                        Fitness is better together. We foster a supportive community where everyone 
+                        motivates each other.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What Makes Us Different -->
+    <section class="differentiators-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">WHY CHOOSE FITNOVA</div>
+                <h2 class="section-title">What Makes Us <span class="gradient-text-accent">Different</span></h2>
+            </div>
+            <div class="diff-grid">
+                <div class="diff-item">
+                    <div class="diff-number">01</div>
+                    <h4>All-in-One Platform</h4>
+                    <p>Workout tracking, nutrition planning, and progress analytics—all in one place. No more juggling multiple apps.</p>
+                </div>
+                <div class="diff-item">
+                    <div class="diff-number">02</div>
+                    <h4>Smart Insights</h4>
+                    <p>AI-powered recommendations that learn from your patterns and help you optimize your routine for better results.</p>
+                </div>
+                <div class="diff-item">
+                    <div class="diff-number">03</div>
+                    <h4>100% Free Forever</h4>
+                    <p>No hidden fees, no premium tiers. All features are completely free because we believe fitness tools should be accessible to everyone.</p>
+                </div>
+                <div class="diff-item">
+                    <div class="diff-number">04</div>
+                    <h4>Beautiful & Intuitive</h4>
+                    <p>Modern design with glassmorphism, smooth animations, and an interface that makes tracking enjoyable.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Showcase -->
+    <section class="features-showcase">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">WHAT WE OFFER</div>
+                <h2 class="section-title">Built for <span class="gradient-text-accent">Your Success</span></h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-box">
+                    <div class="feature-icon-large">
+                        <lucide-icon [img]="Activity" [size]="40"></lucide-icon>
+                    </div>
+                    <h3>Smart Tracking</h3>
+                    <p>Intelligent workout logging with AI-powered recommendations</p>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon-large">
+                        <lucide-icon [img]="TrendingUp" [size]="40"></lucide-icon>
+                    </div>
+                    <h3>Progress Analytics</h3>
+                    <p>Detailed insights and visualizations of your fitness journey</p>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon-large">
+                        <lucide-icon [img]="Apple" [size]="40"></lucide-icon>
+                    </div>
+                    <h3>Nutrition Planning</h3>
+                    <p>Comprehensive meal tracking and macro optimization</p>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon-large">
+                        <lucide-icon [img]="Calendar" [size]="40"></lucide-icon>
+                    </div>
+                    <h3>Workout History</h3>
+                    <p>Complete calendar view of all your training sessions</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">100K+</div>
+                    <div class="stat-label">Workouts Logged</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15K+</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">User Satisfaction</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">25M+</div>
+                    <div class="stat-label">Meals Tracked</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact CTA -->
+    <section class="contact-cta">
+        <div class="cta-gradient-bg"></div>
+        <div class="container">
+            <div class="cta-content">
+                <div class="section-badge">GET IN TOUCH</div>
+                <h2 class="cta-title">Have Questions? <span class="gradient-text-light">We're Here to Help</span></h2>
+                <p class="cta-description">
+                    Whether you have feedback, questions, or just want to say hi, 
+                    we'd love to hear from you.
+                </p>
+                <div class="cta-buttons">
+                    <button class="btn-primary-cta" (click)="showContact()">
+                        <lucide-icon [img]="Mail" [size]="20"></lucide-icon>
+                        Contact Us
+                    </button>
+                    <a routerLink="/auth/register" class="btn-secondary-cta">
+                        <lucide-icon [img]="Rocket" [size]="20"></lucide-icon>
+                        Get Started Free
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form Modal (conditionally shown) -->
+    <div class="contact-modal" *ngIf="currentView() === 'contact'" (click)="closeContact()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <button class="modal-close" (click)="closeContact()">
+                <lucide-icon [img]="X" [size]="24"></lucide-icon>
+            </button>
+            <app-contact-form></app-contact-form>
+        </div>
+    </div>
+</div>

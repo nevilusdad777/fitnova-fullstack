@@ -1,0 +1,46 @@
+<footer class="footer">
+    <div class="container footer-content">
+        <!-- Brand Section -->
+        <div class="footer-section brand-section">
+            <div class="footer-logo">
+                <img src="images/fitnova-logo-main.png" alt="FitNova" class="footer-logo-img">
+            </div>
+            <p class="footer-tagline">Your fitness journey, simplified.</p>
+            <div class="footer-made-with">
+                Made with <lucide-icon [img]="Heart" [size]="16" class="heart-icon"></lucide-icon> for fitness enthusiasts
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-section links-section">
+            <h4 class="footer-title">Quick Links</h4>
+            <nav class="footer-links">
+                <a *ngFor="let link of quickLinks" [routerLink]="link.path" class="footer-link">
+                    {{ link.label }}
+                </a>
+            </nav>
+        </div>
+
+        <!-- Social Links -->
+        <div class="footer-section social-section">
+            <h4 class="footer-title">Connect With Us</h4>
+            <div class="social-links">
+                <a *ngFor="let social of socialLinks" 
+                [href]="social.url" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="social-link"
+                [attr.aria-label]="social.label">
+                <lucide-icon [img]="social.icon" [size]="20"></lucide-icon>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="footer-bottom">
+        <div class="container">
+            <p class="copyright">© {{ currentYear }} FitNova. All rights reserved.</p>
+        </div>
+    </div>
+</footer>

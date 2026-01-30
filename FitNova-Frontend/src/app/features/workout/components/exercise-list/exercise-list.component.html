@@ -1,0 +1,134 @@
+<div class="exercise-list-container">
+    <div class="categories-nav">
+        <button class="category-btn" [class.active]="selectedCategory === ''"
+            (click)="selectCategory('')">
+            <span class="category-emoji">💪</span>
+            <span class="category-name">All</span>
+        </button>
+        <button *ngFor="let cat of categories()" class="category-btn" [class.active]="selectedCategory === cat.name"
+            (click)="selectCategory(cat.name)">
+            <span class="category-emoji">{{ cat.emoji }}</span>
+            <span class="category-name">{{ cat.name }}</span>
+        </button>
+    </div>
+
+    <div class="difficulty-nav">
+        <button class="difficulty-btn" [class.active]="selectedDifficulty === ''" (click)="selectDifficulty('')">
+            All Levels
+        </button>
+        <button class="difficulty-btn" [class.active]="selectedDifficulty === 'beginner'" (click)="selectDifficulty('beginner')">
+            Beginner
+        </button>
+        <button class="difficulty-btn" [class.active]="selectedDifficulty === 'intermediate'" (click)="selectDifficulty('intermediate')">
+            Intermediate
+        </button>
+        <button class="difficulty-btn" [class.active]="selectedDifficulty === 'advanced'" (click)="selectDifficulty('advanced')">
+            Advanced
+        </button>
+    </div>
+
+    <div class="exercises-grid" *ngIf="exercises().length > 0; else noExercises">
+        <div *ngFor="let ex of exercises()" class="exercise-card" 
+            (click)="openExerciseDetails(ex)"
+            (mouseenter)="startAnimation(getExerciseId(ex))"
+            (mouseleave)="stopAnimation(getExerciseId(ex))">
+            
+            <div class="exercise-header">
+                <h3 class="exercise-name">{{ ex.name }}</h3>
+                <button class="add-btn-small" (click)="addToRoutine(ex, $event)">
+                    <lucide-icon [img]="Plus" [size]="16"></lucide-icon>
+                </button>
+            </div>
+            
+            <div class="exercise-visual">
+                <img [src]="getActiveImage(ex)" [alt]="ex.name" loading="lazy">
+            </div>
+            <p class="exercise-desc">{{ ex.description }}</p>
+            <div class="exercise-meta">
+                <div class="meta-item">
+                    <lucide-icon [img]="Repeat" [size]="14"></lucide-icon>
+                    <span>{{ ex.sets || 3 }}x{{ ex.reps || 12 }}</span>
+                </div>
+                <div class="meta-item">
+                    <lucide-icon [img]="Clock" [size]="14"></lucide-icon>
+                    <span>{{ ex.restTime || 60 }}s rest</span>
+                </div>
+                <div class="difficulty-badge" [ngClass]="getDifficultyVariant(ex.difficulty)">
+                    {{ ex.difficulty }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #noExercises>
+        <div class="empty-state">
+            <lucide-icon [img]="Dumbbell" [size]="48"></lucide-icon>
+            <p>Select a category to view exercises</p>
+        </div>
+    </ng-template>
+
+    <!-- Exercise Details Modal -->
+    <div class="exercise-modal-backdrop" *ngIf="selectedExercise()" (click)="closeExerciseDetails()">
+        <div class="exercise-modal-content" (click)="$event.stopPropagation()">
+            <button class="close-modal-btn" (click)="closeExerciseDetails()">
+                <lucide-icon [img]="X" [size]="20"></lucide-icon>
+            </button>
+            
+            <div class="modal-header">
+                <h2>{{ selectedExercise()?.name }}</h2>
+                <span class="difficulty-badge" [ngClass]="getDifficultyVariant(selectedExercise()?.difficulty)">
+                    {{ selectedExercise()?.difficulty }}
+                </span>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-visual">
+                    <img [src]="modalImage() || ''" 
+                         [alt]="selectedExercise()?.name">
+                </div>
+
+                <div class="modal-info">
+                    <p class="modal-desc">{{ selectedExercise()?.description }}</p>
+                    
+                    <div class="benefit-box" *ngIf="getBenefits(selectedExercise())">
+                        <lucide-icon [img]="Info" [size]="16"></lucide-icon>
+                        <p>{{ getBenefits(selectedExercise()) }}</p>
+                    </div>
+
+                    <div class="modal-stats">
+                        <div class="stat-box">
+                            <span class="label">Sets</span>
+                            <span class="value">{{ selectedExercise()?.sets || 3 }}</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="label">Reps</span>
+                            <span class="value">{{ selectedExercise()?.reps || 12 }}</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="label">Rest</span>
+                            <span class="value">{{ selectedExercise()?.restTime || 60 }}s</span>
+                        </div>
+                         <div class="stat-box">
+                            <span class="label">Calories</span>
+                            <span class="valueHighlight">{{ getEstimatedCalories(selectedExercise()) }}</span>
+                        </div>
+                    </div>
+
+                    <div class="instructions-section" *ngIf="selectedExercise()?.instructions">
+                         <h3>Instructions</h3>
+                         <ol>
+                             <li *ngFor="let step of selectedExercise()!.instructions">{{ step }}</li>
+                         </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="add-to-routine-btn" (click)="selectedExercise() && addToRoutine(selectedExercise()!, $event); closeExerciseDetails()">
+                    <lucide-icon [img]="Plus" [size]="18"></lucide-icon>
+                    Add to Routine
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

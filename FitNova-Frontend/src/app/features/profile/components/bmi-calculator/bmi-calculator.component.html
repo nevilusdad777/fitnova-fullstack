@@ -1,0 +1,109 @@
+<app-card class="bmi-calculator-card">
+  <div class="calculator-header">
+    <h2 class="calculator-title">
+      <lucide-icon [img]="Calculator" [size]="28"></lucide-icon>
+      BMI Calculator
+    </h2>
+    <button class="unit-toggle" (click)="toggleUnit()">
+      {{ unitSystem() === 'Metric' ? 'Switch to Imperial' : 'Switch to Metric' }}
+    </button>
+  </div>
+
+  <div class="calculator-content">
+    <!-- Input Form -->
+    <div class="calculator-inputs">
+      <form [formGroup]="bmiForm" class="bmi-form">
+        <div class="form-group">
+          <label [for]="'height'">{{ getHeightLabel() }}</label>
+          <input 
+            type="number" 
+            id="height"
+            formControlName="height"
+            class="form-input"
+            [placeholder]="'Enter ' + getHeightLabel().toLowerCase()"
+            step="0.1">
+        </div>
+
+        <div class="form-group">
+          <label [for]="'weight'">{{ getWeightLabel() }}</label>
+          <input 
+            type="number" 
+            id="weight"
+            formControlName="weight"
+            class="form-input"
+            [placeholder]="'Enter ' + getWeightLabel().toLowerCase()"
+            step="0.1">
+        </div>
+      </form>
+    </div>
+
+    <!-- BMI Result -->
+    <div class="bmi-result" *ngIf="bmiResult()">
+      <div class="result-display">
+        <div class="bmi-circle" [style.border-color]="bmiResult()!.color">
+          <div class="bmi-value">{{ bmiResult()!.value }}</div>
+          <div class="bmi-label">BMI</div>
+        </div>
+
+        <div class="result-info">
+          <app-badge 
+            [text]="bmiResult()!.category" 
+            [variant]="getBMIVariant()">
+          </app-badge>
+          <p class="result-description">{{ bmiResult()!.description }}</p>
+          <div class="healthy-range">
+            <span class="range-label">Healthy Range:</span>
+            <span class="range-value">{{ bmiResult()!.healthyRange }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="bmi-progress-section">
+        <span class="progress-label">BMI Scale</span>
+        <div class="bmi-scale">
+          <div class="scale-bar" [style.background]="'linear-gradient(to right, #3b82f6, #10b981, #f59e0b, #ef4444)'">
+            <div 
+              class="scale-marker" 
+              [style.left.%]="bmiProgress()"
+              [style.background]="bmiResult()!.color">
+            </div>
+          </div>
+          <div class="scale-labels">
+            <span>15</span>
+            <span>20</span>
+            <span>25</span>
+            <span>30</span>
+            <span>35</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Categories Reference -->
+      <div class="categories-reference">
+        <div class="category-item">
+          <div class="category-color" style="background: #3b82f6;"></div>
+          <span class="category-label">Underweight</span>
+        </div>
+        <div class="category-item">
+          <div class="category-color" style="background: #10b981;"></div>
+          <span class="category-label">Normal</span>
+        </div>
+        <div class="category-item">
+          <div class="category-color" style="background: #f59e0b;"></div>
+          <span class="category-label">Overweight</span>
+        </div>
+        <div class="category-item">
+          <div class="category-color" style="background: #ef4444;"></div>
+          <span class="category-label">Obese</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!bmiResult()">
+      <div class="empty-icon">📊</div>
+      <p>Enter your height and weight to calculate your BMI</p>
+    </div>
+  </div>
+</app-card>

@@ -1,0 +1,108 @@
+<div class="routine-builder-container fade-in">
+    <div class="builder-header">
+        <button class="btn-back" (click)="cancel()">
+            <lucide-icon [img]="ArrowLeft" [size]="20"></lucide-icon>
+            Back to Routines
+        </button>
+        <h2>{{ routine ? 'Edit Routine' : 'Create New Routine' }}</h2>
+    </div>
+
+    <div class="builder-content">
+        <!-- Routine Details -->
+        <div class="section">
+            <h3>Routine Details</h3>
+            <div class="form-group">
+                <label>Routine Name*</label>
+                <input type="text" [(ngModel)]="routineName" placeholder="e.g., Upper Body Blast" class="input-field">
+            </div>
+            <div class="form-group">
+                <label>Description (Optional)</label>
+                <textarea [(ngModel)]="routineDescription" placeholder="Brief description of your routine" class="input-field" rows="3"></textarea>
+            </div>
+        </div>
+
+        <!-- Target Body Parts -->
+        <div class="section">
+            <h3>Target Body Parts</h3>
+            <div class="body-parts-selector">
+                <button 
+                    *ngFor="let part of bodyParts"
+                    class="body-part-chip"
+                    [class.selected]="selectedBodyParts().includes(part)"
+                    (click)="toggleBodyPart(part)">
+                    {{ part }}
+                </button>
+            </div>
+        </div>
+
+        <!-- Exercise Selection -->
+        <div class="section">
+            <h3>Add Exercises</h3>
+            <div class="exercise-browser">
+                <div class="exercise-filters">
+                    <button 
+                        *ngFor="let part of bodyParts"
+                        class="filter-btn"
+                        [class.active]="currentBodyPart() === part"
+                        (click)="filterExercises(part)">
+                        {{ part }}
+                    </button>
+                    <button 
+                        class="filter-btn"
+                        [class.active]="!currentBodyPart()"
+                        (click)="filterExercises('')">
+                        All
+                    </button>
+                </div>
+
+                <div class="exercise-grid">
+                    <div *ngFor="let exercise of filteredExercises()" class="exercise-item" (click)="addExercise(exercise)">
+                        <lucide-icon [img]="Dumbbell" [size]="16"></lucide-icon>
+                        <span>{{ exercise.name }}</span>
+                        <button class="btn-add">
+                            <lucide-icon [img]="Plus" [size]="16"></lucide-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Selected Exercises -->
+        <div class="section" *ngIf="selectedExercises().length > 0">
+            <h3>Selected Exercises ({{ selectedExercises().length }})</h3>
+            <div class="selected-exercises">
+                <div *ngFor="let ex of selectedExercises(); let i = index" class="selected-exercise">
+                    <div class="exercise-header">
+                        <span class="exercise-name">{{ ex.name }}</span>
+                        <button class="btn-remove" (click)="removeExercise(i)">
+                            <lucide-icon [img]="X" [size]="16"></lucide-icon>
+                        </button>
+                    </div>
+                    <div class="exercise-config">
+                        <div class="config-item">
+                            <label>Sets</label>
+                            <input type="number" [(ngModel)]="ex.sets" min="1" class="config-input">
+                        </div>
+                        <div class="config-item">
+                            <label>Reps</label>
+                            <input type="number" [(ngModel)]="ex.reps" min="1" class="config-input">
+                        </div>
+                        <div class="config-item">
+                            <label>Rest (sec)</label>
+                            <input type="number" [(ngModel)]="ex.restTime" min="0" step="15" class="config-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="actions">
+            <button class="btn-secondary" (click)="cancel()">Cancel</button>
+            <button class="btn-primary" (click)="saveRoutine()" [disabled]="isLoading()">
+                <lucide-icon [img]="Save" [size]="18"></lucide-icon>
+                {{ isLoading() ? 'Saving...' : 'Save Routine' }}
+            </button>
+        </div>
+    </div>
+</div>

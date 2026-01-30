@@ -1,0 +1,55 @@
+<app-card class="weight-tracker-card">
+    <div class="tracker-header">
+        <h3 class="tracker-title">
+            <lucide-icon [img]="Scale" [size]="24"></lucide-icon>
+            Weight Tracker
+        </h3>
+        <button class="add-weight-button" (click)="toggleAddForm()">
+            <lucide-icon [img]="Plus" [size]="18"></lucide-icon>
+            Add Weight
+        </button>
+    </div>
+
+    <!-- Current Weight Display -->
+    <div class="current-weight-display">
+        <div class="weight-value">{{ getCurrentWeight() }} kg</div>
+        <div class="weight-change" *ngIf="getWeightChange() !== 0">
+            <lucide-icon [img]="getWeightChange() > 0 ? TrendingUp : TrendingDown" [size]="16">
+            </lucide-icon>
+            <span [class.positive]="getWeightChange() > 0" [class.negative]="getWeightChange() < 0">
+                {{ Math.abs(getWeightChange()).toFixed(1) }} kg
+            </span>
+        </div>
+    </div>
+
+    <!-- Add Weight Form -->
+    <div class="add-weight-form" *ngIf="showAddForm()">
+        <input type="number" class="weight-input" placeholder="Enter weight (kg)" [(ngModel)]="newWeight" min="1"
+            step="0.1">
+        <div class="form-actions">
+            <button class="cancel-button" (click)="toggleAddForm()">Cancel</button>
+            <button class="save-button" (click)="addWeight()">Save</button>
+        </div>
+    </div>
+
+    <!-- Weight History -->
+    <div class="weight-history">
+        <h4 class="history-title">Recent Entries</h4>
+        <div class="history-list">
+            <div *ngFor="let entry of weightHistory().slice().reverse().slice(0, 5)" class="history-item">
+                <div class="history-info">
+                    <span class="history-weight">{{ entry.weight }} kg</span>
+                    <span class="history-date">{{ formatDate(entry.date) }}</span>
+                </div>
+                <button class="delete-button" (click)="deleteWeight(entry.id)" title="Delete">
+                    ×
+                </button>
+            </div>
+        </div>
+
+        <div class="empty-history" *ngIf="weightHistory().length === 0">
+            <p>No weight entries yet</p>
+            <span>Start tracking by adding your first weight</span>
+        </div>
+    </div>
+</app-card

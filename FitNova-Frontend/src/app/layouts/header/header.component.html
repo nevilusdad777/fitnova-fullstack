@@ -1,0 +1,48 @@
+
+<header class="header glass-panel">
+    <div class="container header-content">
+        <!-- Logo -->
+        <a routerLink="/" class="logo" (click)="closeMobileMenu()">
+            <img src="images/fitnova-logo-main.png" alt="FitNova" class="logo-img">
+            <span class="logo-text">FitNova</span>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="desktop-nav">
+            <a *ngFor="let item of navItems" [routerLink]="item.path" routerLinkActive="active" class="nav-link">
+                {{ item.label }}
+            </a>
+        </nav>
+
+        <!-- Right Side Actions -->
+        <div class="header-actions">
+            <!-- Theme Toggle -->
+            <button class="icon-btn theme-toggle" (click)="toggleTheme()"
+                [title]="isDarkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+                <lucide-icon [img]="isDarkMode() ? Sun : Moon" [size]="20" class="theme-icon"></lucide-icon>
+            </button>
+
+            <!-- User Menu -->
+            <div class="user-profile" routerLink="/profile" tabindex="0">
+                <img *ngIf="profilePicture()" [src]="profilePicture()" alt="Profile" class="user-avatar-img">
+                <div *ngIf="!profilePicture()" class="user-avatar">{{ userInitials() }}</div>
+                <span class="user-name desktop-only">{{ userName() }}</span>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="icon-btn mobile-menu-toggle" (click)="toggleMobileMenu()">
+                <lucide-icon [img]="isMobileMenuOpen() ? X : Menu" [size]="24"></lucide-icon>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div class="mobile-nav glass-panel" [class.open]="isMobileMenuOpen()">
+        <nav class="mobile-nav-links">
+            <a *ngFor="let item of navItems" [routerLink]="item.path" routerLinkActive="active" class="mobile-nav-link"
+                (click)="closeMobileMenu()">
+                {{ item.label }}
+            </a>
+        </nav>
+    </div>
+</header>

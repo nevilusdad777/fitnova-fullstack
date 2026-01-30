@@ -1,0 +1,96 @@
+<div class="workout-history-container fade-in">
+    <div class="header">
+        <h2>Workout History</h2>
+        <div class="period-selector">
+            <button 
+                *ngFor="let option of dayOptions"
+                class="period-btn"
+                [class.active]="selectedDays() === option.value"
+                (click)="changePeriod(option.value)">
+                {{ option.label }}
+            </button>
+            <button class="refresh-btn" (click)="refresh()" title="Refresh history">
+                <lucide-icon [img]="RefreshCw" [size]="18"></lucide-icon>
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Summary -->
+    <div class="stats-grid" *ngIf="stats()">
+        <div class="stat-card">
+            <lucide-icon [img]="Dumbbell" [size]="24"></lucide-icon>
+            <div class="stat-content">
+                <div class="stat-value">{{ stats().totalWorkouts }}</div>
+                <div class="stat-label">Total Workouts</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <lucide-icon [img]="Flame" [size]="24"></lucide-icon>
+            <div class="stat-content">
+                <div class="stat-value">{{ stats().totalCalories }}</div>
+                <div class="stat-label">Calories Burned</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <lucide-icon [img]="Calendar" [size]="24"></lucide-icon>
+            <div class="stat-content">
+                <div class="stat-value">{{ formatDuration(stats().totalDuration) }}</div>
+                <div class="stat-label">Total Duration</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <lucide-icon [img]="TrendingUp" [size]="24"></lucide-icon>
+            <div class="stat-content">
+                <div class="stat-value">{{ stats().avgCaloriesPerWorkout }}</div>
+                <div class="stat-label">Avg Calories/Workout</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History List -->
+    <div class="history-list" *ngIf="!isLoading() && workoutHistory().length > 0">
+        <div *ngFor="let workout of workoutHistory()" class="workout-card">
+            <div class="workout-header">
+                <div>
+                    <h3>{{ workout.routineName }}</h3>
+                    <div class="workout-date">{{ formatDate(workout.date) }}</div>
+                </div>
+                <div class="workout-summary">
+                    <div class="summary-item">
+                        <lucide-icon [img]="Calendar" [size]="16"></lucide-icon>
+                        {{ workout.duration }} min
+                    </div>
+                    <div class="summary-item">
+                        <lucide-icon [img]="Flame" [size]="16"></lucide-icon>
+                        {{ workout.totalCaloriesBurned }} cal
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercises-summary">
+                <div class="exercise-count">
+                    <lucide-icon [img]="Dumbbell" [size]="14"></lucide-icon>
+                    {{ workout.exercises.length }} exercises completed
+                </div>
+                <div class="body-parts">
+                    <span *ngFor="let part of workout.bodyPartsWorked" class="body-part-tag">
+                        {{ part }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading() && workoutHistory().length === 0">
+        <lucide-icon [img]="Dumbbell" [size]="64" [strokeWidth]="1.5"></lucide-icon>
+        <h3>No workout history yet</h3>
+        <p>Complete your first workout to see it here</p>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="isLoading()">
+        <div class="spinner"></div>
+        <p>Loading history...</p>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+<div class="meal-log-container">
+  <div class="meals-grid">
+    <div class="meal-section" *ngFor="let mealType of mealTypes">
+      <div class="meal-header">
+        <div class="header-left">
+          <span class="meal-icon">{{ getMealIcon(mealType) }}</span>
+          <h3>{{ mealType }}</h3>
+        </div>
+        <span class="meal-total" *ngIf="meals()[mealType].length > 0">
+          {{ getMealTotal(mealType) }} kcal
+        </span>
+      </div>
+
+      <div class="meal-items">
+        <!-- Each meal card -->
+        <div class="meal-card" *ngFor="let meal of meals()[mealType]; let i = index"
+          [class.completed]="meal.completed"
+          [class.expanded]="meal.expanded">
+          
+          <!-- Meal Header -->
+          <div class="meal-card-header">
+            <div class="meal-info" (click)="toggleMealExpansion(mealType, i)">
+              <div class="meal-name">
+                <lucide-icon [img]="meal.expanded ? ChevronUp : ChevronDown" [size]="16" class="expand-icon"></lucide-icon>
+                <span>{{ meal.foods.length }} item{{ meal.foods.length !== 1 ? 's' : '' }}</span>
+              </div>
+              <div class="meal-calories">{{ meal.totalCalories }} kcal</div>
+            </div>
+            
+            <div class="meal-actions">
+              <button class="btn-icon btn-complete" 
+                (click)="toggleMealCompletion(meal.id)"
+                [class.active]="meal.completed"
+                title="Mark meal as {{ meal.completed ? 'incomplete' : 'complete' }}">
+                <lucide-icon [img]="Check" [size]="16"></lucide-icon>
+              </button>
+              <button class="btn-icon btn-delete" 
+                (click)="deleteMeal(meal.id)"
+                title="Delete entire meal">
+                <lucide-icon [img]="Trash2" [size]="16"></lucide-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Meal Macros Summary -->
+          <div class="meal-macros">
+            <span class="macro-pill">P: {{ meal.totalProtein | number:'1.0-2' }}g</span>
+            <span class="macro-pill">C: {{ meal.totalCarbs | number:'1.0-2' }}g</span>
+            <span class="macro-pill">F: {{ meal.totalFat | number:'1.0-2' }}g</span>
+          </div>
+
+          <!-- Expanded Food Items List -->
+          <div class="food-items" *ngIf="meal.expanded">
+            <div class="food-item" *ngFor="let food of meal.foods; let foodIndex = index"
+              [class.completed]="isFoodCompleted(meal, foodIndex)">
+              <div class="food-header">
+                <div class="food-info">
+                  <div class="food-name">{{ food.name }}</div>
+                  <div class="food-quantity">{{ getActualAmount(food) }} {{ food.unit }}</div>
+                </div>
+                <div class="food-item-actions">
+                  <button class="btn-icon-small btn-complete-food" 
+                    (click)="toggleFoodCompletion(mealType, i, foodIndex)"
+                    [class.active]="isFoodCompleted(meal, foodIndex)"
+                    title="Track as eaten (visual only)">
+                    <lucide-icon [img]="Check" [size]="14"></lucide-icon>
+                  </button>
+                  <button class="btn-icon-small btn-delete-item" 
+                    (click)="deleteFoodItem(meal.id, foodIndex, meal.foods.length)"
+                    title="Remove this food item">
+                    <lucide-icon [img]="Trash2" [size]="14"></lucide-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="food-details">
+                <span class="detail-pill">{{ food.calories | number:'1.0-0' }} cal</span>
+                <span class="detail-pill">P: {{ food.protein | number:'1.0-2' }}g</span>
+                <span class="detail-pill">C: {{ food.carbs | number:'1.0-2' }}g</span>
+                <span class="detail-pill">F: {{ food.fat | number:'1.0-2' }}g</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-meal" *ngIf="meals()[mealType].length === 0">
+          <p>No {{ mealType.toLowerCase() }} logged yet</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

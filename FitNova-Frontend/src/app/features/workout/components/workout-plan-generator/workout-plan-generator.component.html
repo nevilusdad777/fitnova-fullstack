@@ -1,0 +1,86 @@
+<div class="plan-generator-container fade-in">
+    <!-- Split Selection -->
+    <div class="generator-header">
+        <h3>Workout Plan Generator</h3>
+        <p>Choose your training split and we'll create a personalized workout plan</p>
+    </div>
+
+    <!-- Split Options Grid -->
+    <div class="split-options-grid">
+        <div *ngFor="let split of splitOptions" 
+             class="split-card"
+             [class.selected]="selectedSplit() === split.id"
+             (click)="selectSplit(split.id)">
+            <div class="split-icon">{{ split.icon }}</div>
+            <h4 class="split-name">{{ split.name }}</h4>
+            <p class="split-days">{{ split.daysPerWeek }} days/week</p>
+            <p class="split-description">{{ split.description }}</p>
+        </div>
+    </div>
+
+    <!-- Fitness Level Selector -->
+    <div class="fitness-level-section">
+        <label class="section-label">Fitness Level</label>
+        <div class="level-buttons">
+            <button class="level-btn" 
+                    [class.active]="fitnessLevel() === 'beginner'"
+                    (click)="fitnessLevel.set('beginner')">
+                Beginner
+            </button>
+            <button class="level-btn" 
+                    [class.active]="fitnessLevel() === 'intermediate'"
+                    (click)="fitnessLevel.set('intermediate')">
+                Intermediate
+            </button>
+            <button class="level-btn" 
+                    [class.active]="fitnessLevel() === 'advanced'"
+                    (click)="fitnessLevel.set('advanced')">
+                Advanced
+            </button>
+        </div>
+    </div>
+
+    <!-- Generate Button -->
+    <div class="action-section" *ngIf="!generatedPlan()">
+        <button class="btn-generate" (click)="generatePlan()" [disabled]="isGenerating()">
+            <lucide-icon [img]="Sparkles" [size]="20"></lucide-icon>
+            <span>{{ isGenerating() ? 'Generating...' : 'Generate My Plan' }}</span>
+        </button>
+    </div>
+
+    <!-- Generated Plan Display -->
+    <div class="generated-plan" *ngIf="generatedPlan() as plan">
+        <div class="plan-header">
+            <h3>{{ plan.name }}</h3>
+            <div class="action-buttons">
+                <button class="btn-new-plan" (click)="resetGenerator()">
+                    <lucide-icon [img]="Sparkles" [size]="18"></lucide-icon>
+                    Start Over
+                </button>
+                <button class="btn-save" (click)="savePlan()" [disabled]="isSaving()">
+                    <lucide-icon [img]="Save" [size]="18"></lucide-icon>
+                    {{ isSaving() ? 'Saving...' : 'Save Plan' }}
+                </button>
+            </div>
+        </div>
+
+        <div class="plan-schedule">
+            <div *ngFor="let day of plan.schedule" class="day-card">
+                <div class="day-header">
+                    <div class="day-name">{{ getDayName(day.dayOfWeek) }}</div>
+                    <div class="day-type">{{ day.name }}</div>
+                </div>
+                
+                <div class="exercises-list">
+                    <div *ngFor="let exercise of day.exercises; let i = index" class="exercise-item">
+                        <div class="exercise-number">{{ i + 1 }}</div>
+                        <div class="exercise-details">
+                            <div class="exercise-name">{{ exercise.name }}</div>
+                            <div class="exercise-sets">{{ exercise.sets }} sets × {{ exercise.reps }} reps</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,8 @@
+<div class="progress-bar-container">
+    <div class="progress-bar-wrapper" [style.height]="normalizedHeight">
+        <div class="progress-bar-fill" [ngClass]="color ? '' : 'progress-' + variant" [style.backgroundColor]="color"
+            [style.width.%]="value">
+        </div>
+    </div>
+    <span class="progress-label" *ngIf="showLabel">{{ value | number:'1.0-0' }}%</span>
+</div>

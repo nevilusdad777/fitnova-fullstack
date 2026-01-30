@@ -1,0 +1,126 @@
+.water-tracker-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.tracker-header {
+  margin-bottom: var(--space-lg);
+}
+
+.tracker-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.water-display {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+
+.water-amount {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
+}
+
+.current {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-water);
+}
+
+.separator {
+  font-size: var(--font-size-2xl);
+  color: var(--color-text-muted);
+}
+
+.goal {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.unit {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-muted);
+}
+
+.glasses-count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.water-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+  margin: var(--space-lg) 0;
+}
+
+.water-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  background: var(--color-water);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.water-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  opacity: 0.9;
+}
+
+.water-visualization {
+  margin-top: auto;
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+.glass-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  justify-content: center;
+}
+
+.glass-icon {
+  font-size: 1.5rem;
+  opacity: 0.3;
+  transition: all var(--transition-fast);
+}
+
+.glass-icon.filled {
+  opacity: 1;
+  animation: dropFill 0.3s ease-out;
+}
+
+@keyframes dropFill {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

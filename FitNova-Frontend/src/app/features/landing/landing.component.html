@@ -1,0 +1,263 @@
+<!-- FitNova Landing Page - Premium Redesign -->
+<div class="landing-container">
+    <!-- Navigation -->
+    <nav class="navbar" [class.scrolled]="isScrolled">
+        <div class="nav-content">
+            <div class="nav-brand" routerLink="/landing">
+                <img src="/images/fitnova-logo-main.png" alt="FitNova" class="nav-logo">
+                <span class="brand-name">FitNova</span>
+            </div>
+            <div class="nav-menu">
+                <a (click)="scrollToSection('features')" class="nav-link">Features</a>
+                <a (click)="scrollToSection('how-it-works')" class="nav-link">How It Works</a>
+                <a routerLink="/about" class="nav-link">About</a>
+                <a routerLink="/auth/login" class="nav-link">Login</a>
+                <a routerLink="/auth/register" class="btn-signup">Sign Up Free</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section - Modern Gradient Design -->
+    <section class="hero">
+        <div class="hero-background-gradient"></div>
+        <div class="hero-grid">
+            <div class="hero-content">
+                <div class="hero-badge animate-slide-up">
+                    <lucide-icon [img]="Zap" [size]="16"></lucide-icon>
+                    <span>Your Fitness Revolution Starts Here</span>
+                </div>
+                <h1 class="hero-title animate-slide-up">
+                    Unleash Your
+                    <span class="gradient-text-hero">Strength</span>
+                </h1>
+                <p class="hero-description animate-slide-up">
+                    Transform your body and mind with FitNova - the ultimate fitness companion 
+                    that tracks workouts, optimizes nutrition, and drives real results with AI-powered insights.
+                </p>
+                <div class="hero-actions animate-slide-up">
+                    <a routerLink="/auth/register" class="btn-primary-hero">
+                        <lucide-icon [img]="Rocket" [size]="20"></lucide-icon>
+                        Start Your Journey
+                    </a>
+                </div>
+                <div class="trust-badges animate-fade-in">
+                    <div class="badge-item">
+                        <lucide-icon [img]="CheckCircle" [size]="18"></lucide-icon>
+                        100% Free Forever
+                    </div>
+                    <div class="badge-item">
+                        <lucide-icon [img]="Shield" [size]="18"></lucide-icon>
+                        Privacy First
+                    </div>
+                    <div class="badge-item">
+                        <lucide-icon [img]="Zap" [size]="18"></lucide-icon>
+                        No Credit Card
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual animate-float">
+                <div class="hero-image-wrapper">
+                    <div class="gradient-orb orb-1"></div>
+                    <div class="gradient-orb orb-2"></div>
+                    <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80" 
+                         alt="Fitness Transformation" class="hero-image">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats Section -->
+        <div class="hero-stats">
+            <div class="stat-item">
+                <div class="stat-number">100K+</div>
+                <div class="stat-label">Workouts Logged</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">15K+</div>
+                <div class="stat-label">Active Users</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">25M+</div>
+                <div class="stat-label">Meals Tracked</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">POWERFUL FEATURES</div>
+                <h2 class="section-title">Everything You Need to <span class="gradient-text-accent">Succeed</span></h2>
+                <p class="section-subtitle">Comprehensive tools designed to transform your fitness journey</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card modern-card" *ngFor="let feature of features">
+                    <div class="feature-image-wrapper">
+                        <img [src]="feature.image" [alt]="feature.title" class="feature-image">
+                        <div class="feature-gradient-overlay"></div>
+                    </div>
+                    <div class="feature-content">
+                        <div class="feature-icon-badge" [style.background]="feature.iconBg">
+                            <lucide-icon [img]="feature.icon" [size]="28" color="white"></lucide-icon>
+                        </div>
+                        <h3 class="feature-title">{{ feature.title }}</h3>
+                        <p class="feature-description">{{ feature.description }}</p>
+                        <ul class="feature-points">
+                            <li *ngFor="let point of feature.points">
+                                <lucide-icon [img]="Check" [size]="16"></lucide-icon>
+                                {{ point }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">SIMPLE PROCESS</div>
+                <h2 class="section-title">Get Started in <span class="gradient-text-accent">3 Easy Steps</span></h2>
+            </div>
+            <div class="steps-container">
+                <div class="step-card" *ngFor="let step of steps; let i = index">
+                    <div class="step-number-badge">{{ i + 1 }}</div>
+                    <div class="step-icon-wrapper">
+                        <lucide-icon [img]="step.icon" [size]="40"></lucide-icon>
+                    </div>
+                    <h3 class="step-title">{{ step.title }}</h3>
+                    <p class="step-description">{{ step.description }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">SUCCESS STORIES</div>
+                <h2 class="section-title">Trusted by <span class="gradient-text-accent">Thousands</span></h2>
+                <p class="section-subtitle">Real results from real people</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card" *ngFor="let testimonial of testimonials">
+                    <div class="quote-icon">
+                        <lucide-icon [img]="Quote" [size]="32"></lucide-icon>
+                    </div>
+                    <p class="testimonial-text">{{ testimonial.text }}</p>
+                    <div class="testimonial-footer">
+                        <div class="testimonial-author">
+                            <div class="author-avatar">{{ testimonial.initials }}</div>
+                            <div class="author-info">
+                                <div class="author-name">{{ testimonial.name }}</div>
+                                <div class="author-role">{{ testimonial.role }}</div>
+                            </div>
+                        </div>
+                        <div class="rating">
+                            <lucide-icon *ngFor="let star of [1,2,3,4,5]" [img]="Star" [size]="16"></lucide-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="cta-section">
+        <div class="cta-gradient-bg"></div>
+        <div class="cta-container">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Transform Your <span class="gradient-text-light">Fitness Journey?</span></h2>
+                <p class="cta-description">
+                    Join thousands of users who have achieved their fitness goals with FitNova. 
+                    Start tracking your progress today - completely free, no credit card required.
+                </p>
+                <a routerLink="/auth/register" class="btn-cta">
+                    <lucide-icon [img]="Rocket" [size]="24"></lucide-icon>
+                    Get Started Now - It's Free
+                </a>
+                <p class="cta-note">
+                    <lucide-icon [img]="CheckCircle" [size]="16"></lucide-icon>
+                    Free forever • No credit card • Start in 30 seconds
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Column 1: Brand -->
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <img src="/images/fitnova-logo-main.png" alt="FitNova">
+                        <span class="footer-brand-name">FitNova</span>
+                    </div>
+                    <p class="footer-tagline">Empowering your fitness journey, one workout at a time</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <lucide-icon [img]="Twitter" [size]="20"></lucide-icon>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <lucide-icon [img]="Facebook" [size]="20"></lucide-icon>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <lucide-icon [img]="Instagram" [size]="20"></lucide-icon>
+                        </a>
+                        <a href="#" class="social-link" aria-label="YouTube">
+                            <lucide-icon [img]="Youtube" [size]="20"></lucide-icon>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Column 2: Product -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Product</h4>
+                    <a (click)="scrollToSection('features')" class="footer-link">Features</a>
+                    <a (click)="scrollToSection('how-it-works')" class="footer-link">How It Works</a>
+                    <a routerLink="/about" class="footer-link">About Us</a>
+                    <a href="#" class="footer-link">Pricing</a>
+                </div>
+
+                <!-- Column 3: Account -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Account</h4>
+                    <a routerLink="/auth/login" class="footer-link">Login</a>
+                    <a routerLink="/auth/register" class="footer-link">Sign Up</a>
+                    <a routerLink="/profile" class="footer-link">My Profile</a>
+                    <a href="#" class="footer-link">Support</a>
+                </div>
+
+                <!-- Column 4: Newsletter -->
+                <div class="footer-column">
+                    <h4 class="footer-heading">Stay Updated</h4>
+                    <p class="footer-newsletter-text">Get fitness tips and updates</p>
+                    <div class="newsletter-form">
+                        <input type="email" placeholder="Enter your email" class="newsletter-input">
+                        <button class="newsletter-button">
+                            <lucide-icon [img]="Send" [size]="18"></lucide-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <p class="footer-copyright">&copy; 2026 FitNova. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#" class="legal-link">Privacy Policy</a>
+                    <a href="#" class="legal-link">Terms of Service</a>
+                    <a href="#" class="legal-link">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>

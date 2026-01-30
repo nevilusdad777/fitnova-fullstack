@@ -1,0 +1,41 @@
+<div class="profile-page fade-in">
+    <div class="layout-container">
+        <!-- Sidebar Navigation -->
+        <aside class="profile-sidebar glass-panel">
+            <div class="sidebar-header">
+                <h2>Profile</h2>
+                <p>Manage your journey.</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item" [class.active]="currentView() === 'details'" (click)="showDetails()">
+                    <lucide-icon [img]="User" [size]="20"></lucide-icon>
+                    <span>Personal Details</span>
+                </button>
+                <button class="nav-item" [class.active]="currentView() === 'goals'" (click)="showGoals()">
+                    <lucide-icon [img]="Target" [size]="20"></lucide-icon>
+                    <span>My Goals</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="nav-item logout" (click)="logout()">
+                    <lucide-icon [img]="LogOut" [size]="20"></lucide-icon>
+                    <span>Log Out</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="profile-main">
+            <div class="content-header mobile-only">
+                <h1>{{ currentView() === 'details' ? 'Personal Details' : 'My Goals' }}</h1>
+            </div>
+
+            <div class="view-container fade-in">
+                <app-personal-details *ngIf="currentView() === 'details'"></app-personal-details>
+                <app-goals *ngIf="currentView() === 'goals'"></app-goals>
+            </div>
+        </main>
+    </div>
+</div>

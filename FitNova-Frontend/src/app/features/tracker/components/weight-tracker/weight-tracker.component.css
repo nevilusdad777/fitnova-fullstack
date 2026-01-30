@@ -1,0 +1,225 @@
+.weight-tracker-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.tracker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+}
+
+.tracker-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.add-weight-button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.add-weight-button:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.current-weight-display {
+  text-align: center;
+  padding: var(--space-xl) var(--space-md);
+  background: var(--color-background);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.weight-value {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.weight-change {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+}
+
+.weight-change .positive {
+  color: var(--color-warning);
+}
+
+.weight-change .negative {
+  color: var(--color-success);
+}
+
+.add-weight-form {
+  padding: var(--space-md);
+  background: var(--color-background);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-lg);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.weight-input {
+  width: 100%;
+  padding: var(--space-md);
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-md);
+  transition: all var(--transition-fast);
+}
+
+.weight-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.cancel-button,
+.save-button {
+  flex: 1;
+  padding: var(--space-sm);
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.cancel-button {
+  background: var(--color-surface-hover);
+  color: var(--color-text-primary);
+}
+
+.cancel-button:hover {
+  background: var(--color-text-muted);
+  color: white;
+}
+
+.save-button {
+  background: var(--color-success);
+  color: white;
+}
+
+.save-button:hover {
+  background: var(--color-success-light);
+  transform: translateY(-1px);
+}
+
+.weight-history {
+  margin-top: auto;
+}
+
+.history-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-md);
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.history-item:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.history-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.history-weight {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.history-date {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.delete-button {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-hover);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xl);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.delete-button:hover {
+  background: var(--color-danger);
+  color: white;
+}
+
+.empty-history {
+  text-align: center;
+  padding: var(--space-xl);
+  color: var(--color-text-muted);
+}
+
+.empty-history p {
+  margin-bottom: var(--space-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.empty-history span {
+  font-size: var(--font-size-sm);
+}
+
+/* Add Math property for template */
+.Math {
+  display: none;
+}

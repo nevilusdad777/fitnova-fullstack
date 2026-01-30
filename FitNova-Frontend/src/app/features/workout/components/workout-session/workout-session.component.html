@@ -1,0 +1,135 @@
+<div class="workout-session-container">
+    <!-- Session Header -->
+    <div class="session-header">
+        <div class="header-info">
+            <h2 class="session-title">Workout in Progress</h2>
+            <div class="session-stats">
+                <div class="stat-item">
+                    <lucide-icon [img]="Timer" [size]="18"></lucide-icon>
+                    <span>{{ sessionDuration() }}</span>
+                </div>
+                <div class="stat-item calories">
+                    <span class="stat-value">{{ totalCaloriesBurned() }}</span>
+                    <span class="stat-label">kcal burned</span>
+                </div>
+            </div>
+        </div>
+        <button class="cancel-button" (click)="cancelWorkout()">
+            <lucide-icon [img]="X" [size]="20"></lucide-icon>
+            Cancel
+        </button>
+    </div>
+
+    <!-- Overall Progress -->
+    <app-card class="progress-card">
+        <div class="progress-info">
+            <span class="progress-label">Overall Progress</span>
+            <span class="progress-value">{{ overallProgress() | number:'1.0-0' }}%</span>
+        </div>
+        <app-progress-bar [value]="overallProgress()" [color]="'var(--color-success)'" [height]="'12px'">
+        </app-progress-bar>
+    </app-card>
+
+    <!-- Current Exercise -->
+    @if (currentExercise(); as current) {
+    <app-card class="current-exercise-card">
+        <div class="exercise-badge">
+            Exercise {{ currentExerciseIndex() + 1 }} of {{ exercises().length }}
+        </div>
+
+        <h3 class="exercise-title">{{ current.exercise.name }}</h3>
+        <p class="exercise-description">{{ current.exercise.description }}</p>
+
+        <div class="set-info">
+            <div class="set-counter">
+                <span class="set-label">Current Set</span>
+                <span class="set-value">
+                    {{ current.currentSet + 1 }} / {{ current.exercise.sets }}
+                </span>
+            </div>
+            <div class="reps-info">
+                <span class="reps-count">{{ current.exercise.reps }}</span>
+                <span class="reps-label">reps</span>
+            </div>
+        </div>
+
+        <!-- Rest Timer -->
+        @if (isResting()) {
+        <div class="rest-timer">
+            <div class="rest-content">
+                <div class="rest-icon">⏱️</div>
+                <h4 class="rest-title">Rest Time</h4>
+                <div class="rest-countdown">{{ restTimeRemaining() }}s</div>
+                <button class="skip-rest-button" (click)="skipRest()">
+                    Skip Rest
+                </button>
+            </div>
+        </div>
+        }
+
+        <!-- Action Buttons -->
+        @if (!isResting()) {
+        <div class="action-buttons">
+            <button class="action-button primary" (click)="completeSet()">
+                <lucide-icon [img]="Check" [size]="24"></lucide-icon>
+                Complete Set
+            </button>
+            <button class="action-button secondary" (click)="skipExercise()">
+                <lucide-icon [img]="SkipForward" [size]="20"></lucide-icon>
+                Skip Exercise
+            </button>
+        </div>
+        }
+    </app-card>
+    } @else {
+    <!-- Completion Screen -->
+    <app-card class="completion-card">
+        <div class="completion-content">
+            <div class="completion-icon">🎉</div>
+            <h2 class="completion-title">Workout Complete!</h2>
+            <p class="completion-message">Great job! You've completed your workout.</p>
+
+            <div class="completion-stats">
+                <div class="completion-stat">
+                    <span class="stat-label">Duration</span>
+                    <span class="stat-value">{{ sessionDuration() }}</span>
+                </div>
+                <div class="completion-stat">
+                    <span class="stat-label">Calories Burned</span>
+                    <span class="stat-value">{{ totalCaloriesBurned() }} kcal</span>
+                </div>
+                <div class="completion-stat">
+                    <span class="stat-label">Exercises</span>
+                    <span class="stat-value">{{ exercises().length }}</span>
+                </div>
+            </div>
+
+            <button class="finish-button" (click)="finishWorkout()">
+                Finish Workout
+            </button>
+        </div>
+    </app-card>
+    }
+
+    <!-- Exercise List -->
+    <app-card class="exercises-list-card">
+        <h4 class="list-title">Exercise List</h4>
+        <div class="exercises-list">
+            <div *ngFor="let item of exercises(); let i = index" class="exercise-list-item"
+                [class.active]="i === currentExerciseIndex()" [class.completed]="item.completed">
+
+                <div class="item-info">
+                    <div class="item-icon" *ngIf="item.completed">
+                        <lucide-icon [img]="Check" [size]="16"></lucide-icon>
+                    </div>
+                    <div class="item-number" *ngIf="!item.completed">{{ i + 1 }}</div>
+                    <span class="item-name">{{ item.exercise.name }}</span>
+                </div>
+
+                <div class="item-progress">
+                    <span class="item-sets">{{ item.currentSet }} / {{ item.exercise.sets }} sets</span>
+                </div>
+            </div>
+        </div>
+    </app-card>
+</div>

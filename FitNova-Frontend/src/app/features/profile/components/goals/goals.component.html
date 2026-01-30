@@ -1,0 +1,105 @@
+<div class="goals-container fade-in">
+    <div class="header">
+        <div class="title-section">
+            <h2>My Goals</h2>
+            <p>Set targets to keep yourself motivated.</p>
+        </div>
+        <button class="btn-primary" (click)="saveGoals()" [disabled]="goalsForm.invalid || saved()">
+            <lucide-icon [img]="saved() ? Trophy : Save" [size]="18"></lucide-icon>
+            <span>{{ saved() ? 'Goals Saved!' : 'Save Goals' }}</span>
+        </button>
+    </div>
+
+    <form [formGroup]="goalsForm" class="goals-grid">
+        <!-- Goal Pace / Intensity -->
+        <div class="goal-card secondary-objective">
+            <div class="card-icon">
+                <lucide-icon [img]="Activity" [size]="24"></lucide-icon>
+            </div>
+            <h3>Goal Pace</h3>
+            <div class="radio-group horizontal">
+                <label *ngFor="let p of paces" [class.selected]="goalsForm.get('pace')?.value === p.id">
+                    <input type="radio" formControlName="pace" [value]="p.id">
+                    <span>{{ p.id | titlecase }}</span>
+                </label>
+            </div>
+            <p class="description">Select how fast you want to progress</p>
+        </div>
+
+        <div class="goal-card main-goal">
+            <div class="card-icon">
+                <lucide-icon [img]="Target" [size]="24"></lucide-icon>
+            </div>
+            <h3>Primary Objective</h3>
+            <div class="radio-group">
+                <label [class.selected]="goalsForm.get('mainGoal')?.value === 'lose'">
+                    <input type="radio" formControlName="mainGoal" value="lose">
+                    <span>Lose Weight</span>
+                </label>
+                <label [class.selected]="goalsForm.get('mainGoal')?.value === 'maintain'">
+                    <input type="radio" formControlName="mainGoal" value="maintain">
+                    <span>Maintain</span>
+                </label>
+                <label [class.selected]="goalsForm.get('mainGoal')?.value === 'gain'">
+                    <input type="radio" formControlName="mainGoal" value="gain">
+                    <span>Build Muscle</span>
+                </label>
+            </div>
+            <div class="suggestion">
+                <span class="label">Recommended Adjustment:</span>
+                <span class="value" [style.color]="goalsForm.get('mainGoal')?.value === 'lose' ? 'var(--color-danger)' : 'var(--color-success)'">
+                    {{ caloricAdjustment() }}
+                </span>
+            </div>
+        </div>
+
+        <!-- Target Weight -->
+        <div class="goal-card">
+            <div class="card-icon">
+                <lucide-icon [img]="TrendingUp" [size]="24"></lucide-icon>
+            </div>
+            <label for="targetWeight"><h3>Target Weight</h3></label>
+            <div class="input-wrapper">
+                <input type="number" id="targetWeight" formControlName="targetWeight">
+                <span class="unit" aria-hidden="true">kg</span>
+            </div>
+            <p class="description">Your ideal body weight</p>
+        </div>
+
+        <!-- Weekly Activity -->
+        <div class="goal-card">
+            <div class="card-icon">
+                <lucide-icon [img]="Trophy" [size]="24"></lucide-icon>
+            </div>
+            <label for="weeklyActivity"><h3>Weekly Workouts</h3></label>
+            <div class="input-wrapper">
+                <input type="number" id="weeklyActivity" formControlName="weeklyActivity" min="0" max="7">
+                <span class="unit" aria-hidden="true">days</span>
+            </div>
+            <p class="description">Days you plan to train</p>
+        </div>
+        <!-- BMI Status -->
+        <div class="goal-card">
+            <div class="card-icon" [style.color]="bmi().color">
+                <lucide-icon [img]="Activity" [size]="24"></lucide-icon>
+            </div>
+            <h3>BMI Status</h3>
+            <div class="metric-value" [style.color]="bmi().color">
+                {{ bmi().value }}
+            </div>
+            <p class="description">{{ bmi().category }}</p>
+        </div>
+
+        <!-- Estimated Completion -->
+        <div class="goal-card">
+            <div class="card-icon">
+                <lucide-icon [img]="Calendar" [size]="24"></lucide-icon>
+            </div>
+            <h3>Estimated Date</h3>
+            <div class="metric-value">
+                {{ estimatedDate() }}
+            </div>
+            <p class="description">To reach target weight</p>
+        </div>
+    </form>
+</div>

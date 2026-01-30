@@ -1,0 +1,105 @@
+<div class="auth-page fade-in">
+    <div class="auth-card glass-panel">
+        <div class="auth-header">
+            <img src="images/fitnova-logo-main.png" alt="FitNova" class="auth-logo">
+            <h2 class="text-gradient">Join FitNova</h2>
+            <p>Start your transformation today</p>
+        </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+            <!-- Server Error Message -->
+            <div *ngIf="errorMessage()" class="error-alert">
+                <p>{{ errorMessage() }}</p>
+            </div>
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <div class="input-wrapper">
+                    <lucide-icon [img]="User" [size]="18" class="input-icon"></lucide-icon>
+                    <input type="text" formControlName="name" placeholder="John Doe" [class.input-error]="nameErrors">
+                </div>
+                <span *ngIf="nameErrors" class="field-error">{{ nameErrors }}</span>
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <div class="input-wrapper">
+                    <lucide-icon [img]="Mail" [size]="18" class="input-icon"></lucide-icon>
+                    <input type="email" formControlName="email" placeholder="name@example.com" [class.input-error]="emailErrors">
+                </div>
+                <span *ngIf="emailErrors" class="field-error">{{ emailErrors }}</span>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <div class="input-wrapper">
+                    <lucide-icon [img]="Lock" [size]="18" class="input-icon"></lucide-icon>
+                    <input type="password" formControlName="password" placeholder="Create a password" [class.input-error]="passwordErrors">
+                </div>
+                <span *ngIf="passwordErrors" class="field-error">{{ passwordErrors }}</span>
+            </div>
+
+            <div class="form-row" style="display: flex; gap: 1rem;">
+                <div class="form-group" style="flex:1">
+                    <label>Age</label>
+                    <input type="number" formControlName="age" placeholder="25" [class.input-error]="ageErrors">
+                    <span *ngIf="ageErrors" class="field-error">{{ ageErrors }}</span>
+                </div>
+                <div class="form-group" style="flex:1">
+                    <label>Gender</label>
+                    <select formControlName="gender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row" style="display: flex; gap: 1rem;">
+                <div class="form-group" style="flex:1">
+                    <label>Height (cm)</label>
+                    <input type="number" formControlName="height" placeholder="175" [class.input-error]="heightErrors">
+                    <span *ngIf="heightErrors" class="field-error">{{ heightErrors }}</span>
+                </div>
+                <div class="form-group" style="flex:1">
+                    <label>Weight (kg)</label>
+                    <input type="number" formControlName="weight" placeholder="70" [class.input-error]="weightErrors">
+                    <span *ngIf="weightErrors" class="field-error">{{ weightErrors }}</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Activity Level</label>
+                <div class="input-wrapper">
+                    <select formControlName="activityLevel">
+                        <option value="1.2">Sedentary (Office job)</option>
+                        <option value="1.375">Light Activity (1-3 days/week)</option>
+                        <option value="1.55">Moderate Activity (3-5 days/week)</option>
+                        <option value="1.725">Very Active (6-7 days/week)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Fitness Goal</label>
+                <div class="input-wrapper">
+                    <lucide-icon [img]="Heart" [size]="18" class="input-icon"></lucide-icon>
+                    <select formControlName="goal">
+                        <option value="loss">Weight Loss</option>
+                        <option value="gain">Muscle Gain</option>
+                        <option value="maintain">Maintain</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary btn-block" [disabled]="isLoading()">
+                <span *ngIf="!isLoading()">Create Account</span>
+                <span *ngIf="isLoading()">Creating...</span>
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Already have an account? <a routerLink="/auth/login">Sign In</a></p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,302 @@
+/* Diet Page Theme - Green Tinted Cards in Light Mode Only */
+.diet-page {
+  height: calc(100vh - var(--header-height));
+  overflow: hidden;
+  background: var(--bg-diet);
+  background-attachment: fixed;
+  position: relative;
+  transition: background 0.5s ease;
+}
+
+/* Light mode only - Green-tinted cards */
+html:not([data-theme="dark"]) .diet-page {
+  --card-bg: #f0fdf4;
+  --bg-secondary: #dcfce7;
+  --border-color: #bbf7d0;
+  --card-glass-bg: rgba(240, 253, 244, 0.9);
+  --sidebar-bg: rgba(245, 254, 250, 0.95);
+}
+
+.diet-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 40%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 70% 70%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  animation: float 10s ease-in-out infinite;
+}
+
+.layout-container {
+  display: flex;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+/* Sidebar Styling */
+.diet-sidebar {
+  width: 300px;
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  background: var(--sidebar-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid var(--sidebar-border);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s ease, border-color 0.3s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+.diet-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.diet-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.diet-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(34, 197, 94, 0.3);
+  border-radius: 10px;
+}
+
+.diet-sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(34, 197, 94, 0.5);
+}
+
+.sidebar-header h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+  background: linear-gradient(135deg, #22c55e 0%, #10b981 50%, #4ade80 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.sidebar-header p {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin: 0;
+  font-weight: 500;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0.65rem 1rem;
+  border-radius: 12px;
+  background: transparent;
+  border: 2px solid transparent;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.nav-item:hover::before {
+  left: 100%;
+}
+
+.nav-item:hover {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.1));
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+  transform: translateX(4px);
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+  color: white;
+  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.4);
+  transform: scale(1.02);
+}
+
+/* Quick Stats - Simplified */
+.quick-stats {
+  margin-top: auto;
+  padding: var(--space-lg);
+  background: var(--card-glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+  min-height: fit-content;
+}
+
+html:not([data-theme="dark"]) .quick-stats {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(34, 197, 94, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.quick-stats h3 {
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+  font-weight: 700;
+}
+
+.stat-item {
+  margin-bottom: var(--space-lg);
+}
+
+.stat-item:last-child {
+  margin-bottom: 0;
+}
+
+.stat-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--space-xs);
+}
+
+.stat-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-numbers {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+html:not([data-theme="dark"]) .progress-bar {
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #10b981);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.progress-fill.protein {
+  background: linear-gradient(90deg, #8b5cf6, #6366f1);
+}
+
+.progress-fill.carbs {
+  background: linear-gradient(90deg, #f59e0b, #f97316);
+}
+
+.progress-fill.fat {
+  background: linear-gradient(90deg, #ec4899, #f43f5e);
+}
+
+/* Main Content */
+.diet-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-2xl);
+  position: relative;
+  background: var(--content-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: background 0.3s ease;
+}
+
+.mobile-only {
+  display: none;
+}
+
+.view-container {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.05);
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .diet-sidebar {
+    display: none;
+  }
+
+  .diet-page {
+    height: auto;
+    overflow: visible;
+  }
+
+  .layout-container {
+    flex-direction: column;
+  }
+
+  .diet-main {
+    padding: var(--space-md);
+  }
+
+  .mobile-only {
+    display: block;
+    margin-bottom: var(--space-lg);
+  }
+
+  .content-header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+}

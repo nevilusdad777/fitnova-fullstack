@@ -1,0 +1,175 @@
+<div class="home-container fade-in">
+    <div class="welcome-section">
+        <div class="welcome-content">
+            <h1 class="welcome-title">Welcome back, <span class="user-name text-gradient">{{ userName() }}</span>!</h1>
+            <p class="welcome-subtitle">Track your fitness journey with FitNova</p>
+        </div>
+        <div class="user-avatar-wrapper">
+            <img *ngIf="profilePicture()" [src]="profilePicture()" alt="Profile" class="user-avatar-img">
+            <div *ngIf="!profilePicture()" class="user-avatar">
+                <span>{{ userInitials() }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card glass-panel" *ngFor="let stat of stats()">
+            <div class="stat-icon" [style.background-color]="stat.color">
+                <lucide-icon [img]="stat.icon" [size]="24" [color]="'white'"></lucide-icon>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">{{ stat.label }}</span>
+                <div class="stat-value">
+                    {{ stat.value }} <span class="stat-unit">{{ stat.unit }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="actions-section">
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="actions-grid">
+            <a routerLink="/tracker" class="action-card glass-panel">
+                <div class="action-icon">
+                    <lucide-icon [img]="Activity" [size]="28"></lucide-icon>
+                </div>
+                <div class="action-content">
+                    <h3>Track Progress</h3>
+                    <p>Log your water, weight, and view charts</p>
+                </div>
+                <lucide-icon [img]="ArrowRight" [size]="20" class="action-arrow"></lucide-icon>
+            </a>
+
+            <a routerLink="/diet" class="action-card glass-panel">
+                <div class="action-icon">
+                    <lucide-icon [img]="Utensils" [size]="28"></lucide-icon>
+                </div>
+                <div class="action-content">
+                    <h3>Log Meal</h3>
+                    <p>Track your daily nutrition intake</p>
+                </div>
+                <lucide-icon [img]="ArrowRight" [size]="20" class="action-arrow"></lucide-icon>
+            </a>
+
+            <a routerLink="/workout" class="action-card glass-panel">
+                <div class="action-icon">
+                    <lucide-icon [img]="TrendingUp" [size]="28"></lucide-icon>
+                </div>
+                <div class="action-content">
+                    <h3>Start Workout</h3>
+                    <p>Begin your exercise session</p>
+                </div>
+                <lucide-icon [img]="ArrowRight" [size]="20" class="action-arrow"></lucide-icon>
+            </a>
+
+            <a routerLink="/goals" class="action-card glass-panel">
+                <div class="action-icon">
+                    <lucide-icon [img]="Droplets" [size]="28"></lucide-icon>
+                </div>
+                <div class="action-content">
+                    <h3>My Goals</h3>
+                    <p>View and update your fitness goals</p>
+                </div>
+                <lucide-icon [img]="ArrowRight" [size]="20" class="action-arrow"></lucide-icon>
+            </a>
+        </div>
+    </div>
+
+    <!-- Workout Sessions Summary -->
+    <div class="workout-sessions-summary">
+        <div class="sessions-header">
+            <h2>Recent Workout Sessions</h2>
+            <a [routerLink]="['/workout']" [state]="{showHistory: true}" class="view-all-btn">
+                View All Sessions
+                <lucide-icon [img]="ArrowRight" [size]="20"></lucide-icon>
+            </a>
+        </div>
+        
+        <div class="sessions-preview glass-panel">
+            <div class="session-stats">
+                <div class="stat-item">
+                    <span class="stat-number">{{ totalWorkouts() }}</span>
+                    <span class="stat-label">Total Sessions</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">{{ totalCaloriesBurned() }}</span>
+                    <span class="stat-label">Calories Burned</span>
+                </div>
+            </div>
+            <p class="view-prompt">Click "View All Sessions" to see detailed workout history with body part filters</p>
+        </div>
+        
+        <!-- Enhanced Dashboard Elements -->
+        <div class="dashboard-enhancements">
+            <!-- Streak Counter -->
+            <div class="streak-counter glass-panel" *ngIf="currentStreak() > 0">
+                <div class="streak-content">
+                    <div class="streak-icon-wrapper">
+                        <lucide-icon [img]="Flame" [size]="40" class="streak-flame"></lucide-icon>
+                    </div>
+                    <div class="streak-info">
+                        <h3>{{ currentStreak() }} Day Streak! 🔥</h3>
+                        <p>Keep the momentum going! You're on fire!</p>
+                    </div>
+                </div>
+                <div class="streak-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" [style.width.%]="(currentStreak() % 7) * 14.3"></div>
+                    </div>
+                    <span class="next-milestone">{{ 7 - (currentStreak() % 7) }} days to next milestone</span>
+                </div>
+            </div>
+
+            <!-- Motivational Quote -->
+            <div class="motivational-quote glass-panel" *ngIf="motivationalQuote()">
+                <lucide-icon [img]="Zap" [size]="24" class="quote-icon"></lucide-icon>
+                <p class="quote-text">"{{ motivationalQuote() }}"</p>
+            </div>
+
+            <!-- Monthly Workout Calendar -->
+            <app-monthly-workout-calendar></app-monthly-workout-calendar>
+
+            <!-- Premium Fitness Persona Hero Card -->
+            <div class="fitness-persona-hero" *ngIf="fitnessPersona()" [style.background]="fitnessPersona()?.gradient">
+                <div class="persona-bg-particles"></div>
+                <div class="persona-content-wrapper">
+                    <!-- Left: Avatar/Icon -->
+                    <div class="persona-visual">
+                        <div class="level-badge">
+                            <span class="level-label">LVL</span>
+                            <span class="level-value">{{ fitnessPersona()?.level }}</span>
+                        </div>
+                        <div class="icon-container">
+                            <lucide-icon [img]="fitnessPersona()?.icon" [size]="64" color="white" strokeWidth="1.5"></lucide-icon>
+                        </div>
+                    </div>
+
+                    <!-- Center: Identity -->
+                    <div class="persona-identity">
+                        <div class="identity-header">
+                            <span class="identity-tag">Fitness Identity</span>
+                            <h2 class="identity-title">{{ fitnessPersona()?.title }}</h2>
+                            <h4 class="identity-subtitle">{{ fitnessPersona()?.subtitle }}</h4>
+                        </div>
+                        <p class="identity-description">{{ fitnessPersona()?.description }}</p>
+                        
+                        <!-- XP Progress -->
+                        <div class="xp-container">
+                            <div class="xp-info">
+                                <span>XP Progress</span>
+                                <span>{{ fitnessPersona()?.progress }}% to next level</span>
+                            </div>
+                            <div class="xp-bar-track">
+                                <div class="xp-bar-fill" [style.width.%]="fitnessPersona()?.progress">
+                                    <div class="xp-glint"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

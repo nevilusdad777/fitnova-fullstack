@@ -1,0 +1,148 @@
+.bmi-trend-card {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.bmi-header {
+  margin-bottom: var(--space-xl);
+}
+
+.section-heading {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.bmi-content-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: var(--space-2xl);
+  margin-bottom: var(--space-2xl);
+}
+
+.bmi-current {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  background: var(--color-background);
+  border-radius: var(--radius-lg);
+}
+
+.bmi-circle {
+  width: 160px;
+  height: 160px;
+  border: 8px solid;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.bmi-value {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-text-primary);
+}
+
+.bmi-label {
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+}
+
+.bmi-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  text-align: center;
+}
+
+.bmi-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.bmi-chart {
+  display: flex;
+  align-items: center;
+}
+
+.chart-wrapper {
+  width: 100%;
+  height: 280px;
+  position: relative;
+}
+
+.bmi-reference {
+  padding: var(--space-lg);
+  background: var(--color-background);
+  border-radius: var(--radius-lg);
+}
+
+.reference-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-md);
+}
+
+.reference-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-md);
+}
+
+.reference-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.reference-color {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.reference-range {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.reference-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 1024px) {
+  .bmi-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bmi-current {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .bmi-current {
+    flex-direction: column;
+  }
+
+  .reference-grid {
+    grid-template-columns: 1fr;
+  }
+}
