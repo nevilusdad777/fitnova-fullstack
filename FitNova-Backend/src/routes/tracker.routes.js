@@ -9,7 +9,7 @@ router.get('/stats', protect, getDashboardStats);
 router.get('/history', protect, getTrackerHistory);
 
 router.post('/water', protect, [
-  body('amount').isFloat({ min: 1 }).withMessage('Amount must be at least 1')
+  body('amount').isFloat().withMessage('Amount must be a number')
 ], updateWaterIntake);
 
 router.post('/weight', protect, [

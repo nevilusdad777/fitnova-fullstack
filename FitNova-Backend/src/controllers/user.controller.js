@@ -34,6 +34,11 @@ const updateProfile = async (req, res) => {
       user.weight = req.body.weight || user.weight;
       user.goal = req.body.goal || user.goal;
       user.activityLevel = req.body.activityLevel || user.activityLevel;
+      user.waterGoal = req.body.waterGoal || user.waterGoal;
+      
+      if (req.body.profilePicture !== undefined) {
+        user.profilePicture = req.body.profilePicture;
+      }
       
       if (req.body.preferences) {
         user.preferences = req.body.preferences;
@@ -59,10 +64,12 @@ const updateProfile = async (req, res) => {
         weight: updatedUser.weight,
         goal: updatedUser.goal,
         activityLevel: updatedUser.activityLevel,
+        waterGoal: updatedUser.waterGoal,
         preferences: updatedUser.preferences,
         bmr: updatedUser.bmr,
         tdee: updatedUser.tdee,
-        dailyCalorieTarget: updatedUser.dailyCalorieTarget
+        dailyCalorieTarget: updatedUser.dailyCalorieTarget,
+        profilePicture: updatedUser.profilePicture
       });
     } else {
       res.status(404).json({ message: 'User not found' });

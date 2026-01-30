@@ -107,23 +107,49 @@ const getDashboardStats = async (req, res) => {
       todayTracker = { caloriesConsumed: 0, caloriesBurned: 0, waterIntake: 0, weight: user.weight };
     }
 
-    // Weekly activity (last 7 days)
+    // Weekly activity - Get from WorkoutHistory for consistency
+    const WorkoutHistory = require('../models/WorkoutHistory');
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 7);
-    const weeklyHistory = await Tracker.find({
-      user: req.user._id,
-      date: { $gte: startDate.toISOString().split('T')[0] }
-    });
-
-    const weeklyWorkouts = weeklyHistory.filter(t => t.caloriesBurned > 0).length;
     
-    // Very simple streak calculation
-    const streak = weeklyHistory.length; 
+    const weeklyWorkoutHistory = await WorkoutHistory.find({
+      user: req.user._id,
+      date: { $gte: startDate }
+    }).sort({ date: -1 });
+
+    const weeklyWorkouts = weeklyWorkoutHistory.length;
+    
+    // Calculate streak - count consecutive days with workouts
+    let streak = 0;
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    
+    while (true) {
+      const dateStr = currentDate.toISOString().split('T')[0];
+      const workoutOnDay = await WorkoutHistory.findOne({
+        user: req.user._id,
+        date: {
+          $gte: new Date(dateStr),
+          $lt: new Date(new Date(dateStr).setDate(new Date(dateStr).getDate() + 1))
+        }
+      });
+      
+      if (workoutOnDay) {
+        streak++;
+        currentDate.setDate(currentDate.getDate() - 1);
+      } else {
+        break;
+      }
+      
+      // Limit to prevent infinite loops
+      if (streak >= 365) break;
+    }
 
     res.json({
       today: todayTracker,
       weeklyWorkouts,
-      streak
+      streak,
+      totalWorkoutsCompleted: user.totalWorkoutsCompleted || 0
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

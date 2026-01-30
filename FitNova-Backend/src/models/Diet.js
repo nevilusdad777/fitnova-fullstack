@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const foodItemSchema = new mongoose.Schema({
   id: {
     type: String,
-    required: true
+    required: false,
+    default: ''
   },
   name: {
     type: String,
@@ -32,11 +33,16 @@ const foodItemSchema = new mongoose.Schema({
   quantity: {
     type: Number,
     required: true,
-    min: 1
+    min: 0.01
   },
   unit: {
     type: String,
     required: true
+  },
+  servingSize: {
+    type: Number,
+    required: false,
+    min: 0
   }
 });
 
@@ -75,6 +81,18 @@ const mealSchema = new mongoose.Schema({
     type: Number,
     required: true,
     min: 0
+  },
+  completed: {
+    type: Boolean,
+    default: false
+  },
+  completedAt: {
+    type: Date,
+    default: null
+  },
+  completedFoodIndices: {
+    type: [Number],
+    default: []
   }
 }, {
   timestamps: true

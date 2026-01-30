@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getTodayMeals, logMeal, updateMeal, deleteMeal, getMealHistory, searchFood, getAllFoods, getFoodById, seedFoods } = require('../controllers/diet.controller');
+const { getTodayMeals, logMeal, updateMeal, deleteMeal, getMealHistory, searchFood, getAllFoods, getFoodById, seedFoods, toggleMealCompletion, toggleFoodItemCompletion } = require('../controllers/diet.controller');
 const { protect } = require('../middlewares/auth.middleware');
 const { body } = require('express-validator');
 
@@ -21,6 +21,8 @@ router.post('/log', protect, [
 ], logMeal);
 
 router.put('/:id', protect, updateMeal);
+router.patch('/:id/complete', protect, toggleMealCompletion);
+router.patch('/:id/food-complete', protect, toggleFoodItemCompletion);
 router.delete('/:id', protect, deleteMeal);
 
 module.exports = router;

@@ -111,43 +111,84 @@ const getWorkoutHistory = async (req, res) => {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
 
-    const workouts = await Workout.find({
+    // Query WorkoutHistory collection instead of Workout
+    const WorkoutHistory = require('../models/WorkoutHistory');
+    const workouts = await WorkoutHistory.find({
       user: req.user._id,
       date: {
-        $gte: startDate.toISOString().split('T')[0],
-        $lte: endDate.toISOString().split('T')[0]
+        $gte: startDate,
+        $lte: endDate
       }
     }).sort({ date: -1 });
 
-    // Calculate body part frequency
+    // Helper function to extract body part from exercise name
+    const getBodyPartFromExerciseName = (exerciseName) => {
+      const name = exerciseName.toLowerCase();
+      
+      // Chest exercises
+      if (name.includes('chest') || name.includes('push') || name.includes('bench') || 
+          name.includes('press up') || name.includes('pec') || name.includes('fly') || 
+          name.includes('dip')) return 'chest';
+      
+      // Back exercises
+      if (name.includes('back') || name.includes('pull') || name.includes('row') || 
+          name.includes('deadlift') || name.includes('lat') || name.includes('chin') ||
+          name.includes('shrug')) return 'back';
+      
+      // Leg exercises
+      if (name.includes('leg') || name.includes('squat') || name.includes('lunge') || 
+          name.includes('calf') || name.includes('thigh') || name.includes('quad') ||
+          name.includes('hamstring') || name.includes('glute')) return 'legs';
+      
+      // Shoulder exercises
+      if (name.includes('shoulder') || name.includes('lateral') || name.includes('front raise') ||
+          name.includes('rear delt') || name.includes('overhead')) return 'shoulders';
+      
+      // Arm exercises
+      if (name.includes('bicep') || name.includes('tricep') || name.includes('arm') || 
+          name.includes('curl') || name.includes('extension') || name.includes('dip')) return 'arms';
+      
+      // Ab exercises
+      if (name.includes('ab') || name.includes('core') || name.includes('crunch') || 
+          name.includes('plank') || name.includes('sit up') || name.includes('twist') ||
+          name.includes('leg raise')) return 'abs';
+      
+      // Cardio exercises
+      if (name.includes('cardio') || name.includes('run') || name.includes('jog') ||
+          name.includes('bike') || name.includes('cycle') || name.includes('treadmill') ||
+          name.includes('walk') || name.includes('sprint') || name.includes('burpee') ||
+          name.includes('jump') || name.includes('skip')) return 'cardio';
+      
+      // Default to full body
+      return 'full body';
+    };
+
+    // Calculate body part frequency and enhance workout objects
     const bodyPartStats = {};
     let totalCaloriesBurned = 0;
     
-    workouts.forEach(workout => {
-      if (!workout.isRestDay && workout.exercises) {
+    const enhancedWorkouts = workouts.map(workout => {
+      const workoutObj = workout.toObject();
+      const bodyPartsSet = new Set();
+      
+      if (workout.exercises && workout.exercises.length > 0) {
         workout.exercises.forEach(exercise => {
-          // Extract body part from exercise name or workout name
-          const workoutName = workout.name?.toLowerCase() || '';
-          let bodyPart = 'other';
-          
-          if (workoutName.includes('chest')) bodyPart = 'chest';
-          else if (workoutName.includes('back')) bodyPart = 'back';
-          else if (workoutName.includes('leg')) bodyPart = 'legs';
-          else if (workoutName.includes('shoulder')) bodyPart = 'shoulders';
-          else if (workoutName.includes('arm')) bodyPart = 'arms';
-          else if (workoutName.includes('abs') || workoutName.includes('core')) bodyPart = 'abs';
-          else if (workoutName.includes('cardio')) bodyPart = 'cardio';
-          
+          const bodyPart = exercise.bodyPart || getBodyPartFromExerciseName(exercise.name);
+          bodyPartsSet.add(bodyPart);
           bodyPartStats[bodyPart] = (bodyPartStats[bodyPart] || 0) + 1;
         });
         totalCaloriesBurned += workout.totalCaloriesBurned || 0;
       }
+      
+      // Add bodyParts array to workout object
+      workoutObj.bodyParts = Array.from(bodyPartsSet);
+      return workoutObj;
     });
 
     res.json({
-      workouts,
+      workouts: enhancedWorkouts,
       analytics: {
-        totalWorkouts: workouts.filter(w => !w.isRestDay).length,
+        totalWorkouts: workouts.length,
         totalCaloriesBurned,
         bodyPartFrequency: bodyPartStats,
         periodDays: days

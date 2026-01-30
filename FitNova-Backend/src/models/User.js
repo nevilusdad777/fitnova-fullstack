@@ -14,6 +14,11 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     trim: true
   },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user'
+  },
   password: {
     type: String,
     required: true,
@@ -76,6 +81,18 @@ const userSchema = new mongoose.Schema({
   dailyCalorieTarget: {
     type: Number,
     required: true
+  },
+  profilePicture: {
+    type: String,
+    default: null
+  },
+  waterGoal: {
+    type: Number,
+    default: 3000
+  },
+  totalWorkoutsCompleted: {
+    type: Number,
+    default: 0
   }
 }, {
   timestamps: true

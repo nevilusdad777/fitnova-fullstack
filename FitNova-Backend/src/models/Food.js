@@ -55,9 +55,18 @@ const foodSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  image: {
+    type: String, // URL of the food image
+    default: null
+  },
+  apiId: {
+    type: String, // ID from the external API (e.g., Spoonacular ID)
+    unique: true,
+    sparse: true // Allows null/undefined values to not conflict
+  },
   apiSource: {
     type: String,
-    enum: ['USDA', 'manual', 'user'],
+    enum: ['USDA', 'Spoonacular', 'OpenFoodFacts', 'manual', 'user', 'Curated (Indian)'],
     default: 'manual'
   },
   createdBy: {

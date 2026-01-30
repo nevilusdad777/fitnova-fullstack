@@ -10,7 +10,7 @@ const exerciseSchema = new mongoose.Schema({
     bodyPart: {
         type: String,
         required: true,
-        enum: ['chest', 'back', 'legs', 'shoulders', 'arms', 'abs', 'cardio', 'full-body']
+        enum: ['chest', 'back', 'legs', 'shoulders', 'biceps', 'triceps', 'abs', 'cardio', 'full-body']
     },
     equipment: {
         type: String,
@@ -25,6 +25,10 @@ const exerciseSchema = new mongoose.Schema({
         type: String,
         enum: ['beginner', 'intermediate', 'advanced'],
         default: 'beginner'
+    },
+    description: {
+        type: String,
+        default: ''
     },
     instructions: [{
         type: String
@@ -44,7 +48,10 @@ const exerciseSchema = new mongoose.Schema({
     gifUrl: {
         type: String,
         default: ''
-    }
+    },
+    images: [{
+        type: String
+    }]
 }, {
     timestamps: true
 });

@@ -44,7 +44,7 @@ const getExercises = async (req, res) => {
       query.bodyPart = bodyPart.toLowerCase();
     }
 
-    const exercises = await Exercise.find(query);
+    const exercises = await Exercise.find(query).select('+images');
     res.json(exercises);
   } catch (error) {
     res.status(500).json({ message: error.message });
