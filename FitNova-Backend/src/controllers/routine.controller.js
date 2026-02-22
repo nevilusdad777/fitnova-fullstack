@@ -9,14 +9,14 @@ const createRoutine = async (req, res) => {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { name, description, targetBodyParts, exercises } = req.body;
+        const { name, description, targetBodyParts, schedule } = req.body;
 
         const routine = await WorkoutRoutine.create({
             user: req.user._id,
             name,
             description,
             targetBodyParts,
-            exercises
+            schedule
         });
 
         res.status(201).json({
@@ -50,7 +50,7 @@ const getRoutines = async (req, res) => {
 
         const routines = await WorkoutRoutine.find(query)
             .sort({ createdAt: -1 })
-            .populate('exercises.exerciseId', 'name bodyPart difficulty');
+            .populate('schedule.exercises.exerciseId', 'name bodyPart difficulty');
 
         res.json({
             success: true,
@@ -70,7 +70,7 @@ const getRoutines = async (req, res) => {
 const getRoutineById = async (req, res) => {
     try {
         const routine = await WorkoutRoutine.findById(req.params.id)
-            .populate('exercises.exerciseId', 'name bodyPart difficulty description');
+            .populate('schedule.exercises.exerciseId', 'name bodyPart difficulty description');
 
         if (!routine) {
             return res.status(404).json({ 
@@ -125,12 +125,12 @@ const updateRoutine = async (req, res) => {
             });
         }
 
-        const { name, description, targetBodyParts, exercises, isActive } = req.body;
+        const { name, description, targetBodyParts, schedule, isActive } = req.body;
 
         if (name) routine.name = name;
         if (description !== undefined) routine.description = description;
         if (targetBodyParts) routine.targetBodyParts = targetBodyParts;
-        if (exercises) routine.exercises = exercises;
+        if (schedule) routine.schedule = schedule;
         if (isActive !== undefined) routine.isActive = isActive;
 
         const updatedRoutine = await routine.save();

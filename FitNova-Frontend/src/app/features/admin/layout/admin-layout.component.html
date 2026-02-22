@@ -1,0 +1,62 @@
+<div class="admin-layout" [class.sidebar-collapsed]="sidebarCollapsed">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="header-title-group" *ngIf="!sidebarCollapsed">
+        <h2>Admin Panel</h2>
+      </div>
+      <h2 *ngIf="sidebarCollapsed" class="collapsed-title">AP</h2>
+      <button class="sidebar-toggle" (click)="toggleSidebar()">
+        <span>☰</span>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">
+        <span class="icon">📊</span>
+        <span class="label" *ngIf="!sidebarCollapsed">Dashboard</span>
+      </a>
+      <a routerLink="/admin/users" routerLinkActive="active" class="nav-item">
+        <span class="icon">👥</span>
+        <span class="label" *ngIf="!sidebarCollapsed">Users</span>
+      </a>
+      <a routerLink="/admin/foods" routerLinkActive="active" class="nav-item">
+        <span class="icon">🍎</span>
+        <span class="label" *ngIf="!sidebarCollapsed">Foods</span>
+      </a>
+      <a routerLink="/admin/exercises" routerLinkActive="active" class="nav-item">
+        <span class="icon">💪</span>
+        <span class="label" *ngIf="!sidebarCollapsed">Exercises</span>
+      </a>
+      <a routerLink="/admin/admins" routerLinkActive="active" class="nav-item">
+        <span class="icon">👨‍💼</span>
+        <span class="label" *ngIf="!sidebarCollapsed">Admins</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="admin-info" *ngIf="!sidebarCollapsed">
+        <div class="admin-avatar">{{ adminName.charAt(0).toUpperCase() }}</div>
+        <div class="admin-details">
+          <div class="admin-name">{{ adminName }}</div>
+          <div class="admin-email">{{ adminEmail }}</div>
+        </div>
+      </div>
+      <button class="logout-btn" (click)="logout()" [title]="sidebarCollapsed ? 'Logout' : ''">
+        <span class="icon">🚪</span>
+        <span *ngIf="!sidebarCollapsed">Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <header class="topbar">
+      <h1 class="page-title">Fitnova Admin</h1>
+    </header>
+
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,140 @@
+<div class="user-list-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h2>Exercise Management</h2>
+      <p>Manage all exercises in the database</p>
+    </div>
+    <button [routerLink]="['/admin/exercises/new']" class="btn-primary">+ Add New Exercise</button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (ngModelChange)="onSearchChange($event)"
+        placeholder="Search by exercise name..."
+      >
+      <button (click)="onSearch()" class="search-btn">🔍 Search</button>
+    </div>
+
+    <div class="filter-group">
+      <select [(ngModel)]="selectedBodyPart" (change)="onFilterChange()">
+        <option value="">All Body Parts</option>
+        <option value="chest">Chest</option>
+        <option value="back">Back</option>
+        <option value="legs">Legs</option>
+        <option value="shoulders">Shoulders</option>
+        <option value="biceps">Biceps</option>
+        <option value="triceps">Triceps</option>
+        <option value="abs">Abs</option>
+        <option value="cardio">Cardio</option>
+        <option value="full-body">Full Body</option>
+      </select>
+
+      <select [(ngModel)]="selectedDifficulty" (change)="onFilterChange()">
+        <option value="">All Difficulties</option>
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+
+      <button (click)="clearFilters()" class="clear-btn">Clear Filters</button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading exercises...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <!-- Exercises Table -->
+  <div *ngIf="!loading" class="table-container">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Body Part</th>
+          <th>Equipment</th>
+          <th>Difficulty</th>
+          <th>Target Muscle</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let exercise of exercises">
+          <td><strong>{{ exercise.name }}</strong></td>
+          <td>{{ exercise.bodyPart | titlecase }}</td>
+          <td>{{ exercise.equipment | titlecase }}</td>
+          <td>
+            <span class="difficulty-badge" [ngClass]="exercise.difficulty">
+              {{ exercise.difficulty | titlecase }}
+            </span>
+          </td>
+          <td>{{ exercise.targetMuscle || '-' }}</td>
+          <td class="actions">
+            <button 
+              [routerLink]="['/admin/exercises/edit', exercise._id]" 
+              class="btn-edit"
+              title="Edit Exercise"
+            >
+              ✏️
+            </button>
+            <button 
+              (click)="openDeleteModal(exercise)" 
+              class="btn-delete"
+              title="Delete Exercise"
+            >
+              🗑️
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="exercises.length === 0">
+          <td colspan="6" class="no-data">No exercises found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!loading && exercises.length > 0" class="pagination">
+    <div class="pagination-info">
+      Showing {{ exercises.length }} of {{ totalExercises }} exercises
+    </div>
+    <div class="pagination-controls">
+      <button 
+        (click)="previousPage()" 
+        [disabled]="currentPage === 1"
+        class="page-btn"
+      >
+        ← Previous
+      </button>
+      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button 
+        (click)="nextPage()" 
+        [disabled]="currentPage === totalPages"
+        class="page-btn"
+      >
+        Next →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div *ngIf="showDeleteModal" class="modal-overlay" (click)="closeDeleteModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>Confirm Delete</h3>
+    <p>Are you sure you want to delete exercise <strong>{{ exerciseToDelete?.name }}</strong>?</p>
+    <p class="warning">This action cannot be undone.</p>
+    <div class="modal-actions">
+      <button (click)="closeDeleteModal()" class="btn-cancel">Cancel</button>
+      <button (click)="confirmDelete()" class="btn-confirm">Delete</button>
+    </div>
+  </div>
+</div>

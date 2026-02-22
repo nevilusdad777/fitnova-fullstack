@@ -4,7 +4,7 @@
             <lucide-icon [img]="ArrowLeft" [size]="20"></lucide-icon>
             Back to Routines
         </button>
-        <h2>{{ routine ? 'Edit Routine' : 'Create New Routine' }}</h2>
+        <h2>{{ isPreview ? 'Preview Routine' : (routine ? 'Edit Routine' : 'Create New Routine') }}</h2>
     </div>
 
     <div class="builder-content">
@@ -13,83 +13,142 @@
             <h3>Routine Details</h3>
             <div class="form-group">
                 <label>Routine Name*</label>
-                <input type="text" [(ngModel)]="routineName" placeholder="e.g., Upper Body Blast" class="input-field">
+                <input type="text" [(ngModel)]="routineName" placeholder="e.g., Upper Body Blast" class="input-field" [readonly]="isPreview">
             </div>
             <div class="form-group">
                 <label>Description (Optional)</label>
-                <textarea [(ngModel)]="routineDescription" placeholder="Brief description of your routine" class="input-field" rows="3"></textarea>
+                <textarea [(ngModel)]="routineDescription" placeholder="Brief description of your routine" class="input-field" rows="3" [readonly]="isPreview"></textarea>
             </div>
         </div>
 
-        <!-- Target Body Parts -->
-        <div class="section">
-            <h3>Target Body Parts</h3>
-            <div class="body-parts-selector">
+        <!-- Weekly Schedule -->
+        <div class="section schedule-section">
+            <h3>Weekly Schedule</h3>
+            
+            <!-- Day Selector -->
+            <div class="day-tabs">
                 <button 
-                    *ngFor="let part of bodyParts"
-                    class="body-part-chip"
-                    [class.selected]="selectedBodyParts().includes(part)"
-                    (click)="toggleBodyPart(part)">
-                    {{ part }}
+                    *ngFor="let day of weekDays"
+                    class="day-tab"
+                    [class.active]="activeDay() === day"
+                    (click)="setActiveDay(day)">
+                    {{ day.slice(0, 3) }}
                 </button>
             </div>
-        </div>
 
-        <!-- Exercise Selection -->
-        <div class="section">
-            <h3>Add Exercises</h3>
-            <div class="exercise-browser">
-                <div class="exercise-filters">
-                    <button 
-                        *ngFor="let part of bodyParts"
-                        class="filter-btn"
-                        [class.active]="currentBodyPart() === part"
-                        (click)="filterExercises(part)">
-                        {{ part }}
-                    </button>
-                    <button 
-                        class="filter-btn"
-                        [class.active]="!currentBodyPart()"
-                        (click)="filterExercises('')">
-                        All
-                    </button>
-                </div>
-
-                <div class="exercise-grid">
-                    <div *ngFor="let exercise of filteredExercises()" class="exercise-item" (click)="addExercise(exercise)">
-                        <lucide-icon [img]="Dumbbell" [size]="16"></lucide-icon>
-                        <span>{{ exercise.name }}</span>
-                        <button class="btn-add">
-                            <lucide-icon [img]="Plus" [size]="16"></lucide-icon>
-                        </button>
+            <!-- Active Day Config -->
+            <div class="day-config">
+                <div class="day-header">
+                    <h4>{{ activeDay() }}</h4>
+                    <div class="day-actions">
+                        <label class="toggle-switch" [class.disabled]="isPreview">
+                            <input type="checkbox" [checked]="currentDayRoutine().isRestDay" (change)="!isPreview && toggleRestDay()" [disabled]="isPreview">
+                            <span class="slider"></span>
+                            <span class="label">Rest Day</span>
+                        </label>
+                        
+                        <div class="copy-dropdown" *ngIf="!currentDayRoutine().isRestDay && !isPreview">
+                            <button class="btn-copy">Copy to...</button>
+                            <div class="dropdown-content">
+                                <button *ngFor="let day of weekDays" 
+                                        (click)="copyDayTo(day)"
+                                        [disabled]="day === activeDay()">
+                                    {{ day }}
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Selected Exercises -->
-        <div class="section" *ngIf="selectedExercises().length > 0">
-            <h3>Selected Exercises ({{ selectedExercises().length }})</h3>
-            <div class="selected-exercises">
-                <div *ngFor="let ex of selectedExercises(); let i = index" class="selected-exercise">
-                    <div class="exercise-header">
-                        <span class="exercise-name">{{ ex.name }}</span>
-                        <button class="btn-remove" (click)="removeExercise(i)">
-                            <lucide-icon [img]="X" [size]="16"></lucide-icon>
+                <!-- Rest Day View -->
+                <div *ngIf="currentDayRoutine().isRestDay" class="rest-day-view">
+                    <lucide-icon [img]="Clock" [size]="48" class="rest-icon"></lucide-icon>
+                    <p>Rest and Recovery</p>
+                    <span class="subtitle">No exercises scheduled for today</span>
+                </div>
+
+                <!-- Active Workout View -->
+                <div *ngIf="!currentDayRoutine().isRestDay" class="workout-view">
+                    <!-- Target Body Parts (Global for routine implies focus, but exercises can vary) -->
+                    <div class="body-parts-selector">
+                        <button 
+                            *ngFor="let part of bodyParts"
+                            class="body-part-chip"
+                            [class.selected]="selectedBodyParts().includes(part)"
+                            (click)="toggleBodyPart(part)">
+                            {{ part }}
                         </button>
                     </div>
-                    <div class="exercise-config">
-                        <div class="config-item">
-                            <label>Sets</label>
-                            <input type="number" [(ngModel)]="ex.sets" min="1" class="config-input">
+
+                    <!-- Selected Exercises for Day -->
+                    <div class="selected-exercises-list">
+                        <h5>Exercises ({{ currentDayRoutine().exercises.length || 0 }})</h5>
+                        
+                        <div class="selected-exercises">
+                            <div *ngFor="let ex of currentDayRoutine().exercises; let i = index" class="selected-exercise">
+                                <div class="exercise-header">
+                                    <span class="exercise-name">{{ ex.name }}</span>
+                                    <button class="btn-remove" (click)="removeExercise(i)" *ngIf="!isPreview">
+                                        <lucide-icon [img]="X" [size]="16"></lucide-icon>
+                                    </button>
+                                </div>
+                                <div class="exercise-config">
+                                    <div class="config-item">
+                                        <label>Sets</label>
+                                        <input type="number" [(ngModel)]="ex.sets" min="1" class="config-input" [readonly]="isPreview">
+                                    </div>
+                                    <div class="config-item">
+                                        <label>Reps</label>
+                                        <input type="number" [(ngModel)]="ex.reps" min="1" class="config-input" [readonly]="isPreview">
+                                    </div>
+                                    <div class="config-item">
+                                        <label>Rest (sec)</label>
+                                        <input type="number" [(ngModel)]="ex.restTime" min="0" step="15" class="config-input" [readonly]="isPreview">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div *ngIf="currentDayRoutine().exercises.length === 0" class="empty-state">
+                                <p>No exercises added for {{ activeDay() }}</p>
+                            </div>
                         </div>
-                        <div class="config-item">
-                            <label>Reps</label>
-                            <input type="number" [(ngModel)]="ex.reps" min="1" class="config-input">
+                    </div>
+
+                    <!-- Start Workout Button (Preview Mode Only) -->
+                    <div class="start-workout-section" *ngIf="isPreview">
+                        <button class="btn-start" (click)="onStartDayWorkout()">
+                            <lucide-icon [img]="Dumbbell" [size]="20"></lucide-icon>
+                            Start {{ activeDay() }}'s Workout
+                        </button>
+                    </div>
+
+                    <!-- Exercise Browser -->
+                    <div class="exercise-browser" *ngIf="!isPreview">
+                        <h5>Add Exercises</h5>
+                        <div class="exercise-filters">
+                            <button 
+                                *ngFor="let part of bodyParts"
+                                class="filter-btn"
+                                [class.active]="currentBodyPart() === part"
+                                (click)="filterExercises(part)">
+                                {{ part }}
+                            </button>
+                            <button 
+                                class="filter-btn"
+                                [class.active]="!currentBodyPart()"
+                                (click)="filterExercises('')">
+                                All
+                            </button>
                         </div>
-                        <div class="config-item">
-                            <label>Rest (sec)</label>
-                            <input type="number" [(ngModel)]="ex.restTime" min="0" step="15" class="config-input">
+
+                        <div class="exercise-grid">
+                            <div *ngFor="let exercise of filteredExercises()" class="exercise-item" (click)="addExercise(exercise)">
+                                <lucide-icon [img]="Dumbbell" [size]="16"></lucide-icon>
+                                <span>{{ exercise.name }}</span>
+                                <button class="btn-add">
+                                    <lucide-icon [img]="Plus" [size]="16"></lucide-icon>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -97,7 +156,7 @@
         </div>
 
         <!-- Action Buttons -->
-        <div class="actions">
+        <div class="actions" *ngIf="!isPreview">
             <button class="btn-secondary" (click)="cancel()">Cancel</button>
             <button class="btn-primary" (click)="saveRoutine()" [disabled]="isLoading()">
                 <lucide-icon [img]="Save" [size]="18"></lucide-icon>

@@ -137,21 +137,21 @@ export class LandingComponent {
             points: [
                 'Track water intake daily',
                 'Monitor body measurements',
-                'Sleep quality tracking',
+                'Track Calories Intake And Burnt',
                 'Overall wellness score'
             ]
         },
         {
-            icon: Users,
-            title: 'Community Support',
-            description: 'Connect with thousands of fitness enthusiasts. Share achievements, get motivated, and grow together on your fitness journey.',
-            image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80',
+            icon: Zap,
+            title: 'Seamless Web Access',
+            description: 'Connect directly with our comprehensive web platform. Access your workouts, nutrition plans, and progress from any device, anywhere.',
+            image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
             iconBg: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
             points: [
-                'Join fitness community',
-                'Share achievements',
-                'Get motivation daily',
-                'Connect with others'
+                'Access from any device',
+                'Real-time data synchronization',
+                'Comprehensive dashboard',
+                'No installation required'
             ]
         },
         {

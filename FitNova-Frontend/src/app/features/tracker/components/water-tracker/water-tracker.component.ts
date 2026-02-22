@@ -1,6 +1,6 @@
 import { Component, signal, Input, inject, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, Droplets, Plus, Minus, GlassWater, Coffee, Milk, Edit2, Check, X, Droplet, Info } from 'lucide-angular';
+import { LucideAngularModule, Droplets, Plus, Minus, GlassWater, Coffee, Milk, Edit2, Check, X, Droplet, Info, BarChart2, TrendingUp, Calendar } from 'lucide-angular';
 import { TrackerService } from '../../../../services/tracker.service';
 import { ProfileService } from '../../../../services/profile.service';
 
@@ -82,6 +82,10 @@ import { ProfileService } from '../../../../services/profile.service';
                         </button>
                     </div>
                 </div>
+                <!-- Remove Error Message -->
+                <div class="remove-error" *ngIf="removeError() && viewMode === 'full'">
+                    ⚠️ {{ removeError() }}
+                </div>
 
                  <!-- Summary Progress Bar (Shown ONLY in Summary Mode) -->
                  <div class="progress-bar-bg" *ngIf="viewMode === 'summary'">
@@ -96,17 +100,17 @@ import { ProfileService } from '../../../../services/profile.service';
                     <div class="graph-visualization">
                         <div class="graph-container">
                             <div class="graph-y-labels">
-                                <span class="y-label">{{ waterGoal() }}ml</span>
-                                <span class="y-label">{{ Math.round(waterGoal() * 0.66) }}ml</span>
-                                <span class="y-label">{{ Math.round(waterGoal() * 0.33) }}ml</span>
+                                <span class="y-label">{{ todayMax() }}ml</span>
+                                <span class="y-label">{{ Math.round(todayMax() * 0.66) }}ml</span>
+                                <span class="y-label">{{ Math.round(todayMax() * 0.33) }}ml</span>
                                 <span class="y-label">0ml</span>
                             </div>
                             <div class="water-levels">
                                 <div class="level-bar" 
-                                     [style.height.%]="progress()" 
-                                     [class.low]="progress() < 33"
-                                     [class.medium]="progress() >= 33 && progress() < 66"
-                                     [class.high]="progress() >= 66">
+                                     [style.height.%]="todayProgress()" 
+                                     [class.low]="todayProgress() < 33"
+                                     [class.medium]="todayProgress() >= 33 && todayProgress() < 66"
+                                     [class.high]="todayProgress() >= 66">
                                     <div class="wave"></div>
                                     <div class="wave wave-2"></div>
                                 </div>
@@ -133,6 +137,97 @@ import { ProfileService } from '../../../../services/profile.service';
                     <h5 class="insight-title">Did you know?</h5>
                     <p class="insight-body">{{ currentTip }}</p>
                  </div>
+            </div>
+        </div>
+
+        <!-- Water Intake History (Full Mode Only) -->
+        <div class="history-section section-fade-in relative-z" *ngIf="viewMode === 'full'">
+            <!-- Header + Period Toggle -->
+            <div class="history-header">
+                <div class="history-title-group">
+                    <lucide-icon [img]="BarChart2" [size]="20" style="color:#3b82f6"></lucide-icon>
+                    <h4 class="history-title">Intake History</h4>
+                </div>
+                <div class="period-toggle">
+                    <button class="period-btn" [class.active]="historyPeriod() === 7" (click)="setHistoryPeriod(7)">7 Days</button>
+                    <button class="period-btn" [class.active]="historyPeriod() === 14" (click)="setHistoryPeriod(14)">14 Days</button>
+                    <button class="period-btn" [class.active]="historyPeriod() === 30" (click)="setHistoryPeriod(30)">30 Days</button>
+                </div>
+            </div>
+
+            <!-- Bar Chart -->
+            <div class="history-chart" *ngIf="!historyLoading() && waterHistory().length > 0; else historyEmpty">
+                <div class="chart-y-axis">
+                    <span class="chart-y-label">{{ chartMax() | number:'1.1-1' }}L</span>
+                    <span class="chart-y-label">{{ chartMax() * 0.5 | number:'1.1-1' }}L</span>
+                    <span class="chart-y-label">0L</span>
+                </div>
+                <div class="chart-bars">
+                    <div class="chart-bar-col" *ngFor="let day of waterHistory()">
+                        <div class="bar-tooltip">{{ day.waterIntake | number:'1.1-1' }}L<br><small>{{ formatDate(day.date) }}</small></div>
+                        <div class="bar-track">
+                            <div class="bar-fill"
+                                 [style.height.%]="getBarHeight(day.waterIntake)"
+                                 [class.bar-low]="getBarHeight(day.waterIntake) < 33"
+                                 [class.bar-med]="getBarHeight(day.waterIntake) >= 33 && getBarHeight(day.waterIntake) < 80"
+                                 [class.bar-high]="getBarHeight(day.waterIntake) >= 80">
+                            </div>
+                        </div>
+                        <span class="bar-label">{{ getDayLabel(day.date) }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <ng-template #historyEmpty>
+                <div class="history-empty" *ngIf="!historyLoading()">
+                    <lucide-icon [img]="BarChart2" [size]="40" style="opacity:0.2;color:#3b82f6"></lucide-icon>
+                    <p>No history data available yet.</p>
+                </div>
+                <div class="history-loading" *ngIf="historyLoading()">
+                    <p>Loading history...</p>
+                </div>
+            </ng-template>
+
+            <!-- Summary Stats Row -->
+            <div class="history-stats" *ngIf="waterHistory().length > 0">
+                <div class="hstat">
+                    <span class="hstat-value">{{ avgIntake() | number:'1.1-1' }}L</span>
+                    <span class="hstat-label">Daily Avg</span>
+                </div>
+                <div class="hstat">
+                    <span class="hstat-value">{{ maxIntake() | number:'1.1-1' }}L</span>
+                    <span class="hstat-label">Best Day</span>
+                </div>
+                <div class="hstat">
+                    <span class="hstat-value">{{ goalMetDays() }}</span>
+                    <span class="hstat-label">Goal Met</span>
+                </div>
+                <div class="hstat">
+                    <span class="hstat-value">{{ historyPeriod() }}d</span>
+                    <span class="hstat-label">Period</span>
+                </div>
+            </div>
+
+            <!-- Text Log List -->
+            <div class="history-log" *ngIf="waterHistory().length > 0">
+                <h5 class="log-subtitle">Daily Log</h5>
+                <div class="log-row" *ngFor="let day of waterHistoryReversed()">
+                    <div class="log-date">
+                        <lucide-icon [img]="Calendar" [size]="14"></lucide-icon>
+                        <span>{{ formatFullDate(day.date) }}</span>
+                    </div>
+                    <div class="log-bar-mini">
+                        <div class="log-bar-fill" [style.width.%]="getBarHeight(day.waterIntake)"
+                             [class.bar-low]="getBarHeight(day.waterIntake) < 33"
+                             [class.bar-med]="getBarHeight(day.waterIntake) >= 33 && getBarHeight(day.waterIntake) < 80"
+                             [class.bar-high]="getBarHeight(day.waterIntake) >= 80">
+                        </div>
+                    </div>
+                    <span class="log-amount">{{ day.waterIntake | number:'1.1-1' }}L</span>
+                    <span class="log-badge" [class.badge-good]="day.waterIntake * 1000 >= waterGoal()" [class.badge-warn]="day.waterIntake * 1000 < waterGoal() * 0.5" [class.badge-ok]="day.waterIntake * 1000 >= waterGoal() * 0.5 && day.waterIntake * 1000 < waterGoal()">
+                        {{ day.waterIntake * 1000 >= waterGoal() ? '✓ Goal' : day.waterIntake * 1000 >= waterGoal() * 0.5 ? 'Partial' : 'Low' }}
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -179,9 +274,10 @@ import { ProfileService } from '../../../../services/profile.service';
     
     .unit { 
         font-size: 1.5rem; 
-        color: var(--color-text-secondary); 
-        font-weight: 600;
-        opacity: 0.7;
+        color: #3b82f6; 
+        font-weight: 700;
+        margin-left: 0.5rem;
+        vertical-align: middle;
     }
     
     .water-goal { 
@@ -478,8 +574,9 @@ import { ProfileService } from '../../../../services/profile.service';
 
     /* Hydration Insights */
     .hydration-insights {
+        margin-top: 2rem;
         padding: 1rem;
-        background: rgba(59, 130, 246, 0.05); /* Slightly blue tinted background */
+        background: rgba(59, 130, 246, 0.05);
         border-radius: 12px;
         border: 1px solid rgba(59, 130, 246, 0.1);
     }
@@ -566,6 +663,300 @@ import { ProfileService } from '../../../../services/profile.service';
             transform: translateX(-20px);
         }
     }
+
+    /* ============  HISTORY SECTION  ============ */
+    .history-section {
+        margin-top: 2rem;
+        background: linear-gradient(135deg, rgba(59,130,246,0.04), rgba(37,99,235,0.04));
+        border: 1px solid rgba(59,130,246,0.12);
+        border-radius: 20px;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .history-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .history-title-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .history-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--color-text-primary);
+        margin: 0;
+    }
+
+    .period-toggle {
+        display: flex;
+        gap: 0.375rem;
+        background: rgba(59,130,246,0.08);
+        border-radius: 10px;
+        padding: 3px;
+    }
+
+    .period-btn {
+        padding: 0.35rem 0.85rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        background: transparent;
+        color: #3b82f6;
+        transition: all 0.2s;
+    }
+
+    .period-btn.active {
+        background: #3b82f6;
+        color: white;
+        box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+    }
+
+    /* Bar Chart */
+    .history-chart {
+        display: flex;
+        gap: 0.5rem;
+        height: 160px;
+        align-items: stretch;
+    }
+
+    .chart-y-axis {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-width: 32px;
+        padding-bottom: 20px;
+    }
+
+    .chart-y-label {
+        font-size: 0.7rem;
+        color: #3b82f6;
+        font-weight: 600;
+        text-align: right;
+    }
+
+    .chart-bars {
+        flex: 1;
+        display: flex;
+        align-items: flex-end;
+        gap: 4px;
+        padding-bottom: 20px;
+        border-left: 2px solid rgba(59,130,246,0.2);
+        border-bottom: 2px solid rgba(59,130,246,0.2);
+        position: relative;
+        height: 100%;
+    }
+
+    .chart-bar-col {
+        flex: 1;
+        height: calc(100% - 24px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 4px;
+        position: relative;
+    }
+
+    .chart-bar-col:hover .bar-tooltip {
+        opacity: 1;
+        transform: translateY(-4px);
+    }
+
+    .bar-tooltip {
+        position: absolute;
+        top: -52px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(30,30,50,0.92);
+        color: white;
+        font-size: 0.68rem;
+        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 7px;
+        white-space: nowrap;
+        pointer-events: none;
+        opacity: 0;
+        transition: all 0.2s;
+        text-align: center;
+        z-index: 10;
+    }
+
+    .bar-track {
+        width: 100%;
+        height: 100%;
+        border-radius: 6px 6px 0 0;
+        background: rgba(59,130,246,0.06);
+        display: flex;
+        align-items: flex-end;
+        overflow: hidden;
+        min-height: 4px;
+        flex: 1;
+    }
+
+    .bar-fill {
+        width: 100%;
+        border-radius: 6px 6px 0 0;
+        transition: height 0.7s cubic-bezier(0.4,0,0.2,1);
+        background: linear-gradient(180deg, #3b82f6, #2563eb);
+        min-height: 2px;
+    }
+
+    .bar-fill.bar-low { background: linear-gradient(180deg, #f59e0b, #d97706); }
+    .bar-fill.bar-med { background: linear-gradient(180deg, #3b82f6, #2563eb); }
+    .bar-fill.bar-high { background: linear-gradient(180deg, #10b981, #059669); }
+
+    .bar-label {
+        font-size: 0.65rem;
+        color: var(--color-text-secondary);
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    /* Summary Stats */
+    .history-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.75rem;
+    }
+
+    .hstat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0.75rem 0.5rem;
+        background: rgba(59,130,246,0.07);
+        border-radius: 12px;
+        border: 1px solid rgba(59,130,246,0.12);
+    }
+
+    .hstat-value {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #3b82f6;
+    }
+
+    .hstat-label {
+        font-size: 0.7rem;
+        color: var(--color-text-secondary);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-top: 2px;
+    }
+
+    /* Text Log */
+    .history-log {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .log-subtitle {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--color-text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin: 0 0 0.25rem 0;
+    }
+
+    .log-row {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.6rem 0.75rem;
+        background: var(--color-surface, #fff);
+        border-radius: 10px;
+        border: 1px solid var(--color-border, rgba(0,0,0,0.06));
+        transition: all 0.2s;
+    }
+
+    .log-row:hover {
+        border-color: rgba(59,130,246,0.3);
+        box-shadow: 0 2px 8px rgba(59,130,246,0.08);
+    }
+
+    .log-date {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        min-width: 110px;
+        font-size: 0.8rem;
+        color: var(--color-text-secondary);
+        font-weight: 500;
+    }
+
+    .log-bar-mini {
+        flex: 1;
+        height: 8px;
+        background: rgba(59,130,246,0.08);
+        border-radius: 99px;
+        overflow: hidden;
+    }
+
+    .log-bar-fill {
+        height: 100%;
+        border-radius: 99px;
+        transition: width 0.5s ease;
+        background: #3b82f6;
+    }
+
+    .log-bar-fill.bar-low { background: #f59e0b; }
+    .log-bar-fill.bar-med { background: #3b82f6; }
+    .log-bar-fill.bar-high { background: #10b981; }
+
+    .log-amount {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--color-text-primary);
+        min-width: 38px;
+        text-align: right;
+    }
+
+    .log-badge {
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 99px;
+        min-width: 56px;
+        text-align: center;
+    }
+
+    .badge-good { background: rgba(16,185,129,0.12); color: #059669; }
+    .badge-ok   { background: rgba(59,130,246,0.12); color: #2563eb; }
+    .badge-warn { background: rgba(245,158,11,0.12); color: #d97706; }
+
+    .history-empty, .history-loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 2rem;
+        color: var(--color-text-muted);
+        font-size: 0.9rem;
+    }
+
+    .remove-error {
+        margin-top: 0.4rem;
+        padding: 0.5rem 0.85rem;
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.35);
+        border-radius: 10px;
+        color: #dc2626;
+        font-size: 0.82rem;
+        font-weight: 600;
+        animation: fadeIn 0.25s ease-out;
+    }
   `]
 })
 export class WaterTrackerComponent implements OnInit {
@@ -584,10 +975,40 @@ export class WaterTrackerComponent implements OnInit {
     readonly Check = Check;
     readonly X = X;
     readonly Info = Info;
+    readonly BarChart2 = BarChart2;
+    readonly Calendar = Calendar;
+    readonly TrendingUp = TrendingUp;
 
     currentIntake = signal(0);
     waterGoal = signal(3000);
     isEditingGoal = signal(false);
+    waterHistory = signal<any[]>([]);
+    historyPeriod = signal<7 | 14 | 30>(7);
+    historyLoading = signal(false);
+    removeError = signal('');
+
+    // Computed stats from history
+    avgIntake = computed(() => {
+        const h = this.waterHistory();
+        if (!h.length) return 0;
+        return h.reduce((s, d) => s + d.waterIntake, 0) / h.length;
+    });
+
+    maxIntake = computed(() => {
+        const h = this.waterHistory();
+        if (!h.length) return 0;
+        return Math.max(...h.map(d => d.waterIntake));
+    });
+
+    goalMetDays = computed(() => {
+        return this.waterHistory().filter(d => d.waterIntake * 1000 >= this.waterGoal()).length;
+    });
+
+    waterHistoryReversed = computed(() => [...this.waterHistory()].reverse());
+
+    /** The ceiling used for both bar heights and Y-axis labels: whichever is bigger, goal or actual max */
+    chartMax = computed(() => Math.max(this.waterGoal() / 1000, this.maxIntake()));
+
 
     hydrationTips = [
         "Drinking water before meals can help you feel fuller.",
@@ -612,11 +1033,83 @@ export class WaterTrackerComponent implements OnInit {
         });
 
         this.currentTip = this.hydrationTips[Math.floor(Math.random() * this.hydrationTips.length)];
+        this.loadHistory();
+    }
+
+    loadHistory() {
+        this.historyLoading.set(true);
+        this.trackerService.getHistory(this.historyPeriod()).subscribe({
+            next: (data) => {
+                const filled = this.fillMissingDays(data, this.historyPeriod());
+                this.waterHistory.set(filled);
+                this.historyLoading.set(false);
+            },
+            error: () => this.historyLoading.set(false)
+        });
+    }
+
+    /** Fills in missing days with waterIntake: 0 so the chart always shows every day */
+    private fillMissingDays(data: any[], days: number): any[] {
+        // Build a date→entry map from real data
+        const map = new Map<string, any>();
+        for (const entry of data) {
+            // Normalise key to YYYY-MM-DD
+            const key = entry.date.split('T')[0];
+            map.set(key, entry);
+        }
+
+        const result: any[] = [];
+        const now = new Date();
+        for (let i = days - 1; i >= 0; i--) {
+            const d = new Date(now);
+            d.setDate(now.getDate() - i);
+            const key = d.toISOString().split('T')[0];
+            result.push(map.get(key) ?? { date: key, waterIntake: 0 });
+        }
+        return result;
+    }
+
+    setHistoryPeriod(days: 7 | 14 | 30) {
+        this.historyPeriod.set(days);
+        this.loadHistory();
+    }
+
+    /** Returns bar height % relative to chartMax so bars above goal are still proportionally distinct */
+    getBarHeight(waterL: number): number {
+        const maxL = this.chartMax();
+        if (maxL === 0) return 0;
+        return (waterL / maxL) * 100;
+    }
+
+    /** Short day label for chart x-axis (Mon, Tue … or day number for 30d) */
+    getDayLabel(dateStr: string): string {
+        const d = new Date(dateStr);
+        if (this.historyPeriod() === 7) {
+            return ['Su','Mo','Tu','We','Th','Fr','Sa'][d.getDay()];
+        }
+        return String(d.getDate());
+    }
+
+    formatDate(dateStr: string): string {
+        return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    formatFullDate(dateStr: string): string {
+        return new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
     }
 
     progress = computed(() => {
         const goal = this.waterGoal();
         return Math.min((this.currentIntake() / goal) * 100, 100);
+    });
+
+    /** Scale ceiling for Today's Progress: whichever is bigger, goal or current intake */
+    todayMax = computed(() => Math.max(this.waterGoal(), this.currentIntake()));
+
+    /** Bar fill % for Today's Progress — not capped, so over-goal intake renders taller */
+    todayProgress = computed(() => {
+        const max = this.todayMax();
+        return max === 0 ? 0 : (this.currentIntake() / max) * 100;
     });
 
     toggleEditGoal() {
@@ -637,6 +1130,7 @@ export class WaterTrackerComponent implements OnInit {
         const liters = amount / 1000;
         this.trackerService.updateWaterIntake(liters).subscribe(tracker => {
             this.currentIntake.set(tracker.waterIntake * 1000);
+            this.loadHistory();
         });
     }
 
@@ -650,10 +1144,17 @@ export class WaterTrackerComponent implements OnInit {
     removeCustomWater(val: string) {
         const amount = parseInt(val);
         if (!isNaN(amount) && amount > 0) {
+            if (this.currentIntake() - amount < 0) {
+                this.removeError.set(`Cannot remove ${amount}ml — you've only logged ${this.currentIntake()}ml today.`);
+                setTimeout(() => this.removeError.set(''), 3000);
+                return;
+            }
+            this.removeError.set('');
             // Convert mL to negative liters for subtraction
             const liters = -(amount / 1000);
             this.trackerService.updateWaterIntake(liters).subscribe(tracker => {
                 this.currentIntake.set(Math.max(0, tracker.waterIntake * 1000));
+                this.loadHistory();
             });
         }
     }

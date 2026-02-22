@@ -125,11 +125,20 @@ const updatePlan = async (req, res) => {
             return res.status(403).json({ message: 'Not authorized' });
         }
 
-        Object.assign(plan, req.body);
+        // Prevent modification of immutable fields
+        const updates = { ...req.body };
+        delete updates._id;
+        delete updates.user;
+        delete updates.createdAt;
+        delete updates.updatedAt;
+        delete updates.__v;
+
+        Object.assign(plan, updates);
         await plan.save();
 
         res.json(plan);
     } catch (error) {
+        console.error('Update Plan Error:', error);
         res.status(500).json({ message: error.message });
     }
 };

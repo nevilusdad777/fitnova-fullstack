@@ -15,7 +15,11 @@ router.put('/profile', protect, [
   body('weight').optional().isFloat({ min: 20, max: 500 }).withMessage('Weight must be between 20 and 500'),
   body('goal').optional().isIn(['gain', 'loss', 'maintain']).withMessage('Valid goal is required'),
   body('activityLevel').optional().isFloat({ min: 1.2, max: 1.9 }).withMessage('Activity level must be between 1.2 and 1.9'),
-  body('waterGoal').optional().isInt({ min: 500, max: 10000 }).withMessage('Water goal must be between 500ml and 10000ml')
+  body('waterGoal').optional().isInt({ min: 500, max: 10000 }).withMessage('Water goal must be between 500ml and 10000ml'),
+  body('targetWeight').optional().isFloat({ min: 20, max: 500 }).withMessage('Target weight must be between 20 and 500'),
+  body('weeklyWorkoutDays').optional().isInt({ min: 0, max: 7 }).withMessage('Weekly workout days must be between 0 and 7'),
+  body('pace').optional().isIn(['relaxed', 'normal', 'aggressive']).withMessage('Valid pace is required'),
+  body('targetWater').optional().isInt({ min: 500, max: 10000 }).withMessage('Target water must be between 500ml and 10000ml')
 ], updateProfile);
 
 module.exports = router;

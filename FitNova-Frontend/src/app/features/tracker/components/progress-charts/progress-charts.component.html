@@ -1,32 +1,88 @@
-<div class="progress-charts-container">
-  <h2 class="section-heading">
-    <lucide-icon [img]="BarChart3" [size]="28"></lucide-icon>
-    Progress Charts
-  </h2>
+<div class="progress-charts-container h-full">
+  <div class="card glass-panel h-full">
+    <div class="card-header">
+      <h3 class="card-title flex-center gap-sm">
+        <lucide-icon [img]="LineChart" [size]="20" style="color: var(--color-success)"></lucide-icon>
+        Progress Charts
+      </h3>
+    </div>
+    <div class="card-body">
+      <div *ngIf="allChartData().length > 0; else noData">
+        
+        <!-- Summary Stats -->
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="summary-label">Starting Weight</div>
+            <div class="summary-value">{{ startingWeight() }} kg</div>
+            <div class="summary-date">{{ startingDate() }}</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-label">Current Weight</div>
+            <div class="summary-value primary">{{ currentWeight() }} kg</div>
+            <div class="summary-date">{{ currentDate() }}</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-label">Weight Change</div>
+            <div class="summary-value" [class.success]="weightChange() < 0" [class.danger]="weightChange() > 0">
+              <lucide-icon [img]="weightChange() < 0 ? TrendingDown : weightChange() > 0 ? TrendingUp : Minus" [size]="20"></lucide-icon>
+              {{ weightChange() > 0 ? '+' : '' }}{{ weightChange() }} kg
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-label">Target Weight</div>
+            <div class="summary-value">{{ targetWeight() }} kg</div>
+          </div>
+        </div>
 
-  <div class="charts-grid">
-    <!-- Weight Chart -->
-    <app-card class="chart-card">
-      <div class="chart-wrapper">
-        <canvas 
-          baseChart
-          [data]="weightChartData()"
-          [options]="weightChartOptions()"
-          type="line">
-        </canvas>
-      </div>
-    </app-card>
+        <!-- Weight Line Chart -->
+        <div class="chart-section weight-chart">
+          <div class="chart-header-row">
+            <h4 class="chart-title mb-0">📊 Weight Trend</h4>
+            <div class="timeframe-selector">
+              <button [class.active]="weightTimeframe() === 7" (click)="weightTimeframe.set(7)">7 Days</button>
+              <button [class.active]="weightTimeframe() === 30" (click)="weightTimeframe.set(30)">30 Days</button>
+              <button [class.active]="weightTimeframe() === 90" (click)="weightTimeframe.set(90)">90 Days</button>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <canvas 
+              baseChart
+              [data]="weightChartData()"
+              [options]="weightChartOptions"
+              type="line">
+            </canvas>
+          </div>
+        </div>
 
-    <!-- Calories Chart -->
-    <app-card class="chart-card">
-      <div class="chart-wrapper">
-        <canvas 
-          baseChart
-          [data]="caloriesChartData()"
-          [options]="caloriesChartOptions()"
-          type="bar">
-        </canvas>
+        <!-- Calorie Bar Chart -->
+        <div class="chart-section calorie-chart">
+          <div class="chart-header-row">
+            <h4 class="chart-title mb-0">🍽️ Daily Calorie Intake</h4>
+            <div class="timeframe-selector">
+              <button [class.active]="calorieTimeframe() === 7" (click)="calorieTimeframe.set(7)">7 Days</button>
+              <button [class.active]="calorieTimeframe() === 14" (click)="calorieTimeframe.set(14)">14 Days</button>
+              <button [class.active]="calorieTimeframe() === 30" (click)="calorieTimeframe.set(30)">30 Days</button>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <canvas 
+              baseChart
+              [data]="caloriesChartData()"
+              [options]="caloriesChartOptions"
+              type="bar">
+            </canvas>
+          </div>
+        </div>
+
       </div>
-    </app-card>
+      
+      <ng-template #noData>
+        <div class="empty-state">
+          <lucide-icon [img]="LineChart" [size]="48" class="empty-icon"></lucide-icon>
+          <p class="text-muted">No tracking data available</p>
+          <p class="text-sm text-muted">Start logging to see your progress charts!</p>
+        </div>
+      </ng-template>
+    </div>
   </div>
 </div>

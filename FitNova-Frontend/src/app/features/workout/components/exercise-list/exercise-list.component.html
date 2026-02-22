@@ -2,12 +2,10 @@
     <div class="categories-nav">
         <button class="category-btn" [class.active]="selectedCategory === ''"
             (click)="selectCategory('')">
-            <span class="category-emoji">💪</span>
             <span class="category-name">All</span>
         </button>
         <button *ngFor="let cat of categories()" class="category-btn" [class.active]="selectedCategory === cat.name"
             (click)="selectCategory(cat.name)">
-            <span class="category-emoji">{{ cat.emoji }}</span>
             <span class="category-name">{{ cat.name }}</span>
         </button>
     </div>
@@ -40,7 +38,7 @@
                 </button>
             </div>
             
-            <div class="exercise-visual">
+            <div class="exercise-visual" *ngIf="getActiveImage(ex)">
                 <img [src]="getActiveImage(ex)" [alt]="ex.name" loading="lazy">
             </div>
             <p class="exercise-desc">{{ ex.description }}</p>

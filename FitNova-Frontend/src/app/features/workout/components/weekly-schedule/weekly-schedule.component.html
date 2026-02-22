@@ -1,103 +1,269 @@
 <div class="weekly-schedule-container fade-in">
-    <div class="schedule-header">
-        <div class="header-content">
-            <h2>Weekly Workout Schedule</h2>
-            <p *ngIf="!activePlan()">No active workout plan. Generate one to get started!</p>
-            <p *ngIf="activePlan()">Stay consistent and crush your goals! 💪</p>
-        </div>
+  <div class="schedule-header">
+    <div class="header-content">
+      <h2>Weekly Workout Schedule</h2>
+      <p *ngIf="!activePlan()">No active workout plan. Generate one to get started!</p>
+      <p *ngIf="activePlan()">Stay consistent and crush your goals! 💪</p>
     </div>
+  </div>
 
-    <div class="week-timeline" *ngIf="!isLoading()">
-        <div *ngFor="let day of weekSchedule()" 
-             class="timeline-day"
-             [class.is-today]="day.isToday"
-             [class.is-rest]="day.isRestDay"
-             [class.is-workout]="!day.isRestDay">
-            
-            <!-- Day Card -->
-            <div class="day-card">
-                <!-- Day Header with Badge -->
-                <div class="card-header">
-                    <div class="day-label">
-                        <div class="day-name">{{ day.dayName }}</div>
-                        <div class="day-date">{{ day.date }}</div>
-                    </div>
-                    <div class="status-badges">
-                        <span class="today-badge" *ngIf="day.isToday">TODAY</span>
-                        <span class="rest-badge" *ngIf="day.isRestDay">REST</span>
-                    </div>
-                </div>
+  <div class="week-timeline" *ngIf="!isLoading()">
+    <div
+      *ngFor="let day of weekSchedule()"
+      class="timeline-day"
+      [class.is-today]="day.isToday"
+      [class.is-rest]="day.isRestDay"
+      [class.is-workout]="!day.isRestDay"
+    >
+      <!-- Day Card -->
+      <div class="day-card">
+        <!-- Day Header with Badge -->
+        <div class="card-header">
+          <div class="day-label">
+            <div class="day-name">{{ day.dayName }}</div>
+            <div class="day-date">{{ day.date }}</div>
+          </div>
+          <div class="status-badges">
+            <span class="today-badge" *ngIf="day.isToday">TODAY</span>
+            <span class="rest-badge" *ngIf="day.isRestDay">REST</span>
+          </div>
+        </div>
 
-                <!-- Card Body -->
-                <div class="card-body">
-                    <!-- Rest Day -->
-                    <div *ngIf="day.isRestDay" class="rest-content">
-                        <div class="rest-visual">
-                            <div class="rest-icon-wrapper">
-                                <lucide-icon [img]="Circle" [size]="32" [strokeWidth]="1.5"></lucide-icon>
-                            </div>
-                            <div class="rest-label">Rest & Recover</div>
-                        </div>
-                        <p class="rest-message">Give your muscles time to rebuild stronger</p>
-                    </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <!-- Rest Day -->
+          <div *ngIf="day.isRestDay" class="rest-content">
+            <div class="rest-visual">
+              <div class="rest-icon-wrapper">
+                <lucide-icon [img]="Circle" [size]="32" [strokeWidth]="1.5"></lucide-icon>
+              </div>
+              <div class="rest-label">Rest & Recover</div>
+            </div>
+            <p class="rest-message">Give your muscles time to rebuild stronger</p>
+          </div>
 
-                    <!-- Workout Day -->
-                    <div *ngIf="!day.isRestDay" class="workout-content">
-                        <div class="workout-header">
-                            <lucide-icon [img]="Dumbbell" [size]="20"></lucide-icon>
-                            <h4>{{ day.workoutName }}</h4>
-                        </div>
-                        
-                        <div class="workout-stats">
-                            <div class="stat-badge">
-                                <lucide-icon [img]="CheckCircle" [size]="14"></lucide-icon>
-                                <span>{{ day.exercises?.length }} exercises</span>
-                            </div>
-                        </div>
-
-                        <div class="exercise-list" *ngIf="day.exercises && day.exercises.length > 0">
-                            <div *ngFor="let ex of day.exercises.slice(0, 4)" class="exercise-item">
-                                <span class="exercise-bullet">●</span>
-                                <span class="exercise-name">{{ ex.name }}</span>
-                            </div>
-                            <div *ngIf="day.exercises.length > 4" class="more-indicator">
-                                +{{ day.exercises.length - 4 }} more exercises
-                            </div>
-                        </div>
-
-                        <button *ngIf="day.exercises && day.exercises.length > 0" 
-                                class="action-btn"
-                                [class.primary]="day.isToday"
-                                (click)="startWorkout(day)">
-                            <lucide-icon [img]="Play" [size]="16"></lucide-icon>
-                            <span>{{ day.isToday ? 'Start Now' : 'Preview' }}</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Progress Indicator -->
-                <div class="card-footer" *ngIf="!day.isRestDay">
-                    <div class="progress-bar">
-                        <div class="progress-fill" [style.width]="'0%'"></div>
-                    </div>
-                </div>
+          <!-- Workout Day -->
+          <div *ngIf="!day.isRestDay" class="workout-content">
+            <div class="workout-header">
+              <div class="workout-title-group">
+                <lucide-icon [img]="Dumbbell" [size]="20"></lucide-icon>
+                <h4>{{ day.workoutName }}</h4>
+              </div>
+              <button class="edit-icon-btn" (click)="openEdit(day)" title="Edit Workout">
+                <lucide-icon [img]="Edit2" [size]="16"></lucide-icon>
+              </button>
             </div>
 
-            <!-- Timeline Connector -->
-            <div class="timeline-connector" *ngIf="day.dayOfWeek < 6"></div>
+            <div class="workout-stats">
+              <div class="stat-badge">
+                <lucide-icon [img]="CheckCircle" [size]="14"></lucide-icon>
+                <span>{{ day.exercises?.length }} exercises</span>
+              </div>
+            </div>
+
+            <div class="exercise-list" *ngIf="day.exercises && day.exercises.length > 0">
+              <div *ngFor="let ex of day.exercises.slice(0, 4)" class="exercise-item">
+                <span class="exercise-bullet">●</span>
+                <span class="exercise-name">{{ ex.name }}</span>
+              </div>
+              <div *ngIf="day.exercises.length > 4" class="more-indicator">
+                +{{ day.exercises.length - 4 }} more exercises
+              </div>
+            </div>
+
+            <div *ngIf="day.exercises && day.exercises.length > 0" class="action-buttons">
+              <button class="action-btn preview-btn" (click)="openPreview(day)">
+                <lucide-icon [img]="Eye" [size]="16"></lucide-icon>
+                <span>Preview</span>
+              </button>
+              <button *ngIf="day.isToday && !day.isCompleted" class="action-btn primary" (click)="startWorkout(day)">
+                <lucide-icon [img]="Play" [size]="16"></lucide-icon>
+                <span>Start Now</span>
+              </button>
+              <button *ngIf="day.isCompleted" class="action-btn success" disabled>
+                <lucide-icon [img]="CheckCircle" [size]="16"></lucide-icon>
+                <span>Completed</span>
+              </button>
+            </div>
+          </div>
         </div>
-    </div>
 
-    <!-- Empty State -->
-    <div *ngIf="!isLoading() && weekSchedule().length === 0" class="empty-state">
-        <lucide-icon [img]="CalendarDays" [size]="64" [strokeWidth]="1.5"></lucide-icon>
-        <h3>No Schedule Yet</h3>
-        <p>Generate a workout plan to see your weekly schedule</p>
-    </div>
+        <!-- Progress Indicator -->
+        <div class="card-footer" *ngIf="!day.isRestDay">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width]="'0%'"></div>
+          </div>
+        </div>
+      </div>
 
-    <!-- Loading State -->
-    <div *ngIf="isLoading()" class="loading-state">
-        <div class="spinner"></div>
-        <p>Loading your schedule...</p>
+      <!-- Timeline Connector -->
+      <div class="timeline-connector" *ngIf="day.dayOfWeek < 6"></div>
     </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading() && weekSchedule().length === 0" class="empty-state">
+    <lucide-icon [img]="CalendarDays" [size]="64" [strokeWidth]="1.5"></lucide-icon>
+    <h3>No Schedule Yet</h3>
+    <p>Generate a workout plan to see your weekly schedule</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading()" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading your schedule...</p>
+  </div>
+
+  <!-- Preview Modal -->
+  <div *ngIf="previewDay()" class="preview-modal-overlay" (click)="closePreview()">
+    <div class="preview-modal" (click)="$event.stopPropagation()">
+      <div class="preview-header">
+        <div class="preview-title-section">
+          <div class="preview-day-badge">{{ previewDay()?.dayName }}</div>
+          <h3>{{ previewDay()?.workoutName }}</h3>
+          <p class="preview-date">{{ previewDay()?.date }}</p>
+        </div>
+        <button class="close-btn" (click)="closePreview()" aria-label="Close preview">
+          <lucide-icon [img]="X" [size]="24"></lucide-icon>
+        </button>
+      </div>
+
+      <div class="preview-body">
+        <div class="preview-stats">
+          <div class="preview-stat-item">
+            <lucide-icon [img]="Dumbbell" [size]="18"></lucide-icon>
+            <span>{{ previewDay()?.exercises?.length }} Exercises</span>
+          </div>
+        </div>
+
+        <div class="preview-exercises">
+          <h4>Exercise List</h4>
+          <div class="preview-exercise-grid">
+            <div *ngFor="let ex of previewDay()?.exercises; let i = index" class="preview-exercise-card">
+              <div class="exercise-number">{{ i + 1 }}</div>
+              <div class="exercise-details">
+                <div class="exercise-title">{{ ex.name }}</div>
+                <div class="exercise-specs">
+                  <span class="spec-item">
+                    <strong>{{ ex.sets || 3 }}</strong> sets
+                  </span>
+                  <span class="spec-divider">•</span>
+                  <span class="spec-item">
+                    <strong>{{ ex.reps || 12 }}</strong> reps
+                  </span>
+                  <span class="spec-divider">•</span>
+                  <span class="spec-item">
+                    <strong>{{ ex.restSeconds || ex.restTime || 60 }}s</strong> rest
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="preview-footer">
+        <button class="cancel-btn" (click)="closePreview()">
+          Close
+        </button>
+        <button class="start-workout-btn" (click)="startWorkoutFromPreview()">
+          <lucide-icon [img]="Play" [size]="18"></lucide-icon>
+          <span>Start Workout</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div *ngIf="editDay()" class="preview-modal-overlay" (click)="closeEdit()">
+    <div class="preview-modal edit-modal" (click)="$event.stopPropagation()">
+      <div class="preview-header">
+        <div class="preview-title-section">
+          <div class="preview-day-badge">{{ editDay()?.dayName }} - Edit</div>
+          <input type="text" [(ngModel)]="editWorkoutName" class="edit-title-input" placeholder="Workout Name" />
+          <p class="preview-date">{{ editDay()?.date }}</p>
+        </div>
+        <button class="close-btn" (click)="closeEdit()" aria-label="Close edit">
+          <lucide-icon [img]="X" [size]="24"></lucide-icon>
+        </button>
+      </div>
+
+      <div class="preview-body">
+        <div class="preview-exercises">
+          <h4>Edit Exercises</h4>
+          <div class="preview-exercise-grid">
+            <div *ngFor="let ex of editExercises(); let i = index" class="preview-exercise-card edit-exercise-card">
+              <div class="exercise-number">{{ i + 1 }}</div>
+              <div class="exercise-details">
+                <div class="exercise-title">{{ ex.name }}</div>
+                <div class="exercise-edit-inputs">
+                  <div class="edit-input-group">
+                    <label>Sets</label>
+                    <input type="number" min="1" max="10" [(ngModel)]="ex.sets" />
+                  </div>
+                  <div class="edit-input-group">
+                    <label>Reps</label>
+                    <input type="number" min="1" max="100" [(ngModel)]="ex.reps" />
+                  </div>
+                  <div class="edit-input-group">
+                    <label>Rest</label>
+                    <input type="number" min="0" step="15" [(ngModel)]="ex.restSeconds" />
+                  </div>
+                </div>
+              </div>
+              <button class="delete-ex-btn" (click)="removeEditExercise(i)" title="Remove Exercise">
+                <lucide-icon [img]="Trash2" [size]="18"></lucide-icon>
+              </button>
+            </div>
+            
+            <div *ngIf="editExercises().length === 0" class="empty-exercises-state">
+              <p>No exercises remaining. Add a new exercise to continue.</p>
+            </div>
+          </div>
+
+          <!-- Add Exercise Section -->
+          <div class="add-exercise-section">
+            <button class="action-btn preview-btn add-ex-btn" (click)="toggleExerciseSearch()">
+              <lucide-icon [img]="showExerciseSearch() ? X : Plus" [size]="18"></lucide-icon>
+              <span>{{ showExerciseSearch() ? 'Cancel' : 'Add Exercise' }}</span>
+            </button>
+
+            <div class="exercise-search-dropdown fade-in" *ngIf="showExerciseSearch()">
+              <div class="search-input-wrapper">
+                <lucide-icon [img]="Search" [size]="16" class="search-icon"></lucide-icon>
+                <input type="text" [ngModel]="searchQuery()" (input)="onSearchInput($event)" placeholder="Search exercises by name or body part..." />
+              </div>
+              
+              <div class="search-results-list">
+                <div class="search-result-item" *ngFor="let ex of filteredExercises()" (click)="addExercise(ex)">
+                  <div class="res-info">
+                    <span class="res-name">{{ ex.name }}</span>
+                    <span class="res-bodypart">{{ ex.bodyPart }}</span>
+                  </div>
+                  <button class="add-btn-small">
+                    <lucide-icon [img]="Plus" [size]="14"></lucide-icon>
+                  </button>
+                </div>
+                
+                <div *ngIf="filteredExercises().length === 0" class="no-results">
+                  <p>No exercises found matching "{{ searchQuery() }}"</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="preview-footer">
+        <button class="cancel-btn" (click)="closeEdit()" [disabled]="isSaving()">
+          Cancel
+        </button>
+        <button class="start-workout-btn save-edit-btn" (click)="saveEdit()" [disabled]="isSaving()">
+          <lucide-icon [img]="Save" [size]="18" *ngIf="!isSaving()"></lucide-icon>
+          <div class="spinner-small" *ngIf="isSaving()"></div>
+          <span>{{ isSaving() ? 'Saving...' : 'Save Changes' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

@@ -1,0 +1,66 @@
+<div class="form-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h2>{{ isEditMode ? 'Edit Admin' : 'Add New Admin' }}</h2>
+      <p>{{ isEditMode ? 'Update existing admin details' : 'Create a new administrator account' }}</p>
+    </div>
+    <button [routerLink]="['/admin/admins']" class="btn-back">← Back to List</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading admin details...</p>
+  </div>
+
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <form *ngIf="!loading" [formGroup]="adminForm" (ngSubmit)="onSubmit()" class="food-form">
+    
+    <div class="form-section">
+      <h3>Account Details</h3>
+      
+      <div class="form-grid">
+        <div class="form-group span-2">
+          <label for="name">Full Name *</label>
+          <input type="text" id="name" formControlName="name" placeholder="John Doe">
+          <span class="error-msg" *ngIf="isFieldInvalid('name')">Name is required</span>
+        </div>
+
+        <div class="form-group span-2">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" formControlName="email" placeholder="admin@fitnova.com">
+          <span class="error-msg" *ngIf="isFieldInvalid('email')">A valid email is required</span>
+        </div>
+
+        <div class="form-group span-2">
+          <label for="password">Password {{ isEditMode ? '(leave blank to keep current)' : '*' }}</label>
+          <input type="password" id="password" formControlName="password" placeholder="Min 6 characters">
+          <span class="error-msg" *ngIf="isFieldInvalid('password')">Password must be at least 6 characters</span>
+        </div>
+
+        <div class="form-group">
+          <label for="role">Role *</label>
+          <select id="role" formControlName="role">
+            <option *ngFor="let role of roles" [value]="role">{{ role | titlecase }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="checkbox-group mt-16">
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="isActive">
+          <span class="checkbox-text">Active Account</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions mt-32">
+      <button type="button" [routerLink]="['/admin/admins']" class="btn-cancel">Cancel</button>
+      <button type="submit" class="btn-submit" [disabled]="submitting">
+        {{ submitting ? 'Saving...' : (isEditMode ? 'Update Admin' : 'Create Admin') }}
+      </button>
+    </div>
+
+  </form>
+</div>

@@ -32,22 +32,14 @@ export class AuthService {
     login(credentials: LoginRequest): Observable<AuthResponse> {
         return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
             tap((response) => {
+                const { token, ...userData } = response;
                 const user: User = {
-                    _id: response._id,
-                    name: response.name,
-                    email: response.email,
-                    token: response.token,
-                    profilePicture: response.profilePicture,
-                    age: 0,
-                    gender: 'other',
-                    height: 0,
-                    weight: 0,
-                    goal: 'maintain',
-                    activityLevel: 1.2
+                    ...userData,
+                    token
                 };
                 this.currentUser.set(user);
-                if (response.token) {
-                    localStorage.setItem('token', response.token);
+                if (token) {
+                    localStorage.setItem('token', token);
                 }
                 localStorage.setItem('user', JSON.stringify(user));
                 this.router.navigate(['/home']);
@@ -78,10 +70,23 @@ export class AuthService {
         localStorage.setItem('user', JSON.stringify(user));
     }
 
+    isAuthenticated(): boolean {
+        const token = localStorage.getItem('token');
+        return !!token;
+    }
+
     logout() {
         this.currentUser.set(null);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         this.router.navigate(['/auth/login']);
+    }
+
+    forgotPassword(email: string): Observable<any> {
+        return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+    }
+
+    resetPassword(password: string, token: string): Observable<any> {
+        return this.http.put(`${this.apiUrl}/reset-password/${token}`, { password });
     }
 }

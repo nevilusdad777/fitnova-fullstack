@@ -30,6 +30,13 @@
                 <span *ngIf="passwordErrors" class="field-error">{{ passwordErrors }}</span>
             </div>
 
+            <div class="form-group flex justify-between items-center" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div class="remember-me">
+                    <!-- Can add remember me later if needed -->
+                </div>
+                <a routerLink="/auth/forgot-password" class="forgot-password-link" style="color: var(--primary-color); font-size: 0.9rem; text-decoration: none; transition: background-color 0.3s ease;">Forgot Password?</a>
+            </div>
+
             <button type="submit" class="btn-primary btn-block" [disabled]="isLoading()">
                 <span *ngIf="!isLoading()">Sign In</span>
                 <span *ngIf="isLoading()">Signing in...</span>

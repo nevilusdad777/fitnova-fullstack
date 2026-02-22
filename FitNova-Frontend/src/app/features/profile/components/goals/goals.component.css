@@ -1,215 +1,317 @@
 .goals-container {
-    max-width: 900px;
-    margin: 0 auto;
+    width: 100%;
+    animation: fadeIn 0.4s ease-out;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--space-2xl);
-    padding-bottom: var(--space-lg);
-    border-bottom: 1px solid var(--color-border);
+    align-items: flex-end;
+    margin-bottom: var(--space-xl);
 }
 
 .title-section h2 {
-    font-size: var(--font-size-xl);
+    font-size: 1.75rem;
+    font-weight: 600;
     color: var(--color-text-primary);
     margin-bottom: var(--space-xs);
+    letter-spacing: -0.02em;
 }
 
 .title-section p {
     color: var(--color-text-secondary);
-    font-size: var(--font-size-sm);
+    font-size: 0.95rem;
+    margin: 0;
 }
 
 .goals-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--space-xl);
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
 }
 
-.main-goal {
+/* Sections grouping */
+.goal-section-title {
     grid-column: 1 / -1;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.5rem;
 }
 
 .goal-card {
-    background: var(--card-glass-bg, var(--color-surface));
-    padding: var(--space-xl);
-    border-radius: var(--radius-xl);
+    background-color: var(--card-bg, #ffffff);
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
     border: 1px solid var(--color-border);
-    transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .goal-card:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-    border-color: var(--color-primary-light);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.card-header-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 }
 
 .card-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-lg);
-    background: var(--color-surface-hover);
     color: var(--color-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: var(--space-lg);
 }
 
 .goal-card h3 {
-    font-size: var(--font-size-lg);
-    margin-bottom: var(--space-lg);
+    font-size: 1rem;
+    font-weight: 600;
     color: var(--color-text-primary);
+    margin: 0;
 }
 
-.metric-value {
-    font-size: var(--font-size-2xl);
-    font-weight: 800;
-    color: var(--color-text-primary);
-    margin-bottom: var(--space-xs);
+/* Primary Objective Card Specifics */
+.main-goal {
+    grid-column: 1 / -1;
 }
 
-/* Radio Group Styling */
-.radio-group {
-    display: flex;
-    gap: var(--space-md);
-    margin-bottom: var(--space-lg);
+.objective-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 0.5rem;
 }
 
-.radio-group label {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-md);
-    border: 2px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    cursor: pointer;
-    font-weight: var(--font-weight-medium);
-    transition: all var(--transition-fast);
+.objective-item {
     position: relative;
-    color: var(--color-text-secondary);
+    cursor: pointer;
 }
 
-.radio-group input {
+.objective-item input {
     position: absolute;
     opacity: 0;
 }
 
-.radio-group label.selected {
+.objective-box {
+    padding: 1.25rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.2s ease;
+    background-color: var(--color-surface);
+}
+
+.objective-box .icon-wrapper {
+    margin-bottom: 0.5rem;
+    color: var(--color-text-secondary);
+    transition: color 0.2s ease;
+}
+
+.objective-box span {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.objective-item:hover .objective-box {
+    border-color: var(--color-text-muted);
+}
+
+.objective-item input:checked + .objective-box {
+    background-color: rgba(59, 130, 246, 0.05); /* Slight blue tint */
     border-color: var(--color-primary);
-    background: var(--color-surface-hover); /* Or a very light tint of primary */
+}
+
+.objective-item input:checked + .objective-box .icon-wrapper,
+.objective-item input:checked + .objective-box span {
     color: var(--color-primary);
 }
 
-.radio-group.horizontal {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: var(--space-sm);
-}
-
-.radio-group.horizontal label {
-    flex: 1;
-    min-width: 80px;
-    padding: var(--space-sm);
-    font-size: var(--font-size-xs);
-    text-align: center;
-}
-
-.suggestion {
-    margin-top: var(--space-lg);
-    padding-top: var(--space-md);
-    border-top: 1px dashed var(--color-border);
+/* Input Fields */
+.input-group {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 0.5rem;
 }
 
-.suggestion .label {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.suggestion .value {
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold); /* Optimized assuming positive reinforcement */
-    color: var(--color-success);
-}
-
-/* Input Styling */
-.input-wrapper {
+.input-container {
     position: relative;
-    margin-bottom: var(--space-xs);
+    display: flex;
+    align-items: center;
 }
 
-.input-wrapper input {
+.input-container input {
     width: 100%;
-    padding: var(--space-md);
-    padding-right: 3rem; /* Space for unit */
+    background-color: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    background: var(--color-background);
+    border-radius: 8px;
+    padding: 0.85rem 3.5rem 0.85rem 1rem;
     color: var(--color-text-primary);
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-bold);
+    font-size: 1.25rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
-.input-wrapper input:focus {
+.input-container input:focus {
     outline: none;
     border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.unit {
+.input-container .unit {
     position: absolute;
-    right: var(--space-md);
-    top: 50%;
-    transform: translateY(-50%);
+    right: 1rem;
+    font-weight: 500;
     color: var(--color-text-muted);
-    font-weight: var(--font-weight-medium);
+    font-size: 0.9rem;
+}
+
+/* Metric Display for Read-only cards */
+.metric-display {
+    margin-top: 0.5rem;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1;
+}
+
+.metric-category {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+    color: var(--color-text-secondary);
 }
 
 .description {
-    font-size: var(--font-size-sm);
+    font-size: 0.85rem;
     color: var(--color-text-muted);
+    margin-top: auto;
 }
 
-/* Button */
-.btn-primary {
+/* Pace Selection */
+.pace-selector {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    background-color: var(--color-surface);
+    padding: 0.25rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+}
+
+.pace-chip {
+    flex: 1;
+    position: relative;
+    cursor: pointer;
+}
+
+.pace-chip input {
+    position: absolute;
+    opacity: 0;
+}
+
+.pace-content {
+    padding: 0.5rem;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    transition: all 0.2s ease;
+}
+
+.pace-chip:hover .pace-content {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.pace-chip input:checked + .pace-content {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+/* Footer / Action */
+.suggestion-banner {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: var(--color-surface);
+    border-radius: 8px;
+    border-left: 4px solid var(--color-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.suggestion-text {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+
+.suggestion-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.btn-save {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
-    padding: var(--space-sm) var(--space-xl);
-    border-radius: var(--radius-lg);
-    background: var(--color-primary);
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    background-color: var(--color-primary);
     color: white;
-    font-weight: var(--font-weight-medium);
+    font-weight: 500;
+    font-size: 0.95rem;
     border: none;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background-color 0.2s ease;
 }
 
-.btn-primary:disabled {
-    opacity: 0.7;
-    cursor: default;
+.btn-save:hover:not(:disabled) {
+    background-color: #2563eb;
 }
 
-.btn-primary:not(:disabled):hover {
-    background: var(--color-primary-dark);
+.btn-save:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: var(--color-text-muted);
 }
 
-@media (max-width: 768px) {
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+@media (max-width: 640px) {
+    .goals-grid {
+        grid-template-columns: 1fr;
+    }
+    .objective-options {
+        grid-template-columns: 1fr;
+    }
     .header {
         flex-direction: column;
         align-items: flex-start;
-        gap: var(--space-md);
-    }
-    
-    .radio-group {
-        flex-direction: column;
+        gap: 1rem;
     }
 }

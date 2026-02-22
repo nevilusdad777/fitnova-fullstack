@@ -141,7 +141,10 @@ export class PersonalDetailsComponent implements OnInit {
 
     const img = new Image();
     img.onload = () => {
-      const maxSize = 600;
+      // Calculate max width based on container, default to 600
+      const containerWidth = this.cropCanvas.nativeElement.parentElement?.clientWidth || 600;
+      const maxSize = Math.min(containerWidth - 32, 600); // 32px for padding
+      
       let width = img.width;
       let height = img.height;
 
@@ -197,21 +200,24 @@ export class PersonalDetailsComponent implements OnInit {
       ctx.closePath();
       ctx.clip();
 
-      // Now draw the dark overlay - it will only appear outside the crop area
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+      // Now draw the semi-transparent overlay - it will only appear outside the crop area
+      // Check for dark theme by looking at a document attribute or body class
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      ctx.fillStyle = isDark ? 'rgba(0, 0, 0, 0.75)' : 'rgba(255, 255, 255, 0.7)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Restore to remove clipping
       ctx.restore();
 
-      // Draw purple border around crop area
-      ctx.strokeStyle = '#8b5cf6';
+      // Draw primary color border around crop area
+      const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim() || '#8b5cf6';
+      ctx.strokeStyle = primaryColor;
       ctx.lineWidth = 3;
       ctx.strokeRect(this.cropData.startX, this.cropData.startY, this.cropData.width, this.cropData.height);
       
       // Add corner handles
       const handleSize = 12;
-      ctx.fillStyle = '#8b5cf6';
+      ctx.fillStyle = primaryColor;
       ctx.fillRect(this.cropData.startX - handleSize/2, this.cropData.startY - handleSize/2, handleSize, handleSize);
       ctx.fillRect(this.cropData.startX + this.cropData.width - handleSize/2, this.cropData.startY - handleSize/2, handleSize, handleSize);
       ctx.fillRect(this.cropData.startX - handleSize/2, this.cropData.startY + this.cropData.height - handleSize/2, handleSize, handleSize);

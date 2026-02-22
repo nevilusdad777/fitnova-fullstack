@@ -39,7 +39,7 @@
                 <h3>Quick Stats</h3>
                 <div class="stat-row">
                     <lucide-icon [img]="Activity" [size]="16" class="text-primary"></lucide-icon>
-                    <span>{{ todayCaloriesBurned() }} kcal burned</span>
+                    <span>{{ todayCaloriesBurned() }} kcal burned (Today)</span>
                 </div>
                 <div class="stat-row">
                     <lucide-icon [img]="TrendingUp" [size]="16" class="text-success"></lucide-icon>
@@ -66,12 +66,14 @@
                         <app-routine-list *ngIf="currentView() === 'routines'"
                             (createRoutine)="showRoutineBuilder()"
                             (editRoutine)="onEditRoutine($event)"
-                            (startRoutine)="onStartRoutineFromList($event)">
+                            (previewRoutine)="onPreviewRoutineFromList($event)">
                         </app-routine-list>
                         <app-routine-builder *ngIf="currentView() === 'routine-builder'"
                             [routine]="editingRoutine()"
+                            [isPreview]="isPreviewMode()"
                             (saved)="onRoutineSaved()"
-                            (cancelled)="onRoutineCancelled()">
+                            (cancelled)="onRoutineCancelled()"
+                            (startDayWorkout)="onStartDayWorkout($event)">
                         </app-routine-builder>
                         <app-workout-history *ngIf="currentView() === 'history'"></app-workout-history>
                         <app-workout-plan-generator *ngIf="currentView() === 'generator'" (planGenerated)="onPlanGenerated()"></app-workout-plan-generator>

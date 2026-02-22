@@ -107,7 +107,13 @@ export class ExerciseListComponent implements OnInit, OnDestroy {
             const index = this.activeImageIndex[id] || 0;
             return ex.images[index];
         }
-        return ex.images?.[0] || '';
+        
+        if (ex.images && ex.images.length === 1) {
+            return ex.images[0];
+        }
+        
+        const encodedName = encodeURIComponent(ex.name || 'Exercise');
+        return `https://placehold.co/600x400/2a2438/e0d6eb?text=${encodedName}`;
     }
 
     selectCategory(categoryName: string) {
@@ -161,6 +167,9 @@ export class ExerciseListComponent implements OnInit, OnDestroy {
                     this.modalImage.set(ex.images![idx]);
                 }, 600); // 600ms swap for slideshow effect
             }
+        } else {
+            const encodedName = encodeURIComponent(ex.name || 'Exercise');
+            this.modalImage.set(`https://placehold.co/600x400/2a2438/e0d6eb?text=${encodedName}`);
         }
     }
 

@@ -38,7 +38,16 @@ app.use('/diet', dietRoutes);
 app.use('/routines', routineRoutes);
 app.use('/workout-history', workoutHistoryRoutes);
 app.use('/workout-plan', workoutPlanRoutes);
+
+// Admin routes
+app.use('/admin/auth', require('./routes/admin-auth.routes'));
+app.use('/admin/users', require('./routes/admin-user.routes'));
+app.use('/admin/foods', require('./routes/admin-food.routes'));
+app.use('/admin/exercises', require('./routes/admin-exercise.routes'));
+app.use('/admin/stats', require('./routes/admin-stats.routes'));
 app.use('/admin', require('./routes/admin.routes'));
+
+
 
 // Error handling
 app.use(notFound);
@@ -47,9 +56,9 @@ app.use(errorHandler);
 // Connect DB and start server
 connectDB().then(() => {
   app.listen(PORT, () => {
-    console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+    console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
   });
 }).catch(err => {
-  console.error('Failed to connect to MongoDB', err);
+  console.error('❌ Failed to connect to MongoDB', err);
   process.exit(1);
 });

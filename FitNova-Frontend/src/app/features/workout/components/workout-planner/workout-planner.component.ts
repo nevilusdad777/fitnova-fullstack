@@ -82,7 +82,8 @@ export class WorkoutPlannerComponent {
             'Back': '🦾',
             'Legs': '🦵',
             'Shoulder': '🏋️',
-            'Arms': '💪',
+            'Biceps': '💪',
+            'Triceps': '🦵',
             'Abs': '🔥'
         };
         return emojiMap[category] || '💪';

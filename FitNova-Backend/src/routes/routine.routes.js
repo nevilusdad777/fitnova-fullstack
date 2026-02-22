@@ -23,25 +23,30 @@ const routineValidation = [
         .optional()
         .isArray()
         .withMessage('Target body parts must be an array'),
-    body('exercises')
-        .isArray({ min: 1 })
-        .withMessage('At least one exercise is required'),
-    body('exercises.*.exerciseId')
+    body('schedule')
+        .isArray()
+        .withMessage('Schedule must be an array'),
+    body('schedule.*.day')
+        .notEmpty()
+        .withMessage('Day is required')
+        .isIn(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+        .withMessage('Invalid day'),
+    body('schedule.*.exercises')
+        .optional()
+        .isArray()
+        .withMessage('Exercises must be an array'),
+    body('schedule.*.exercises.*.exerciseId')
         .notEmpty()
         .withMessage('Exercise ID is required'),
-    body('exercises.*.name')
+    body('schedule.*.exercises.*.name')
         .notEmpty()
         .withMessage('Exercise name is required'),
-    body('exercises.*.sets')
+    body('schedule.*.exercises.*.sets')
         .isInt({ min: 1 })
         .withMessage('Sets must be at least 1'),
-    body('exercises.*.reps')
+    body('schedule.*.exercises.*.reps')
         .isInt({ min: 1 })
-        .withMessage('Reps must be at least 1'),
-    body('exercises.*.restTime')
-        .optional()
-        .isInt({ min: 0 })
-        .withMessage('Rest time must be a positive number')
+        .withMessage('Reps must be at least 1')
 ];
 
 // Routes

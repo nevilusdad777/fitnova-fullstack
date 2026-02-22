@@ -1,0 +1,153 @@
+<div class="user-list-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h2>Food Management</h2>
+      <p>Manage all foods in the database</p>
+    </div>
+    <button [routerLink]="['/admin/foods/new']" class="btn-primary">+ Add New Food</button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (ngModelChange)="onSearchChange($event)"
+        placeholder="Search by food name..."
+      >
+      <button (click)="onSearch()" class="search-btn">🔍 Search</button>
+    </div>
+
+    <div class="filter-group">
+      <select [(ngModel)]="selectedCategory" (ngModelChange)="onFilterChange()">
+        <option value="">All Categories</option>
+        <option value="protein">Protein</option>
+        <option value="carbs">Carbs</option>
+        <option value="vegetables">Vegetables</option>
+        <option value="fruits">Fruits</option>
+        <option value="dairy">Dairy</option>
+        <option value="fats">Fats</option>
+        <option value="snacks">Snacks</option>
+        <option value="beverages">Beverages</option>
+        <option value="grains">Grains</option>
+      </select>
+
+      <select [(ngModel)]="sortField" (ngModelChange)="onFilterChange()">
+        <option value="name">Sort by Name</option>
+        <option value="calories">Sort by Calories</option>
+        <option value="protein">Sort by Protein</option>
+        <option value="carbs">Sort by Carbs</option>
+        <option value="fat">Sort by Fat</option>
+      </select>
+
+      <select [(ngModel)]="sortDirection" (ngModelChange)="onFilterChange()">
+        <option value="asc">{{ sortField === 'name' ? 'A-Z' : 'Low to High' }}</option>
+        <option value="desc">{{ sortField === 'name' ? 'Z-A' : 'High to Low' }}</option>
+      </select>
+
+      <button (click)="clearFilters()" class="clear-btn">Clear Filters</button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading foods...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <!-- Foods Table -->
+  <div *ngIf="!loading" class="table-container">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Calories</th>
+          <th>Protein (g)</th>
+          <th>Carbs (g)</th>
+          <th>Fat (g)</th>
+          <th>Serving</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let food of foods">
+          <td>
+            <div class="food-name">
+              {{ food.name }}
+              <span *ngIf="food.verified" class="verified-badge" title="Verified">✓</span>
+              <span *ngIf="food.isVegetarian" class="veg-badge" title="Vegetarian">🌱</span>
+              <span *ngIf="!food.isVegetarian" class="non-veg-badge" title="Non-Vegetarian">🍗</span>
+            </div>
+          </td>
+          <td>{{ food.category | titlecase }}</td>
+          <td>{{ food.calories }}</td>
+          <td>{{ food.protein }}</td>
+          <td>{{ food.carbs }}</td>
+          <td>{{ food.fat }}</td>
+          <td>{{ food.servingSize }} {{ food.servingUnit }}</td>
+          <td class="actions">
+            <button 
+              [routerLink]="['/admin/foods/edit', food._id]" 
+              class="btn-edit"
+              title="Edit Food"
+            >
+              ✏️
+            </button>
+            <button 
+              (click)="openDeleteModal(food)" 
+              class="btn-delete"
+              title="Delete Food"
+            >
+              🗑️
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="foods.length === 0">
+          <td colspan="8" class="no-data">No foods found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!loading && foods.length > 0" class="pagination">
+    <div class="pagination-info">
+      Showing {{ foods.length }} of {{ totalFoods }} foods
+    </div>
+    <div class="pagination-controls">
+      <button 
+        (click)="previousPage()" 
+        [disabled]="currentPage === 1"
+        class="page-btn"
+      >
+        ← Previous
+      </button>
+      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button 
+        (click)="nextPage()" 
+        [disabled]="currentPage === totalPages"
+        class="page-btn"
+      >
+        Next →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div *ngIf="showDeleteModal" class="modal-overlay" (click)="closeDeleteModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>Confirm Delete</h3>
+    <p>Are you sure you want to delete food <strong>{{ foodToDelete?.name }}</strong>?</p>
+    <p class="warning">This action cannot be undone.</p>
+    <div class="modal-actions">
+      <button (click)="closeDeleteModal()" class="btn-cancel">Cancel</button>
+      <button (click)="confirmDelete()" class="btn-confirm">Delete</button>
+    </div>
+  </div>
+</div>

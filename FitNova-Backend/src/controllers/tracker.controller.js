@@ -119,34 +119,62 @@ const getDashboardStats = async (req, res) => {
 
     const weeklyWorkouts = weeklyWorkoutHistory.length;
     
-    // Calculate streak - count consecutive days with workouts
+    // Calculate streak - count consecutive days with workouts.
+    // IMPORTANT: use Date.UTC() to get today's UTC date regardless of server timezone.
+    // setHours(0,0,0,0) uses local timezone (IST on this machine), which would give
+    // yesterday's UTC date when converted via toISOString() — causing the loop to
+    // start one day too early and miss today's workout entirely.
     let streak = 0;
-    const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0);
-    
-    while (true) {
-      const dateStr = currentDate.toISOString().split('T')[0];
-      const workoutOnDay = await WorkoutHistory.findOne({
+    const now = new Date();
+    // UTC midnight of today — timezone-safe
+    let currentUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+
+    // Helper: find a workout on a given UTC-midnight Date
+    const hasWorkoutOnDay = (utcMidnight) => {
+      const nextDay = new Date(utcMidnight.getTime() + 24 * 60 * 60 * 1000);
+      return WorkoutHistory.findOne({
         user: req.user._id,
-        date: {
-          $gte: new Date(dateStr),
-          $lt: new Date(new Date(dateStr).setDate(new Date(dateStr).getDate() + 1))
-        }
+        date: { $gte: utcMidnight, $lt: nextDay }
       });
-      
+    };
+
+    // If today has no workout yet (day still in progress), start counting from yesterday
+    const workoutToday = await hasWorkoutOnDay(currentUTC);
+    if (!workoutToday) {
+      currentUTC = new Date(currentUTC.getTime() - 24 * 60 * 60 * 1000); // go to yesterday
+    }
+
+    while (streak < 365) {
+      const workoutOnDay = await hasWorkoutOnDay(currentUTC);
       if (workoutOnDay) {
         streak++;
-        currentDate.setDate(currentDate.getDate() - 1);
+        currentUTC = new Date(currentUTC.getTime() - 24 * 60 * 60 * 1000); // previous day
       } else {
         break;
       }
-      
-      // Limit to prevent infinite loops
-      if (streak >= 365) break;
     }
 
+    // Compute today's caloriesConsumed live from completed meals only
+    const Meal = require('../models/Diet');
+    const completedMeals = await Meal.find({
+      user: req.user._id,
+      date: today,
+      completed: true
+    });
+    const liveCaloriesConsumed = Math.round(
+      completedMeals.reduce((sum, m) => sum + (m.totalCalories || 0), 0)
+    );
+
+    // Build today object with live calories
+    const todayData = {
+      caloriesConsumed: liveCaloriesConsumed,
+      caloriesBurned: todayTracker.caloriesBurned || 0,
+      waterIntake: todayTracker.waterIntake || 0,
+      weight: todayTracker.weight || user.weight
+    };
+
     res.json({
-      today: todayTracker,
+      today: todayData,
       weeklyWorkouts,
       streak,
       totalWorkoutsCompleted: user.totalWorkoutsCompleted || 0
@@ -163,19 +191,43 @@ const getTrackerHistory = async (req, res) => {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
 
+    const startDateStr = startDate.toISOString().split('T')[0];
+    const endDateStr = endDate.toISOString().split('T')[0];
+
     const trackers = await Tracker.find({
       user: req.user._id,
       date: {
-        $gte: startDate.toISOString().split('T')[0],
-        $lte: endDate.toISOString().split('T')[0]
+        $gte: startDateStr,
+        $lte: endDateStr
       }
     }).sort({ date: 1 });
 
-    res.json(trackers);
+    // Compute caloriesConsumed live from Meal records for accuracy
+    const Meal = require('../models/Diet');
+    const meals = await Meal.find({
+      user: req.user._id,
+      date: { $gte: startDateStr, $lte: endDateStr },
+      completed: true   // only count meals the user has marked as eaten
+    });
+
+    // Build a map of date -> total calories from actual meals
+    const calsByDate = {};
+    for (const meal of meals) {
+      calsByDate[meal.date] = (calsByDate[meal.date] || 0) + (meal.totalCalories || 0);
+    }
+
+    // Merge live calories into tracker records
+    const result = trackers.map(t => ({
+      ...t.toObject(),
+      caloriesConsumed: Math.round(calsByDate[t.date] || 0)
+    }));
+
+    res.json(result);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 module.exports = {
   getTodayTracker,

@@ -13,6 +13,7 @@ export interface Food {
   _id: string;
   name: string;
   category: string;
+  description?: string;
   isVegetarian: boolean;
   calories: number;
   protein: number;

@@ -1,0 +1,106 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h2>Dashboard Overview</h2>
+    <p>Welcome to the FitNova Admin Panel</p>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading dashboard...</p>
+  </div>
+
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div *ngIf="stats && !loading" class="dashboard-content">
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-info">
+          <h3>{{ stats.overview.totalUsers }}</h3>
+          <p>Total Users</p>
+          <span class="stat-badge" *ngIf="stats.overview.recentUsers > 0">
+            +{{ stats.overview.recentUsers }} this week
+          </span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">🍎</div>
+        <div class="stat-info">
+          <h3>{{ stats.overview.totalFoods }}</h3>
+          <p>Food Items</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">💪</div>
+        <div class="stat-info">
+          <h3>{{ stats.overview.totalExercises }}</h3>
+          <p>Exercises</p>
+        </div>
+      </div>
+
+
+    </div>
+
+    <!-- User Statistics -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>User Goals Distribution</h3>
+        <div class="chart-container">
+          <canvas baseChart
+            [data]="goalChartData"
+            [options]="pieChartOptions"
+            type="pie">
+          </canvas>
+        </div>
+        <div class="chart-legend">
+           <div *ngFor="let goal of getGoalArray(); let i = index" class="legend-item">
+             <span class="legend-color" [style.background-color]="getLegendColor(goalChartData, i)"></span>
+             <span class="legend-label">{{ goal.name }}</span>
+             <span class="legend-count">{{ goal.count }}</span>
+           </div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3>Gender Distribution</h3>
+        <div class="chart-container">
+          <canvas baseChart
+            [data]="genderChartData"
+            [options]="pieChartOptions"
+            type="pie">
+          </canvas>
+        </div>
+        <div class="chart-legend">
+            <div *ngFor="let gender of getGenderArray(); let i = index" class="legend-item">
+              <span class="legend-color" [style.background-color]="getLegendColor(genderChartData, i)"></span>
+              <span class="legend-label">{{ gender.name }}</span>
+              <span class="legend-count">{{ gender.count }}</span>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Registrations -->
+    <div class="recent-section">
+      <h3>Recent Registrations (Last 30 Days)</h3>
+      <div class="recent-list">
+        <div *ngFor="let user of stats.recentActivity.registrations" class="recent-item">
+          <div class="user-avatar">{{ user.name.charAt(0).toUpperCase() }}</div>
+          <div class="user-info">
+            <div class="user-name">{{ user.name }}</div>
+            <div class="user-email">{{ user.email }}</div>
+          </div>
+          <div class="user-date">
+            {{ user.createdAt | date: 'short' }}
+          </div>
+        </div>
+        <div *ngIf="stats.recentActivity.registrations.length === 0" class="no-data">
+          No recent registrations
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

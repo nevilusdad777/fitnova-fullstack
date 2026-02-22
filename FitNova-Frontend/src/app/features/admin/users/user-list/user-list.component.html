@@ -1,0 +1,135 @@
+<div class="user-list-container">
+  <div class="page-header">
+    <h2>User Management</h2>
+    <p>Manage all registered users</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (keyup.enter)="onSearch()"
+        placeholder="Search by name or email..."
+      >
+      <button (click)="onSearch()" class="search-btn">🔍 Search</button>
+    </div>
+
+    <div class="filter-group">
+      <select [(ngModel)]="selectedGoal" (change)="onFilterChange()">
+        <option value="">All Goals</option>
+        <option value="gain">Gain</option>
+        <option value="loss">Loss</option>
+        <option value="maintain">Maintain</option>
+      </select>
+
+      <select [(ngModel)]="selectedGender" (change)="onFilterChange()">
+        <option value="">All Genders</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+      </select>
+
+      <button (click)="clearFilters()" class="clear-btn">Clear Filters</button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading users...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <!-- Users Table -->
+  <div *ngIf="!loading" class="table-container">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Age</th>
+          <th>Gender</th>
+          <th>Goal</th>
+          <th>Weight</th>
+          <th>Joined</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.age }}</td>
+          <td>{{ user.gender | titlecase }}</td>
+          <td>
+            <span class="goal-badge" [class]="user.goal">
+              {{ user.goal | titlecase }}
+            </span>
+          </td>
+          <td>{{ user.weight }} kg</td>
+          <td>{{ user.createdAt | date: 'short' }}</td>
+          <td class="actions">
+            <button 
+              [routerLink]="['/admin/users', user._id]" 
+              class="btn-view"
+              title="View Details"
+            >
+              👁️
+            </button>
+            <button 
+              (click)="openDeleteModal(user)" 
+              class="btn-delete"
+              title="Delete User"
+            >
+              🗑️
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="users.length === 0">
+          <td colspan="8" class="no-data">No users found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!loading && users.length > 0" class="pagination">
+    <div class="pagination-info">
+      Showing {{ users.length }} of {{ totalUsers }} users
+    </div>
+    <div class="pagination-controls">
+      <button 
+        (click)="previousPage()" 
+        [disabled]="currentPage === 1"
+        class="page-btn"
+      >
+        ← Previous
+      </button>
+      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button 
+        (click)="nextPage()" 
+        [disabled]="currentPage === totalPages"
+        class="page-btn"
+      >
+        Next →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div *ngIf="showDeleteModal" class="modal-overlay" (click)="closeDeleteModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>Confirm Delete</h3>
+    <p>Are you sure you want to delete user <strong>{{ userToDelete?.name }}</strong>?</p>
+    <p class="warning">This action cannot be undone.</p>
+    <div class="modal-actions">
+      <button (click)="closeDeleteModal()" class="btn-cancel">Cancel</button>
+      <button (click)="confirmDelete()" class="btn-confirm">Delete</button>
+    </div>
+  </div>
+</div>

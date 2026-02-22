@@ -2,6 +2,7 @@ export interface User {
   _id?: string;
   name: string;
   email: string;
+  role?: 'admin' | 'user';
   age: number;
   gender: 'male' | 'female' | 'other';
   height: number;
@@ -15,7 +16,7 @@ export interface User {
   weeklyWorkoutDays?: number;
   targetWater?: number;
   waterGoal?: number;
-  pace?: 'slow' | 'moderate' | 'fast';
+  pace?: 'relaxed' | 'normal' | 'aggressive';
   profilePicture?: string;
   preferences?: {
     weightUnit: 'kg' | 'lbs';

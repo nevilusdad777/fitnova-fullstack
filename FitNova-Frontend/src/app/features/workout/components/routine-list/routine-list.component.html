@@ -40,9 +40,8 @@
 
             <div class="body-parts">
                 <span 
-                    *ngFor="let part of routine.targetBodyParts" 
-                    class="body-part-badge"
-                    [style.background-color]="getBodyPartColor(part)">
+                    *ngFor="let part of getUniqueBodyParts(routine.targetBodyParts)" 
+                    class="body-part-badge">
                     {{ part }}
                 </span>
             </div>
@@ -50,21 +49,21 @@
             <div class="routine-stats">
                 <div class="stat">
                     <lucide-icon [img]="Dumbbell" [size]="16"></lucide-icon>
-                    <span>{{ routine.exercises.length }} exercises</span>
+                    <span>{{ getExerciseCount(routine) }} exercises</span>
                 </div>
                 <div class="stat">
                     <lucide-icon [img]="Calendar" [size]="16"></lucide-icon>
-                    <span>~{{ routine.estimatedDuration }} min</span>
+                    <span>~{{ routine.estimatedDuration || 0 }} min</span>
                 </div>
                 <div class="stat">
                     <lucide-icon [img]="Flame" [size]="16"></lucide-icon>
-                    <span>~{{ routine.estimatedCalories }} cal</span>
+                    <span>~{{ routine.estimatedCalories || 0 }} cal</span>
                 </div>
             </div>
 
-            <button class="btn-start" (click)="onStartRoutine(routine)">
-                <lucide-icon [img]="Play" [size]="18"></lucide-icon>
-                Start Workout
+            <button class="btn-start" (click)="onPreviewRoutine(routine)">
+                <lucide-icon [img]="Eye" [size]="18"></lucide-icon>
+                Preview
             </button>
         </div>
     </div>

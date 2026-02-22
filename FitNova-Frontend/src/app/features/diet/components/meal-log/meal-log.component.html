@@ -22,12 +22,17 @@
             <div class="meal-info" (click)="toggleMealExpansion(mealType, i)">
               <div class="meal-name">
                 <lucide-icon [img]="meal.expanded ? ChevronUp : ChevronDown" [size]="16" class="expand-icon"></lucide-icon>
-                <span>{{ meal.foods.length }} item{{ meal.foods.length !== 1 ? 's' : '' }}</span>
+                <span>Meal Details</span>
               </div>
               <div class="meal-calories">{{ meal.totalCalories }} kcal</div>
             </div>
             
             <div class="meal-actions">
+              <button class="btn-icon btn-edit-meal" 
+                (click)="openEdit(meal)"
+                title="Edit meal items and quantities">
+                <lucide-icon [img]="Edit2" [size]="16"></lucide-icon>
+              </button>
               <button class="btn-icon btn-complete" 
                 (click)="toggleMealCompletion(meal.id)"
                 [class.active]="meal.completed"
@@ -87,6 +92,115 @@
           <p>No {{ mealType.toLowerCase() }} logged yet</p>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal (Workout Style) -->
+<div *ngIf="editMeal()" class="edit-modal-overlay" (click)="closeEdit()">
+  <div class="edit-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="title-section">
+        <div class="meal-type-badge">{{ editMeal()?.mealType }}</div>
+        <h3>Edit Meal</h3>
+        <p class="meal-date">Modify your food items and quantities</p>
+      </div>
+      <button class="close-btn" (click)="closeEdit()" aria-label="Close edit">
+        <lucide-icon [img]="X" [size]="24"></lucide-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="edit-foods-section">
+        <h4>Meal Items</h4>
+        <div class="foods-grid">
+          <div *ngFor="let food of editFoods(); let i = index" class="food-edit-card">
+            <div class="food-number">{{ i + 1 }}</div>
+            <div class="food-details">
+              <div class="food-name">{{ food.name }}</div>
+              
+              <!-- Nutrient Breakdown Grid -->
+              <div class="nutrient-grid">
+                <div class="nutrient-pill">
+                  <span class="label">Prot</span>
+                  <span class="value">{{ food.protein * (food.portionAmount / (food.servingSize || 1)) | number:'1.0-1' }}g</span>
+                </div>
+                <div class="nutrient-pill">
+                  <span class="label">Carb</span>
+                  <span class="value">{{ food.carbs * (food.portionAmount / (food.servingSize || 1)) | number:'1.0-1' }}g</span>
+                </div>
+                <div class="nutrient-pill">
+                  <span class="label">Fat</span>
+                  <span class="value">{{ food.fat * (food.portionAmount / (food.servingSize || 1)) | number:'1.0-1' }}g</span>
+                </div>
+              </div>
+
+              <div class="food-edit-controls">
+                <div class="input-group">
+                  <label>Portion</label>
+                  <div class="qty-field">
+                    <input type="number" [(ngModel)]="food.portionAmount" min="1" step="0.5" />
+                    <span class="unit-label">{{ food.unit }}</span>
+                  </div>
+                </div>
+                <div class="macro-preview">
+                  <span class="total-cals">{{ food.calories * (food.portionAmount / (food.servingSize || 1)) | number:'1.0-0' }}</span>
+                  <span class="unit-cals">kcal</span>
+                </div>
+              </div>
+            </div>
+            <button class="delete-food-btn" (click)="removeEditFood(i)" title="Remove Food">
+              <lucide-icon [img]="Trash2" [size]="18"></lucide-icon>
+            </button>
+          </div>
+          
+          <div *ngIf="editFoods().length === 0" class="empty-edit-state">
+            <p>No foods in this meal. Search below to add some!</p>
+          </div>
+        </div>
+
+        <!-- Add Food Section -->
+        <div class="add-food-section">
+          <button class="btn-add-food" (click)="toggleFoodSearch()">
+            <lucide-icon [img]="showFoodSearch() ? X : Plus" [size]="18"></lucide-icon>
+            <span>{{ showFoodSearch() ? 'Cancel' : 'Add More Food' }}</span>
+          </button>
+
+          <div class="food-search-dropdown fade-in" *ngIf="showFoodSearch()">
+            <div class="search-bar">
+              <lucide-icon [img]="Search" [size]="16" class="search-icon"></lucide-icon>
+              <input type="text" [ngModel]="searchQuery()" (input)="onSearchInput($event)" placeholder="Search food database..." />
+            </div>
+            
+            <div class="search-results">
+              <div class="result-item" *ngFor="let f of filteredFoods()" (click)="addFoodToEdit(f)">
+                <div class="res-info">
+                  <span class="res-name">{{ f.name }}</span>
+                  <span class="res-cals">{{ f.calories }} cal / {{ f.servingSize }}{{ f.servingUnit }}</span>
+                </div>
+                <button class="item-add-btn">
+                  <lucide-icon [img]="Plus" [size]="14"></lucide-icon>
+                </button>
+              </div>
+              
+              <div *ngIf="filteredFoods().length === 0" class="no-results">
+                <p>No matches found for "{{ searchQuery() }}"</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeEdit()" [disabled]="isSaving()">
+        Cancel
+      </button>
+      <button class="btn-save" (click)="saveMealEdit()" [disabled]="isSaving() || editFoods().length === 0">
+        <lucide-icon [img]="Save" [size]="18" *ngIf="!isSaving()"></lucide-icon>
+        <div class="spinner-small" *ngIf="isSaving()"></div>
+        <span>{{ isSaving() ? 'Saving...' : 'Save Changes' }}</span>
+      </button>
     </div>
   </div>
 </div>

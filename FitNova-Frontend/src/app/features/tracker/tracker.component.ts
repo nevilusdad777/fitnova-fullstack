@@ -1,5 +1,6 @@
-import { Component, signal, inject, OnInit, ViewChild, effect } from '@angular/core';
+import { Component, signal, computed, inject, OnInit, ViewChild, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { LucideAngularModule, BarChart2, Droplets, Scale, Calculator, Activity, ChevronRight } from 'lucide-angular';
 import { WaterTrackerComponent } from './components/water-tracker/water-tracker.component';
 import { WeightTrackerComponent } from './components/weight-tracker/weight-tracker.component';
@@ -15,6 +16,7 @@ export type TrackerView = 'overview' | 'water' | 'weight' | 'bmi';
     standalone: true,
     imports: [
         CommonModule,
+        RouterModule,
         LucideAngularModule,
         WaterTrackerComponent,
         WeightTrackerComponent,
@@ -27,6 +29,7 @@ export type TrackerView = 'overview' | 'water' | 'weight' | 'bmi';
 export class TrackerComponent implements OnInit {
     private trackerService = inject(TrackerService);
     private profileService = inject(ProfileService);
+    private route = inject(ActivatedRoute);
 
     @ViewChild(ProgressChartsComponent) progressCharts?: ProgressChartsComponent;
     @ViewChild(WeightTrackerComponent) weightTracker?: WeightTrackerComponent;
@@ -43,6 +46,35 @@ export class TrackerComponent implements OnInit {
     waterGoal = signal(3.0);
     currentWeight = signal(0);
     weekChange = signal(0);
+    userHeight = signal(0);
+    
+    bmiScore = computed(() => {
+        const weight = this.currentWeight();
+        const height = this.userHeight();
+        if (weight > 0 && height > 0) {
+            const heightM = height / 100;
+            return Math.round((weight / (heightM * heightM)) * 10) / 10;
+        }
+        return 0;
+    });
+
+    bmiCategory = computed(() => {
+        const bmi = this.bmiScore();
+        if (bmi === 0) return 'Unknown';
+        if (bmi < 18.5) return 'Underweight';
+        if (bmi < 25) return 'Normal Weight';
+        if (bmi < 30) return 'Overweight';
+        return 'Obese';
+    });
+
+    bmiColor = computed(() => {
+        const bmi = this.bmiScore();
+        if (bmi === 0) return '#6b7280'; // gray
+        if (bmi < 18.5) return '#3b82f6'; // blue
+        if (bmi < 25) return '#22c55e'; // green
+        if (bmi < 30) return '#f59e0b'; // amber
+        return '#ef4444'; // red
+    });
 
     constructor() {
         // Watch for view changes and refresh data
@@ -55,6 +87,11 @@ export class TrackerComponent implements OnInit {
     }
 
     ngOnInit() {
+        // Read optional ?view= query param to jump to a specific section
+        const viewParam = this.route.snapshot.queryParamMap.get('view') as TrackerView | null;
+        if (viewParam && ['overview', 'water', 'weight', 'bmi'].includes(viewParam)) {
+            this.currentView.set(viewParam);
+        }
         this.refreshDashboard();
     }
 
@@ -64,11 +101,13 @@ export class TrackerComponent implements OnInit {
             this.todayWater.set(Math.round(tracker.waterIntake * 10) / 10);
             this.currentWeight.set(Math.round(tracker.weight * 10) / 10);
         });
-        
-        // Fetch User Goal
+        // Fetch User Profile for height and water goal
         this.profileService.getProfile().subscribe(user => {
             if (user.waterGoal) {
-                this.waterGoal.set(Math.round(user.waterGoal / 100) / 10); // Convert ml to L (e.g. 3000 -> 3.0)
+                this.waterGoal.set(Math.round(user.waterGoal / 100) / 10);
+            }
+            if (user.height) {
+                this.userHeight.set(user.height);
             }
         });
 

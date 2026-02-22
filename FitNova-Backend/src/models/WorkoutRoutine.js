@@ -58,7 +58,23 @@ const workoutRoutineSchema = new mongoose.Schema({
         enum: ['chest', 'back', 'legs', 'shoulders', 'arms', 'abs', 'cardio'],
         lowercase: true
     }],
-    exercises: [routineExerciseSchema],
+    schedule: [{
+        day: {
+            type: String,
+            enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            required: true
+        },
+        isRestDay: {
+            type: Boolean,
+            default: false
+        },
+        exercises: [routineExerciseSchema]
+    }],
+    // Legacy support (optional, can be removed if specific migration script is run)
+    exercises: {
+        type: [routineExerciseSchema],
+        default: undefined
+    },
     isActive: {
         type: Boolean,
         default: true
@@ -81,14 +97,23 @@ workoutRoutineSchema.index({ user: 1, targetBodyParts: 1 });
 
 // Calculate estimated duration and calories before saving
 workoutRoutineSchema.pre('save', function(next) {
-    if (this.exercises && this.exercises.length > 0) {
-        // Estimate duration: (sets * reps * 3 seconds per rep) + rest time
-        this.estimatedDuration = Math.ceil(
-            this.exercises.reduce((total, ex) => {
-                const exerciseTime = (ex.sets * ex.reps * 3) + (ex.sets * ex.restTime);
-                return total + exerciseTime;
-            }, 0) / 60  // Convert to minutes
-        );
+    if (this.schedule && this.schedule.length > 0) {
+        // Estimate duration: Sum of all exercises across all days
+        let totalDuration = 0;
+        
+        this.schedule.forEach(day => {
+            if (!day.isRestDay && day.exercises) {
+                const dayDuration = day.exercises.reduce((total, ex) => {
+                    const exerciseTime = (ex.sets * ex.reps * 3) + (ex.sets * ex.restTime);
+                    return total + exerciseTime;
+                }, 0);
+                totalDuration += dayDuration;
+            }
+        });
+        
+        // Average daily duration (excluding rest days)
+        const activeDays = this.schedule.filter(d => !d.isRestDay).length || 1;
+        this.estimatedDuration = Math.ceil((totalDuration / activeDays) / 60); // Average minutes per workout
 
         // Estimate calories: rough estimate based on exercise count and duration
         this.estimatedCalories = Math.ceil(this.estimatedDuration * 5);

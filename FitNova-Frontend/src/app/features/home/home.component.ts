@@ -1,7 +1,7 @@
 import { Component, inject, computed, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { LucideAngularModule, Activity, Utensils, Droplets, TrendingUp, ArrowRight, Flame, Calendar, Award, Target, Clock, Zap } from 'lucide-angular';
+import { LucideAngularModule, Activity, Utensils, Droplets, TrendingUp, ArrowRight, Flame, Calendar, Award, Target, Clock, Zap, Brain } from 'lucide-angular';
 import { AuthService } from '../auth/auth.service';
 import { TrackerService } from '../../services/tracker.service';
 import { HomeService } from './home.service';
@@ -26,6 +26,7 @@ export class HomeComponent implements OnInit {
     readonly Target = Target;
     readonly Clock = Clock;
     readonly Zap = Zap;
+    readonly Brain = Brain;
 
     private authService = inject(AuthService);
     private trackerService = inject(TrackerService);
@@ -39,10 +40,10 @@ export class HomeComponent implements OnInit {
     profilePicture = computed(() => this.authService.currentUser()?.profilePicture);
 
     stats = signal([
-        { label: 'Workouts', value: '0', unit: 'sessions', icon: Activity, color: 'var(--color-workout)' },
-        { label: 'Calories', value: '0', unit: 'kcal', icon: Utensils, color: 'var(--color-calorie)' },
-        { label: 'Water', value: '0', unit: 'L', icon: Droplets, color: 'var(--color-water)' },
-        { label: 'Weight', value: '0', unit: 'kg', icon: TrendingUp, color: 'var(--color-primary)' }
+        { label: 'Calories Burned', value: '0', unit: 'kcal', icon: Flame, color: 'var(--color-primary)', route: '/workout', queryParams: null, valueClass: 'stat-value-burned' },
+        { label: 'Calories Intake', value: '0', unit: 'kcal', icon: Utensils, color: 'var(--color-calorie)', route: '/nutrition', queryParams: { view: 'meals' }, valueClass: 'stat-value-intake' },
+        { label: 'Water', value: '0', unit: 'L', icon: Droplets, color: 'var(--color-water)', route: '/tracker', queryParams: { view: 'water' }, valueClass: 'stat-value-water' },
+        { label: 'Weight', value: '0', unit: 'kg', icon: TrendingUp, color: 'var(--color-primary)', route: '/tracker', queryParams: { view: 'weight' }, valueClass: 'stat-value-weight' }
     ]);
 
     // Workout summary stats
@@ -53,20 +54,53 @@ export class HomeComponent implements OnInit {
     recentWorkouts = signal<any[]>([]);
     weeklyActivity = signal<boolean[]>([false, false, false, false, false, false, false]);
     activeWorkoutDays = computed(() => this.weeklyActivity().filter(day => day).length);
-    fitnessPersona = signal<{title: string, subtitle: string, icon: any, description: string, color: string, gradient: string, level: number, progress: number} | null>(null);
+    workoutRecommendation = signal<{focus: string, reason: string, icon: any, color: string, gradient: string} | null>(null);
     currentStreak = signal(0);
     bestStreak = signal(0);
     motivationalQuote = signal('');
+
+    // Milestone computed properties
+    private readonly MILESTONES = [7, 30, 90, 365];
+
+    isMilestoneStreak = computed(() => this.MILESTONES.includes(this.currentStreak()));
+
+    /** Progress % toward the next milestone */
+    streakProgressPct = computed(() => {
+        const s = this.currentStreak();
+        if (s === 0) return 0;
+        // If it's a milestone day, show 100% full (and gold via CSS)
+        if (this.MILESTONES.includes(s)) return 100;
+
+        if (s >= 365) return 100;
+        if (s > 90) return Math.min(100, (s - 90) / (365 - 90) * 100);
+        if (s > 30) return Math.min(100, (s - 30) / (90  - 30) * 100);
+        if (s >  7) return Math.min(100, (s -  7) / (30  -  7) * 100);
+        return (s / 7) * 100;
+    });
+
+    nextMilestoneDays = computed(() => {
+        const s = this.currentStreak();
+        for (const m of this.MILESTONES) { if (s < m) return m - s; }
+        return 0; // past 365
+    });
+
+    milestoneTitle = computed(() => {
+        const s = this.currentStreak();
+        if (s >= 365) return 'Year Legend 👑';
+        if (s >=  90) return '90-Day Champion 🚀';
+        if (s >=  30) return 'Monthly Beast 💪';
+        return 'Week Warrior 🏆';
+    });
 
     ngOnInit() {
         this.trackerService.getDashboardStats().subscribe({
             next: (stats) => {
                 console.log('Dashboard stats received:', stats);
                 this.stats.set([
-                    { label: 'Calories Burned', value: Math.round(stats.today.caloriesBurned || 0).toString(), unit: 'kcal', icon: Flame, color: 'var(--color-primary)' },
-                    { label: 'Calories Intake', value: Math.round(stats.today.caloriesConsumed || 0).toString(), unit: 'kcal', icon: Utensils, color: 'var(--color-calorie)' },
-                    { label: 'Water', value: (stats.today.waterIntake || 0).toFixed(1), unit: 'L', icon: Droplets, color: 'var(--color-water)' },
-                    { label: 'Weight', value: (stats.today.weight || 0).toFixed(1), unit: 'kg', icon: TrendingUp, color: 'var(--color-primary)' }
+                    { label: 'Calories Burned', value: Math.round(stats.today.caloriesBurned || 0).toString(), unit: 'kcal', icon: Flame, color: 'var(--color-primary)', route: '/workout', queryParams: null, valueClass: 'stat-value-burned' },
+                    { label: 'Calories Intake', value: Math.round(stats.today.caloriesConsumed || 0).toString(), unit: 'kcal', icon: Utensils, color: 'var(--color-calorie)', route: '/nutrition', queryParams: { view: 'meals' }, valueClass: 'stat-value-intake' },
+                    { label: 'Water', value: (stats.today.waterIntake || 0).toFixed(1), unit: 'L', icon: Droplets, color: 'var(--color-water)', route: '/tracker', queryParams: { view: 'water' }, valueClass: 'stat-value-water' },
+                    { label: 'Weight', value: (stats.today.weight || 0).toFixed(1), unit: 'kg', icon: TrendingUp, color: 'var(--color-primary)', route: '/tracker', queryParams: { view: 'weight' }, valueClass: 'stat-value-weight' }
                 ]);
                 // Set streak data
                 this.currentStreak.set(stats.streak || 0);
@@ -118,85 +152,77 @@ export class HomeComponent implements OnInit {
                 console.log('Weekly activity:', weekActivity);
                 this.weeklyActivity.set(weekActivity);
                 
-                // Calculate Fitness Persona & Level
+                // Smart Coach Recommendation Logic
                 const bodyPartFreq = response.analytics.bodyPartFrequency || {};
-                const totalExercises = Object.values(bodyPartFreq).reduce((a: number, b: any) => a + b, 0);
                 
-                // Level Calculation (Simple RPG style: Level = sqrt(workouts) * 2 or similar)
-                // Let's make it a bit harder: Level 1 = 0-10, Level 5 = ~100
-                const xpPerWorkout = 50;
-                const totalXP = this.totalWorkouts() * xpPerWorkout;
-                const level = Math.floor(Math.sqrt(totalXP / 100)) + 1;
-                const nextLevelXP = Math.pow(level, 2) * 100;
-                const currentLevelBaseXP = Math.pow(level - 1, 2) * 100;
-                const progressToNext = Math.min(100, Math.max(0, ((totalXP - currentLevelBaseXP) / (nextLevelXP - currentLevelBaseXP)) * 100));
-
-                let persona = {
-                    title: 'Rookie',
-                    subtitle: 'The Beginning',
-                    icon: this.Target, 
-                    description: 'Every legend starts somewhere. Keep pushing!',
-                    color: 'var(--color-text-muted)',
-                    gradient: 'linear-gradient(135deg, #e0e0e0, #9e9e9e)',
-                    level: level,
-                    progress: Math.round(progressToNext)
+                // Helper to check days since last workout of a specific type
+                const daysSinceLast = (type: string | null = null) => {
+                    const last = allWorkouts.find((w: any) => 
+                        !type || (w.bodyParts && w.bodyParts.includes(type.toLowerCase()))
+                    );
+                    if (!last) return 999;
+                    const lastDate = new Date(last.date || last.createdAt);
+                    const diffTime = Math.abs(today.getTime() - lastDate.getTime());
+                    return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
                 };
 
-                if (this.totalWorkouts() > 5) {
-                    const cardio = (bodyPartFreq['cardio'] || 0) + (bodyPartFreq['legs'] || 0) * 0.3; 
-                    const strength = (bodyPartFreq['chest'] || 0) + (bodyPartFreq['back'] || 0) + (bodyPartFreq['shoulders'] || 0) + (bodyPartFreq['arms'] || 0);
-                    const legs = bodyPartFreq['legs'] || 0;
-                    
-                    if (cardio > strength * 1.5) {
-                         persona = {
-                            title: 'Cardio Crusher',
-                            subtitle: 'Endurance Master',
-                            icon: this.Zap,
-                            description: 'You were born to run! Your stamina is legendary.',
-                            color: 'var(--color-water)',
-                            gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-                            level: level,
-                            progress: Math.round(progressToNext)
-                        };
-                    } else if (legs > strength * 0.4) { 
-                        persona = {
-                            title: 'Leg Day Legend',
-                            subtitle: 'Lower Body Specialist',
-                            icon: this.TrendingUp,
-                            description: 'They said don\'t skip leg day. You live for it.',
-                            color: 'var(--color-primary)',
-                            gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-                            level: level,
-                            progress: Math.round(progressToNext)
-                        };
-                    } else if (strength > cardio * 2) {
-                        persona = {
-                            title: 'Iron Titan',
-                            subtitle: 'Strength Specialist',
-                            icon: this.Flame,
-                            description: 'Forged in iron. Your strength knows no bounds.',
-                            color: 'var(--color-calorie)', 
-                            gradient: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #feada6 100%)', // Or better: Fire gradient
-                            level: level,
-                            progress: Math.round(progressToNext)
-                        };
-                        // Override gradient for Iron Titan to be more fiery
-                        persona.gradient = 'linear-gradient(135deg, #ff0844 0%, #ffb199 100%)';
-                    } else {
-                        persona = {
-                            title: 'Balanced Athlete',
-                            subtitle: 'Hybrid Specialist',
-                            icon: this.Award,
-                            description: 'Perfectly balanced physical prowess. Ready for anything.',
-                            color: 'var(--color-workout)', 
-                            gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                            level: level,
-                            progress: Math.round(progressToNext)
-                        };
-                    }
+                const daysSinceWorkout = daysSinceLast();
+                const daysSinceLegs = daysSinceLast('legs');
+                const daysSincePush = Math.min(daysSinceLast('chest'), daysSinceLast('shoulders'), daysSinceLast('triceps'));
+                const daysSincePull = Math.min(daysSinceLast('back'), daysSinceLast('biceps'));
+                const daysSinceCardio = daysSinceLast('cardio');
+
+                let recommendation = {
+                    focus: 'Full Body',
+                    reason: 'It\'s been a while! Let\'s wake up those muscles with a full body activation.',
+                    icon: this.Activity,
+                    color: 'var(--color-primary)',
+                    gradient: 'linear-gradient(135deg, #4a90e2 0%, #6366f1 100%)'
+                };
+
+                if (daysSinceWorkout === 0) {
+                     recommendation = {
+                        focus: 'Rest & Recovery',
+                        reason: 'You crushed it today! Rest is where the growth happens.',
+                        icon: this.Clock,
+                        color: 'var(--color-success)',
+                        gradient: 'linear-gradient(135deg, #10b981 0%, #0ea5e9 100%)'
+                    };
+                } else if (daysSinceLegs > 4) {
+                    recommendation = {
+                        focus: 'Leg Day',
+                        reason: 'Don\'t skip it! Your legs are fully recovered and ready for gains.',
+                        icon: this.TrendingUp,
+                        color: 'var(--color-calorie)',
+                        gradient: 'linear-gradient(135deg, #4a90e2 0%, #6366f1 100%)'
+                    };
+                } else if (daysSinceCardio > 3) {
+                    recommendation = {
+                        focus: 'Cardio & Core',
+                        reason: 'Boost your endurance and heart health today.',
+                        icon: this.Zap,
+                        color: 'var(--color-water)',
+                        gradient: 'linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%)'
+                    };
+                } else if (daysSincePush > daysSincePull) {
+                     recommendation = {
+                        focus: 'Push (Chest/Shoulders)',
+                        reason: 'Time to build that upper body strength.',
+                         icon: this.Target,
+                        color: 'var(--color-primary)',
+                        gradient: 'linear-gradient(135deg, #6366f1 0%, #4a90e2 100%)'
+                    };
+                } else {
+                     recommendation = {
+                        focus: 'Pull (Back/Biceps)',
+                        reason: 'Strengthen your back and posture today.',
+                         icon: this.Award,
+                        color: 'var(--color-secondary)',
+                        gradient: 'linear-gradient(135deg, #4a90e2 0%, #8dc63f 100%)'
+                    };
                 }
-                
-                this.fitnessPersona.set(persona);
+
+                this.workoutRecommendation.set(recommendation);
             },
             error: (err) => {
                 console.error('Error loading workout summary:', err);

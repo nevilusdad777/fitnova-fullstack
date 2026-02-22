@@ -1,0 +1,24 @@
+# dependencies
+node_modules/
+
+# environment
+.env
+
+# angular build
+dist/
+.angular/
+coverage/
+
+# logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# misc
+*.json
+duplicates*
+search*
+url-results*
+testOutput.txt

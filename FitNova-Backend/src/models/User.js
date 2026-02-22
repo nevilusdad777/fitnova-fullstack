@@ -90,10 +90,29 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 3000
   },
+  targetWeight: {
+    type: Number,
+    default: 0
+  },
+  weeklyWorkoutDays: {
+    type: Number,
+    default: 0
+  },
+  pace: {
+    type: String,
+    enum: ['relaxed', 'normal', 'aggressive'],
+    default: 'normal'
+  },
+  targetWater: {
+    type: Number,
+    default: 3000
+  },
   totalWorkoutsCompleted: {
     type: Number,
     default: 0
-  }
+  },
+  resetPasswordToken: String,
+  resetPasswordExpire: Date
 }, {
   timestamps: true
 });

@@ -1,0 +1,186 @@
+<div class="form-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h2>Manage User Details</h2>
+      <p>View and update user information</p>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn-edit" (click)="toggleEdit()">
+        {{ isEditing ? 'Cancel Edit' : 'Edit Profile' }}
+      </button>
+      <button [routerLink]="['/admin/users']" class="btn-back">← Back to Users</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading user details...</p>
+  </div>
+
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <div *ngIf="successMessage" class="success-alert">{{ successMessage }}</div>
+
+  <form *ngIf="!loading && !error" [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form">
+    
+    <!-- Profile Info -->
+    <div class="form-section">
+      <h3>Profile Information</h3>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="name">Name *</label>
+          <input type="text" id="name" formControlName="name">
+          <span class="error-msg" *ngIf="isFieldInvalid('name')">Name is required</span>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input type="email" id="email" formControlName="email">
+          <span class="error-msg" *ngIf="isFieldInvalid('email')">Valid email is required</span>
+        </div>
+
+        <div class="form-group">
+          <label for="age">Age *</label>
+          <input type="number" id="age" formControlName="age">
+        </div>
+
+        <div class="form-group">
+          <label for="gender">Gender *</label>
+          <select id="gender" formControlName="gender">
+            <option *ngFor="let option of genders" [value]="option">{{ option | titlecase }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Health Metrics -->
+    <div class="form-section mt-24">
+      <h3>Health Metrics</h3>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="height">Height (cm) *</label>
+          <input type="number" id="height" formControlName="height">
+        </div>
+
+        <div class="form-group">
+          <label for="weight">Weight (kg) *</label>
+          <input type="number" id="weight" formControlName="weight">
+        </div>
+
+        <div class="form-group">
+          <label for="goal">Goal *</label>
+          <select id="goal" formControlName="goal">
+            <option *ngFor="let option of goals" [value]="option">{{ option | titlecase }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Basal Metabolic Rate (BMR)</label>
+          <div class="readonly-value">{{ userForm.get('bmr')?.value || 'Not calculated' }} kcal/day</div>
+        </div>
+        
+        <div class="form-group">
+          <label>Total Daily Energy Expend. (TDEE)</label>
+          <div class="readonly-value">{{ userForm.get('tdee')?.value || 'Not calculated' }} kcal/day</div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Workout History -->
+    <div class="form-section mt-24">
+      <div class="section-header-flex">
+        <h3>Recent Workouts</h3>
+        <select class="filter-select" (change)="onWorkoutDaysChange($event)" [value]="workoutDays">
+          <option value="7">Last 7 Days</option>
+          <option value="30">Last 30 Days</option>
+          <option value="90">Last 90 Days</option>
+        </select>
+      </div>
+      <div *ngIf="loadingWorkouts" class="loading-small">Loading workout history...</div>
+      <div *ngIf="!loadingWorkouts && workoutHistory.length === 0" class="empty-state">No workout history found.</div>
+      <div *ngIf="!loadingWorkouts && workoutHistory.length > 0" class="data-list">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Routine</th>
+              <th>Duration</th>
+              <th>Calories Burned</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let workout of workoutHistory">
+              <td>{{ workout.date | date:'mediumDate' }}</td>
+              <td>{{ workout.routine?.name || 'Custom Workout' }}</td>
+              <td>{{ workout.duration }} min</td>
+              <td>{{ workout.totalCaloriesBurned || 0 }} kcal</td>
+              <td>
+                <button type="button" class="btn-icon btn-delete" (click)="deleteWorkout(workout._id)" title="Delete Workout">
+                  🗑️
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Diet Logs -->
+    <div class="form-section mt-24">
+      <div class="section-header-flex">
+        <h3>Diet Logs</h3>
+        <select class="filter-select" (change)="onDietDaysChange($event)" [value]="dietDays">
+          <option value="7">Last 7 Days</option>
+          <option value="30">Last 30 Days</option>
+          <option value="90">Last 90 Days</option>
+        </select>
+      </div>
+      <div *ngIf="loadingDiet" class="loading-small">Loading diet logs...</div>
+      <div *ngIf="!loadingDiet && dietLogs.length === 0" class="empty-state">No diet logs found.</div>
+      <div *ngIf="!loadingDiet && dietLogs.length > 0" class="data-list">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Calories</th>
+              <th>Protein (g)</th>
+              <th>Carbs (g)</th>
+              <th>Fat (g)</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let log of dietLogs">
+              <td>{{ log.date | date:'mediumDate' }}</td>
+              <td>{{ log.totalCalories }} / {{ log.calorieTarget }}</td>
+              <td>{{ log.totalProtein }}</td>
+              <td>{{ log.totalCarbs }}</td>
+              <td>{{ log.totalFat }}</td>
+              <td>
+                <span class="status-indicator" [ngClass]="{'on-track': log.totalCalories <= log.calorieTarget, 'over-limit': log.totalCalories > log.calorieTarget}"></span>
+              </td>
+              <td>
+                <button type="button" class="btn-icon btn-delete" (click)="deleteDiet(log.date)" title="Delete Diet Logs for this Date">
+                  🗑️
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions mt-32" *ngIf="isEditing">
+      <button type="button" class="btn-cancel" (click)="toggleEdit()">Cancel</button>
+      <button type="submit" class="btn-submit" [disabled]="submitting || userForm.invalid">
+        {{ submitting ? 'Saving...' : 'Save Changes' }}
+      </button>
+    </div>
+
+  </form>
+</div>

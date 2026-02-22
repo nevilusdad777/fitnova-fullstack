@@ -32,13 +32,19 @@ export interface RoutineExercise {
   notes?: string;
 }
 
+export interface DailyRoutine {
+  day: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+  isRestDay: boolean;
+  exercises: RoutineExercise[];
+}
+
 export interface WorkoutRoutine {
   _id?: string;
   user?: string;
   name: string;
   description?: string;
   targetBodyParts: string[];
-  exercises: RoutineExercise[];
+  schedule: DailyRoutine[];
   isActive: boolean;
   estimatedDuration?: number;
   estimatedCalories?: number;

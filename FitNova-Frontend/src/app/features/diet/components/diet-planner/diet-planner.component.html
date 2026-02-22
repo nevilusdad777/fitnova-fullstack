@@ -1,88 +1,293 @@
-<div class="diet-planner-container fade-in">
-  <!-- Generator Panel -->
-  <div class="planner-controls glass-panel">
-    <div class="planner-header-mini">
-      <h3>Custom Plan Generator</h3>
+<div class="diet-planner-modern">
+
+  <!-- Hero Banner -->
+  <div class="planner-hero">
+    <div class="hero-icon">
+      <lucide-icon [img]="Sparkles" [size]="32"></lucide-icon>
     </div>
+    <div class="hero-content">
+      <h2> Diet Plan Generator</h2>
+      <p>Personalized macro-targeted meal plans built for your exact goal</p>
+    </div>
+    <div class="hero-badge">Smart Engine v2</div>
+  </div>
 
-    <div class="controls-grid">
-      <div class="control-group">
-        <label>Goal</label>
-        <div class="toggle-group">
-          <button [class.active]="fitnessGoal() === 'Weight Loss'"
-            (click)="fitnessGoal.set('Weight Loss')">Loss</button>
-          <button [class.active]="fitnessGoal() === 'Maintain'" (click)="fitnessGoal.set('Maintain')">Maintain</button>
-          <button [class.active]="fitnessGoal() === 'Weight Gain'"
-            (click)="fitnessGoal.set('Weight Gain')">Gain</button>
-        </div>
-      </div>
+  <!-- ===================== FILTER CONTROLS ===================== -->
+  <div class="filter-section">
 
-      <div class="control-group">
-        <label>Diet</label>
-        <div class="toggle-group">
-          <button [class.active]="foodPreference() === 'Veg'" (click)="foodPreference.set('Veg')">Veg</button>
-          <button [class.active]="foodPreference() === 'Non-Veg'"
-            (click)="foodPreference.set('Non-Veg')">Non-Veg</button>
-          <button [class.active]="foodPreference() === 'Both'" (click)="foodPreference.set('Both')">Both</button>
-        </div>
-      </div>
-
-      <div class="control-group">
-        <label>Calories: {{ dailyCalorieTarget() }}</label>
-        <input type="range" min="1200" max="4000" step="100" [ngModel]="dailyCalorieTarget()"
-          (ngModelChange)="dailyCalorieTarget.set($event)" class="range-slider">
-      </div>
-
-      <div class="control-actions">
-        <button class="btn-generate" (click)="generatePlan()">
-          <lucide-icon [img]="Sparkles" [size]="18"></lucide-icon>
-          Generate
+    <!-- Goal -->
+    <div class="filter-group">
+      <label class="filter-label">
+        <lucide-icon [img]="Target" [size]="16"></lucide-icon>
+        Your Goal
+      </label>
+      <div class="pill-group">
+        <button class="pill pill-loss" [class.active]="fitnessGoal() === 'Weight Loss'" (click)="fitnessGoal.set('Weight Loss')">
+          🔥 Weight Loss
+        </button>
+        <button class="pill pill-maintain" [class.active]="fitnessGoal() === 'Maintain'" (click)="fitnessGoal.set('Maintain')">
+          ⚖️ Maintain
+        </button>
+        <button class="pill pill-gain" [class.active]="fitnessGoal() === 'Weight Gain'" (click)="fitnessGoal.set('Weight Gain')">
+          💪 Weight Gain
         </button>
       </div>
     </div>
+
+    <!-- Diet Style -->
+    <div class="filter-group">
+      <label class="filter-label">
+        <lucide-icon [img]="Dumbbell" [size]="16"></lucide-icon>
+        Diet Style
+      </label>
+      <div class="pill-group">
+        <button class="pill pill-traditional" [class.active]="dietType() === 'Traditional'" (click)="dietType.set('Traditional')">
+          🍛 Traditional
+        </button>
+        <button class="pill pill-fitness" [class.active]="dietType() === 'Fitness'" (click)="dietType.set('Fitness')">
+          🏋️ Fitness / Clean
+        </button>
+        <button class="pill pill-balanced" [class.active]="dietType() === 'Balanced'" (click)="dietType.set('Balanced')">
+          🥗 Balanced
+        </button>
+      </div>
+    </div>
+
+    <!-- Food Preference -->
+    <div class="filter-group">
+      <label class="filter-label">
+        <lucide-icon [img]="Flame" [size]="16"></lucide-icon>
+        Food Preference
+      </label>
+      <div class="pill-group">
+        <button class="pill pill-veg" [class.active]="foodPreference() === 'Veg'" (click)="foodPreference.set('Veg')">
+          🥦 Vegetarian
+        </button>
+        <button class="pill pill-nonveg" [class.active]="foodPreference() === 'Non-Veg'" (click)="foodPreference.set('Non-Veg')">
+          🍗 Non-Veg
+        </button>
+        <button class="pill pill-both" [class.active]="foodPreference() === 'Both'" (click)="foodPreference.set('Both')">
+          🌍 Both
+        </button>
+      </div>
+    </div>
+
+    <!-- Calorie Slider -->
+    <div class="filter-group">
+      <label class="filter-label">
+        Daily Calories: <strong class="calorie-value">{{ dailyCalorieTarget() }}</strong> kcal
+      </label>
+      <div class="slider-container">
+        <span class="slider-min">1200</span>
+        <input type="range" min="1200" max="4000" step="50"
+               [ngModel]="dailyCalorieTarget()"
+               (ngModelChange)="dailyCalorieTarget.set($event)"
+               class="modern-slider">
+        <span class="slider-max">4000</span>
+      </div>
+    </div>
+
+    <!-- LIVE MACRO PREVIEW — updates with pill selections -->
+    <div class="macro-preview-panel">
+      <div class="preview-header">
+        <span class="preview-title">Expected Macro Targets</span>
+        <span class="preview-subtitle">{{ getGoalIcon() }} {{ getGoalDescription() }}</span>
+      </div>
+      <div class="preview-macros">
+        <div class="preview-macro">
+          <div class="preview-macro-circle protein-circle">
+            {{ macroPreview().proteinG }}g
+          </div>
+          <span class="preview-macro-label">Protein</span>
+          <span class="preview-macro-pct">{{ (macroPreview().proteinPct * 100) | number:'1.0-0' }}%</span>
+        </div>
+        <div class="preview-macro">
+          <div class="preview-macro-circle carbs-circle">
+            {{ macroPreview().carbsG }}g
+          </div>
+          <span class="preview-macro-label">Carbs</span>
+          <span class="preview-macro-pct">{{ (macroPreview().carbsPct * 100) | number:'1.0-0' }}%</span>
+        </div>
+        <div class="preview-macro">
+          <div class="preview-macro-circle fat-circle">
+            {{ macroPreview().fatG }}g
+          </div>
+          <span class="preview-macro-label">Fat</span>
+          <span class="preview-macro-pct">{{ (macroPreview().fatPct * 100) | number:'1.0-0' }}%</span>
+        </div>
+      </div>
+      <div class="preview-protein-note" *ngIf="foodPreference() === 'Non-Veg'">
+        🍗 Non-veg protein sources will be prioritised (chicken, fish, eggs, mutton)
+      </div>
+      <div class="preview-protein-note veg-note" *ngIf="foodPreference() === 'Veg'">
+        🥦 Vegetarian protein sources only (dal, paneer, soya, legumes)
+      </div>
+    </div>
+
+    <!-- Generate Button -->
+    <button class="btn-generate-modern" (click)="generatePlan()" [disabled]="isGenerating()">
+      <ng-container *ngIf="!isGenerating()">
+        <lucide-icon [img]="Sparkles" [size]="20"></lucide-icon>
+        <span>Generate My Plan</span>
+      </ng-container>
+      <ng-container *ngIf="isGenerating()">
+        <div class="spinner"></div>
+        <span>Building your plan...</span>
+      </ng-container>
+    </button>
   </div>
 
-  <!-- Plan Display -->
-  <div class="plan-result" *ngIf="generatedPlan() as plan">
-    <div class="plan-summary-header">
-      <div class="header-left">
-          <h4>Your Daily Plan</h4>
-          <span class="summary-badge">{{ plan.totalCalories }} kcal</span>
+  <!-- ===================== PLAN DISPLAY ===================== -->
+  <div class="plan-result-modern" *ngIf="generatedPlan() as plan">
+
+    <!-- Plan Header -->
+    <div class="plan-header">
+      <div class="plan-title">
+        <h3>Your Personalized Plan</h3>
+        <div class="plan-badges">
+          <span class="badge badge-cal">{{ plan.totalCalories }} kcal</span>
+          <span class="badge badge-type">{{ dietType() }}</span>
+          <span class="badge badge-pref" [class.badge-nonveg]="foodPreference() === 'Non-Veg'"
+                [class.badge-veg]="foodPreference() === 'Veg'">
+            {{ foodPreference() === 'Non-Veg' ? '🍗' : foodPreference() === 'Veg' ? '🥦' : '🌍' }} {{ foodPreference() }}
+          </span>
+        </div>
       </div>
-      <button class="btn-save" (click)="savePlan()" [disabled]="isSaving()">
-        <lucide-icon [img]="Download" [size]="16"></lucide-icon>
-        {{ isSaving() ? 'Saving...' : 'Save to Log' }}
+      <button class="btn-save-modern" (click)="savePlan()" [disabled]="isSaving()">
+        <lucide-icon [img]="Download" [size]="18"></lucide-icon>
+        {{ isSaving() ? 'Saving...' : 'Save to Journal' }}
       </button>
     </div>
 
-    <div class="meal-timeline">
-      <div class="timeline-item" *ngFor="let meal of plan.meals; let i = index; let last = last"
-        [style.animation-delay]="i * 100 + 'ms'">
-        <div class="time-marker">
-          <div class="time-dot"></div>
-          <div class="time-line" *ngIf="!last"></div>
+    <!-- Plan Accuracy Bars -->
+    <div class="accuracy-panel">
+      <div class="accuracy-item">
+        <div class="accuracy-label">
+          <span>Calorie Accuracy</span>
+          <span class="accuracy-pct">{{ getCalorieAccuracy(plan) }}%</span>
+        </div>
+        <div class="accuracy-bar">
+          <div class="accuracy-fill calorie-fill" [style.width.%]="getCalorieAccuracy(plan)"></div>
+        </div>
+      </div>
+      <div class="accuracy-item">
+        <div class="accuracy-label">
+          <span>Protein Goal Met</span>
+          <span class="accuracy-pct">{{ getTotalMacro(plan, 'protein') }}g / {{ macroPreview().proteinG }}g</span>
+        </div>
+        <div class="accuracy-bar">
+          <div class="accuracy-fill protein-fill" [style.width.%]="getProteinAccuracy(plan)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coach Tip -->
+    <div class="coach-tip-modern" *ngIf="plan.coachTip">
+      <div class="tip-icon">💡</div>
+      <div class="tip-content">
+        <strong>Coach's Insight</strong>
+        <p>{{ plan.coachTip }}</p>
+      </div>
+    </div>
+
+    <!-- Total Macro Summary -->
+    <div class="macro-summary">
+      <div class="macro-card protein">
+        <div class="macro-icon">💪</div>
+        <div class="macro-details">
+          <span class="macro-value">{{ getTotalMacro(plan, 'protein') }}g</span>
+          <span class="macro-label">Protein</span>
+        </div>
+        <div class="macro-target-badge">Target: {{ macroPreview().proteinG }}g</div>
+      </div>
+      <div class="macro-card carbs">
+        <div class="macro-icon">🍚</div>
+        <div class="macro-details">
+          <span class="macro-value">{{ getTotalMacro(plan, 'carbs') }}g</span>
+          <span class="macro-label">Carbs</span>
+        </div>
+        <div class="macro-target-badge">Target: {{ macroPreview().carbsG }}g</div>
+      </div>
+      <div class="macro-card fats">
+        <div class="macro-icon">🥑</div>
+        <div class="macro-details">
+          <span class="macro-value">{{ getTotalMacro(plan, 'fat') }}g</span>
+          <span class="macro-label">Fats</span>
+        </div>
+        <div class="macro-target-badge">Target: {{ macroPreview().fatG }}g</div>
+      </div>
+    </div>
+
+    <!-- Meals Grid -->
+    <div class="meals-grid">
+      <div class="meal-card-modern" *ngFor="let meal of plan.meals; let i = index"
+           [style.animation-delay]="i * 100 + 'ms'">
+
+        <!-- Meal Header -->
+        <div class="meal-card-header">
+          <div class="meal-time">
+            <span class="meal-icon">{{ getMealIcon(meal.mealType) }}</span>
+            <div>
+              <h4>{{ meal.mealType }}</h4>
+              <span class="meal-cal-share">{{ getMealCaloriePct(meal) }}% of daily</span>
+            </div>
+          </div>
+          <span class="meal-cals-badge">{{ meal.calories }} kcal</span>
         </div>
 
-        <div class="meal-content-card">
-          <div class="meal-header">
-            <span class="meal-type">{{ meal.mealType }}</span>
-            <span class="meal-cals">{{ meal.calories }} kcal</span>
-          </div>
+        <!-- Calorie bar -->
+        <div class="meal-calorie-bar-track">
+          <div class="meal-calorie-bar-fill" [style.width.%]="getMealCaloriePct(meal)"></div>
+        </div>
 
-          <div class="meal-foods">
-            <div class="food-row" *ngFor="let food of meal.foods">
-              <span class="bullet">•</span>
-              <span class="food-text">{{ food.name }} ({{ food.serving }})</span>
+        <!-- Food Items -->
+        <div class="meal-foods-list">
+          <div class="food-item" *ngFor="let food of meal.foods">
+            <div class="food-main">
+              <span class="food-dot" [class.non-veg-dot]="isNonVegProtein(food)" [class.veg-dot]="!isNonVegProtein(food)"></span>
+              <div class="food-name-block">
+                <span class="food-name">{{ food.name }}</span>
+                <span class="food-cals-inline">{{ food.calories }} kcal</span>
+              </div>
             </div>
+            <div class="food-right">
+              <span class="food-serving">{{ food.serving }}</span>
+              <span class="food-protein-badge" *ngIf="food.protein > 8">{{ food.protein | number:'1.0-1' }}g P</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Meal Macros Mini -->
+        <div class="meal-macros">
+          <div class="macro-mini">
+            <span class="macro-mini-label">Protein</span>
+            <span class="macro-mini-value protein-color">{{ getMealMacro(meal, 'protein') }}g</span>
+          </div>
+          <div class="macro-mini">
+            <span class="macro-mini-label">Carbs</span>
+            <span class="macro-mini-value carbs-color">{{ getMealMacro(meal, 'carbs') }}g</span>
+          </div>
+          <div class="macro-mini">
+            <span class="macro-mini-label">Fat</span>
+            <span class="macro-mini-value fat-color">{{ getMealMacro(meal, 'fat') }}g</span>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Empty State -->
-  <div class="empty-planner" *ngIf="!generatedPlan()">
-    <lucide-icon [img]="Sparkles" [size]="48" class="ghost-icon"></lucide-icon>
-    <p>Set your preferences to generate a plan</p>
+  <!-- ===================== EMPTY STATE ===================== -->
+  <div class="empty-state-modern" *ngIf="!generatedPlan() && !isGenerating()">
+    <div class="empty-icon-wrap">
+      <lucide-icon [img]="ChefHat" [size]="64" class="empty-icon"></lucide-icon>
+    </div>
+    <h3>Configure & Generate</h3>
+    <p>Select your goal, diet style, and food preference above to get a personalised macro-targeted meal plan.</p>
+    <div class="empty-hints">
+      <div class="empty-hint">🥦 Veg? Get dal, paneer & soya proteins</div>
+      <div class="empty-hint">🍗 Non-Veg? Get chicken, fish & egg proteins</div>
+      <div class="empty-hint">🏋️ Fitness mode? Clean foods only, no junk</div>
+    </div>
   </div>
+
 </div>

@@ -11,6 +11,12 @@ const foodSchema = new mongoose.Schema({
     required: true,
     enum: ['protein', 'carbs', 'vegetables', 'fruits', 'dairy', 'fats', 'snacks', 'beverages', 'grains']
   },
+  description: {
+    type: String,
+    maxLength: 500,
+    trim: true,
+    default: ""
+  },
   isVegetarian: {
     type: Boolean,
     required: true,
@@ -49,7 +55,7 @@ const foodSchema = new mongoose.Schema({
   servingUnit: {
     type: String,
     required: true,
-    enum: ['g', 'ml', 'cup', 'piece', 'tbsp', 'tsp', 'oz']
+    enum: ['g', 'ml', 'cup', 'piece', 'tbsp', 'tsp', 'oz', 'glass', 'pack', 'scoop', 'serving']
   },
   verified: {
     type: Boolean,

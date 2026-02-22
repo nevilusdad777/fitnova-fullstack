@@ -78,8 +78,8 @@
                             </div>
                             <div class="metric-info">
                                 <span class="metric-label">BMI Score</span>
-                                <span class="metric-value">24.2</span>
-                                <span class="metric-sub text-success">Normal Weight</span>
+                                <span class="metric-value">{{ bmiScore() || '--' }}</span>
+                                <span class="metric-sub" [style.color]="bmiColor()">{{ bmiCategory() }}</span>
                             </div>
                         </div>
                     </div>

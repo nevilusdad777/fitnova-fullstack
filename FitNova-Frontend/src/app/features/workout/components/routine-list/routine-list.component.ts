@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, Plus, Dumbbell, Calendar, Edit, Trash2, Play, Flame } from 'lucide-angular';
+import { LucideAngularModule, Plus, Dumbbell, Calendar, Edit, Trash2, Play, Flame, Eye } from 'lucide-angular';
 import { WorkoutService } from '../../workout.service';
 import { WorkoutRoutine } from '../../../../core/models/workout.model';
 import { CardComponent } from '../../../../shared/components/card/card.component';
@@ -20,10 +20,11 @@ export class RoutineListComponent implements OnInit {
     readonly Trash2 = Trash2;
     readonly Play = Play;
     readonly Flame = Flame;
+    readonly Eye = Eye;
 
     @Output() createRoutine = new EventEmitter<void>();
     @Output() editRoutine = new EventEmitter<WorkoutRoutine>();
-    @Output() startRoutine = new EventEmitter<WorkoutRoutine>();
+    @Output() previewRoutine = new EventEmitter<WorkoutRoutine>();
 
     routines = signal<WorkoutRoutine[]>([]);
     isLoading = signal(false);
@@ -40,7 +41,7 @@ export class RoutineListComponent implements OnInit {
         );
     });
 
-    bodyParts = ['All', 'Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Abs', 'Cardio'];
+    bodyParts = ['All', 'Chest', 'Back', 'Legs', 'Shoulders', 'Biceps', 'Triceps', 'Abs', 'Cardio'];
 
     constructor(private workoutService: WorkoutService) {}
 
@@ -78,8 +79,8 @@ export class RoutineListComponent implements OnInit {
         this.editRoutine.emit(routine);
     }
 
-    onStartRoutine(routine: WorkoutRoutine) {
-        this.startRoutine.emit(routine);
+    onPreviewRoutine(routine: WorkoutRoutine) {
+        this.previewRoutine.emit(routine);
     }
 
     onDeleteRoutine(routine: WorkoutRoutine, event: Event) {
@@ -99,15 +100,21 @@ export class RoutineListComponent implements OnInit {
     }
 
     getBodyPartColor(bodyPart: string): string {
-        const colors: { [key: string]: string } = {
-            'chest': '#667eea',
-            'back': '#f5576c',
-            'legs': '#00f2fe',
-            'shoulders': '#38f9d7',
-            'arms': '#fee140',
-            'abs': '#330867',
-            'cardio': '#FF4B2B'
-        };
-        return colors[bodyPart.toLowerCase()] || '#667eea';
+        // Use a consistent subtle glass style instead of rainbow colors
+        return 'rgba(255, 255, 255, 0.1)';
+    }
+
+    getUniqueBodyParts(bodyParts: string[]): string[] {
+        return [...new Set(bodyParts)];
+    }
+
+    getExerciseCount(routine: WorkoutRoutine): number {
+        if (routine.schedule && routine.schedule.length > 0) {
+            return routine.schedule.reduce((total, day) => {
+                return total + (day.exercises ? day.exercises.length : 0);
+            }, 0);
+        }
+        // Legacy fallback
+        return (routine as any).exercises ? (routine as any).exercises.length : 0;
     }
 }

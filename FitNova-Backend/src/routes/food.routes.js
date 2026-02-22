@@ -12,5 +12,8 @@ router.get('/:id', foodController.getFoodById);
 
 // Protected routes
 router.post('/', protect, foodController.createFood);
+router.put('/:id', protect, foodController.updateFood);
+router.delete('/:id', protect, foodController.deleteFood);
 
 module.exports = router;
+

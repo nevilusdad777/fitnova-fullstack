@@ -8,7 +8,7 @@
 .categories-nav {
     display: flex;
     gap: 12px;
-    overflow-x: auto;
+    flex-wrap: wrap;
     padding-bottom: 8px;
 }
 
@@ -32,9 +32,9 @@
 }
 
 .category-btn.active {
-    background-color: var(--color-primary);
+    background: var(--bg-workout);
     color: white;
-    border-color: var(--color-primary);
+    border-color: transparent;
 }
 
 .exercises-grid {
@@ -56,9 +56,9 @@
 }
 
 .exercise-card:hover {
-    border-color: var(--color-primary-light);
+    border-color: var(--color-calorie);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.15);
 }
 
 .exercise-header {
@@ -92,9 +92,9 @@
 }
 
 .add-btn-small:hover {
-    background-color: var(--color-primary);
+    background-color: var(--color-calorie);
     color: white;
-    border-color: var(--color-primary);
+    border-color: var(--color-calorie);
     transform: scale(1.1);
 }
 
@@ -174,31 +174,34 @@
 
 .difficulty-nav {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 
 .difficulty-btn {
-    padding: 6px 14px;
-    background-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background-color: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-radius: 20px;
+    border-radius: 9999px;
     cursor: pointer;
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-    transition: all 0.2s;
+    white-space: nowrap;
+    transition: all 0.2s ease;
     font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
 }
 
 .difficulty-btn:hover {
     background-color: var(--color-surface-hover);
-    border-color: var(--color-text-muted);
 }
 
 .difficulty-btn.active {
-    background-color: var(--color-primary);
+    background: var(--bg-workout);
     color: white;
-    border-color: var(--color-primary);
+    border-color: transparent;
 }
 
 /* Modal Styles */
@@ -317,15 +320,15 @@
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    background-color: rgba(59, 130, 246, 0.1); /* Primary with opacity */
+    background-color: rgba(249, 115, 22, 0.1); /* Orange with opacity */
     padding: 12px 16px;
     border-radius: 8px;
     margin-bottom: 20px;
-    border: 1px solid rgba(59, 130, 246, 0.2);
+    border: 1px solid rgba(249, 115, 22, 0.2);
 }
 
 .benefit-box lucide-icon {
-    color: var(--color-primary);
+    color: var(--color-calorie); /* Orange */
     margin-top: 3px;
     flex-shrink: 0;
 }
@@ -340,7 +343,7 @@
 .valueHighlight {
     font-size: 0.95rem; /* Slightly smaller to fit if text is long */
     font-weight: 700;
-    color: var(--color-primary);
+    color: var(--color-calorie); /* Orange */
     text-align: center;
 }
 
@@ -398,7 +401,7 @@
     align-items: center;
     gap: 8px;
     padding: 12px 24px;
-    background-color: var(--color-primary);
+    background: var(--bg-workout); /* Gradient orange/red */
     color: white;
     border: none;
     border-radius: 8px;
@@ -408,8 +411,8 @@
 }
 
 .add-to-routine-btn:hover {
-    background-color: var(--color-primary-dark);
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
 }
 
 @keyframes fadeIn {

@@ -30,8 +30,8 @@ export class WorkoutPlanGeneratorComponent {
         {
             id: 'bro',
             name: 'Bro Split',
-            description: '5 days - Classic bodybuilding split (Chest, Back, Shoulders, Arms, Legs)',
-            daysPerWeek: 5,
+            description: '6 days - Classic bodybuilding split (Chest, Back, Shoulders, Biceps, Triceps, Legs, Full Body)',
+            daysPerWeek: 6,
             icon: '💪'
         },
         {

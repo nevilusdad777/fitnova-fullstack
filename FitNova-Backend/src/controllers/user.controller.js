@@ -35,6 +35,10 @@ const updateProfile = async (req, res) => {
       user.goal = req.body.goal || user.goal;
       user.activityLevel = req.body.activityLevel || user.activityLevel;
       user.waterGoal = req.body.waterGoal || user.waterGoal;
+      user.targetWeight = req.body.targetWeight !== undefined ? req.body.targetWeight : user.targetWeight;
+      user.weeklyWorkoutDays = req.body.weeklyWorkoutDays !== undefined ? req.body.weeklyWorkoutDays : user.weeklyWorkoutDays;
+      user.pace = req.body.pace || user.pace;
+      user.targetWater = req.body.targetWater !== undefined ? req.body.targetWater : user.targetWater;
       
       if (req.body.profilePicture !== undefined) {
         user.profilePicture = req.body.profilePicture;
@@ -65,6 +69,10 @@ const updateProfile = async (req, res) => {
         goal: updatedUser.goal,
         activityLevel: updatedUser.activityLevel,
         waterGoal: updatedUser.waterGoal,
+        targetWeight: updatedUser.targetWeight,
+        weeklyWorkoutDays: updatedUser.weeklyWorkoutDays,
+        pace: updatedUser.pace,
+        targetWater: updatedUser.targetWater,
         preferences: updatedUser.preferences,
         bmr: updatedUser.bmr,
         tdee: updatedUser.tdee,

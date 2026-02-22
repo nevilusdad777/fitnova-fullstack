@@ -1,0 +1,112 @@
+<div class="form-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h2>{{ isEditMode ? 'Edit Exercise' : 'Add New Exercise' }}</h2>
+      <p>{{ isEditMode ? 'Update existing exercise details' : 'Create a new exercise record' }}</p>
+    </div>
+    <button [routerLink]="['/admin/exercises']" class="btn-back">← Back to List</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading exercise details...</p>
+  </div>
+
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <form *ngIf="!loading" [formGroup]="exerciseForm" (ngSubmit)="onSubmit()" class="food-form">
+    
+    <!-- Basic Information -->
+    <div class="form-section">
+      <h3>Basic Information</h3>
+      
+      <div class="form-grid">
+        <div class="form-group span-2">
+          <label for="name">Exercise Name *</label>
+          <input type="text" id="name" formControlName="name" placeholder="e.g., Bench Press, Squat">
+          <span class="error-msg" *ngIf="isFieldInvalid('name')">Exercise name is required</span>
+        </div>
+
+        <div class="form-group">
+          <label for="bodyPart">Body Part *</label>
+          <select id="bodyPart" formControlName="bodyPart">
+            <option *ngFor="let part of bodyParts" [value]="part">{{ part | titlecase }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="equipment">Equipment *</label>
+          <select id="equipment" formControlName="equipment">
+            <option *ngFor="let eq of equipments" [value]="eq">{{ eq | titlecase }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="difficulty">Difficulty *</label>
+          <select id="difficulty" formControlName="difficulty">
+            <option *ngFor="let diff of difficulties" [value]="diff">{{ diff | titlecase }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="targetMuscle">Target Muscle</label>
+          <input type="text" id="targetMuscle" formControlName="targetMuscle" placeholder="e.g., Pectoralis Major">
+        </div>
+
+        <div class="form-group span-2">
+          <label for="description">Description (Optional)</label>
+          <textarea id="description" formControlName="description" rows="3" placeholder="Overview of the exercise..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Instructions Array -->
+    <div class="form-section mt-24">
+      <div class="section-header-flex">
+        <h3>Step-by-Step Instructions *</h3>
+        <button type="button" class="btn-add-inst" (click)="addInstruction()">+ Add Step</button>
+      </div>
+
+      <div formArrayName="instructions" class="instructions-list">
+        <div *ngFor="let instCtrl of instructionsArray.controls; let i = index" class="instruction-item">
+          <span class="step-num">{{ i + 1 }}</span>
+          <textarea [formControlName]="i" rows="2" placeholder="e.g., Lie flat on the bench with your feet on the ground..."></textarea>
+          <button type="button" class="btn-remove-inst" (click)="removeInstruction(i)" [disabled]="instructionsArray.length === 1">
+            ✕
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Workout Defaults -->
+    <div class="form-section mt-24">
+      <h3>Workout Defaults</h3>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="defaultSets">Default Sets</label>
+          <input type="number" id="defaultSets" formControlName="defaultSets">
+        </div>
+
+        <div class="form-group">
+          <label for="defaultReps">Default Reps</label>
+          <input type="number" id="defaultReps" formControlName="defaultReps">
+        </div>
+
+        <div class="form-group">
+          <label for="caloriesPerMinute">Calories Burned (per min)</label>
+          <input type="number" id="caloriesPerMinute" formControlName="caloriesPerMinute">
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions mt-32">
+      <button type="button" [routerLink]="['/admin/exercises']" class="btn-cancel">Cancel</button>
+      <button type="submit" class="btn-submit" [disabled]="submitting">
+        {{ submitting ? 'Saving...' : (isEditMode ? 'Update Exercise' : 'Create Exercise') }}
+      </button>
+    </div>
+
+  </form>
+</div>

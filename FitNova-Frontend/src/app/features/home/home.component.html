@@ -14,17 +14,36 @@
 
     <!-- Quick Stats Grid -->
     <div class="stats-grid">
-        <div class="stat-card glass-panel" *ngFor="let stat of stats()">
+        <a class="stat-card glass-panel stat-card-link" *ngFor="let stat of stats()" [routerLink]="stat.route" [queryParams]="stat.queryParams">
             <div class="stat-icon" [style.background-color]="stat.color">
                 <lucide-icon [img]="stat.icon" [size]="24" [color]="'white'"></lucide-icon>
             </div>
             <div class="stat-info">
                 <span class="stat-label">{{ stat.label }}</span>
-                <div class="stat-value">
+                <div class="stat-value" [ngClass]="stat.valueClass">
                     {{ stat.value }} <span class="stat-unit">{{ stat.unit }}</span>
                 </div>
             </div>
+        </a>
+    </div>
+
+    <!-- Smart Coach Recommendation -->
+    <div class="smart-coach-card" *ngIf="workoutRecommendation()" [style.background]="workoutRecommendation()?.gradient">
+        <div class="coach-content">
+            <div class="coach-icon-wrapper">
+                <lucide-icon [img]="workoutRecommendation()?.icon" [size]="32" color="white"></lucide-icon>
+            </div>
+            <div class="coach-text">
+                <div class="coach-label">FitNova Smart Recommendation</div>
+                <h3 class="coach-title">Recommended: {{ workoutRecommendation()?.focus }}</h3>
+                <p class="coach-reason">{{ workoutRecommendation()?.reason }}</p>
+            </div>
+            <a [routerLink]="['/workout']" class="coach-action-btn">
+                Start Workout
+                <lucide-icon [img]="ArrowRight" [size]="18"></lucide-icon>
+            </a>
         </div>
+        <div class="coach-particles"></div>
     </div>
 
     <!-- Quick Actions -->
@@ -105,71 +124,46 @@
         <div class="dashboard-enhancements">
             <!-- Streak Counter -->
             <div class="streak-counter glass-panel" *ngIf="currentStreak() > 0">
+
+                <!-- Confetti particles (only on milestone days) -->
+                <div class="confetti-container" *ngIf="isMilestoneStreak()">
+                    <div class="confetti-piece" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]"
+                         [attr.data-index]="i"></div>
+                </div>
+
+                <!-- Milestone Badge Banner -->
+                <div class="milestone-banner" *ngIf="isMilestoneStreak()">
+                    <span class="milestone-badge-icon">🏅</span>
+                    <span class="milestone-badge-text">{{ milestoneTitle() }} — {{ currentStreak() }}-Day Streak!</span>
+                </div>
+
                 <div class="streak-content">
-                    <div class="streak-icon-wrapper">
+                    <div class="streak-icon-wrapper" [class.milestone-pulse]="isMilestoneStreak()">
                         <lucide-icon [img]="Flame" [size]="40" class="streak-flame"></lucide-icon>
                     </div>
                     <div class="streak-info">
                         <h3>{{ currentStreak() }} Day Streak! 🔥</h3>
-                        <p>Keep the momentum going! You're on fire!</p>
+                        <p *ngIf="!isMilestoneStreak()">Keep the momentum going! You're on fire!</p>
+                        <p *ngIf="isMilestoneStreak()" class="milestone-subtitle">🎉 Milestone reached! Incredible discipline!</p>
                     </div>
                 </div>
                 <div class="streak-progress">
                     <div class="progress-bar">
-                        <div class="progress-fill" [style.width.%]="(currentStreak() % 7) * 14.3"></div>
+                        <div class="progress-fill" [class.milestone-fill]="isMilestoneStreak()"
+                             [style.width.%]="streakProgressPct()"></div>
                     </div>
-                    <span class="next-milestone">{{ 7 - (currentStreak() % 7) }} days to next milestone</span>
+                    <span class="next-milestone" *ngIf="!isMilestoneStreak()">
+                        {{ nextMilestoneDays() }} days to next milestone
+                    </span>
+                    <span class="next-milestone milestone-achieved" *ngIf="isMilestoneStreak()">
+                        ✨ {{ currentStreak() }}-day milestone achieved!
+                    </span>
                 </div>
             </div>
 
-            <!-- Motivational Quote -->
-            <div class="motivational-quote glass-panel" *ngIf="motivationalQuote()">
-                <lucide-icon [img]="Zap" [size]="24" class="quote-icon"></lucide-icon>
-                <p class="quote-text">"{{ motivationalQuote() }}"</p>
-            </div>
 
             <!-- Monthly Workout Calendar -->
             <app-monthly-workout-calendar></app-monthly-workout-calendar>
-
-            <!-- Premium Fitness Persona Hero Card -->
-            <div class="fitness-persona-hero" *ngIf="fitnessPersona()" [style.background]="fitnessPersona()?.gradient">
-                <div class="persona-bg-particles"></div>
-                <div class="persona-content-wrapper">
-                    <!-- Left: Avatar/Icon -->
-                    <div class="persona-visual">
-                        <div class="level-badge">
-                            <span class="level-label">LVL</span>
-                            <span class="level-value">{{ fitnessPersona()?.level }}</span>
-                        </div>
-                        <div class="icon-container">
-                            <lucide-icon [img]="fitnessPersona()?.icon" [size]="64" color="white" strokeWidth="1.5"></lucide-icon>
-                        </div>
-                    </div>
-
-                    <!-- Center: Identity -->
-                    <div class="persona-identity">
-                        <div class="identity-header">
-                            <span class="identity-tag">Fitness Identity</span>
-                            <h2 class="identity-title">{{ fitnessPersona()?.title }}</h2>
-                            <h4 class="identity-subtitle">{{ fitnessPersona()?.subtitle }}</h4>
-                        </div>
-                        <p class="identity-description">{{ fitnessPersona()?.description }}</p>
-                        
-                        <!-- XP Progress -->
-                        <div class="xp-container">
-                            <div class="xp-info">
-                                <span>XP Progress</span>
-                                <span>{{ fitnessPersona()?.progress }}% to next level</span>
-                            </div>
-                            <div class="xp-bar-track">
-                                <div class="xp-bar-fill" [style.width.%]="fitnessPersona()?.progress">
-                                    <div class="xp-glint"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

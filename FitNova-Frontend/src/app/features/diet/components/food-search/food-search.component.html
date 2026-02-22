@@ -1,10 +1,16 @@
 <div class="food-search-container fade-in">
     <!-- Search Bar & Filters -->
     <div class="search-controls">
-        <div class="search-box">
-            <lucide-icon [img]="Search" [size]="20" class="search-icon"></lucide-icon>
-            <input type="text" placeholder="Search foods (e.g., 'Apple', 'Chicken')..." [value]="searchQuery()"
-                (input)="onSearchChange($event)" class="search-input">
+        <div class="search-top-row">
+            <div class="search-box">
+                <lucide-icon [img]="Search" [size]="20" class="search-icon"></lucide-icon>
+                <input type="text" placeholder="Search foods (e.g., 'Apple', 'Chicken')..." [value]="searchQuery()"
+                    (input)="onSearchChange($event)" class="search-input">
+            </div>
+            <button class="btn-create-custom" (click)="openCustomFoodModal()">
+                <lucide-icon [img]="PlusCircle" [size]="18"></lucide-icon>
+                Create Custom Food
+            </button>
         </div>
 
         <div class="filters-row">
@@ -34,29 +40,38 @@
         </div>
     </div>
 
-    <!-- Results Grid -->
-    <div class="food-grid-container">
-        <div class="results-header" *ngIf="filteredFoods().length > 0">
-            <span>{{ filteredFoods().length }} foods found</span>
+    <!-- ── My Custom Foods Section ── -->
+    <div class="custom-foods-section" *ngIf="filteredCustomFoods().length > 0">
+        <div class="section-header">
+            <div class="section-title">
+                <lucide-icon [img]="PlusCircle" [size]="18" class="section-icon"></lucide-icon>
+                <h3>My Custom Foods</h3>
+                <span class="section-count">{{ filteredCustomFoods().length }}</span>
+            </div>
         </div>
 
-        <div class="food-grid" *ngIf="filteredFoods().length > 0; else emptyState">
-            <div *ngFor="let food of filteredFoods()" class="food-card" (click)="selectFood(food)">
-                <div class="food-image" *ngIf="food.image">
-                    <img [src]="food.image" [alt]="food.name" loading="lazy" (error)="handleImageError(food)">
-                </div>
-                <!-- Fallback/Placeholder if no image -->
-                <div class="food-image placeholder" *ngIf="!food.image">
-                    <span>{{ food.name.charAt(0) }}</span>
+        <div class="food-grid">
+            <div *ngFor="let food of filteredCustomFoods()" class="food-card custom-food-card" (click)="selectFood(food)">
+                <!-- Edit / Delete actions -->
+                <div class="custom-card-actions">
+                    <button class="card-action-btn edit-btn" (click)="openEditModal(food, $event)" title="Edit food">
+                        <lucide-icon [img]="Pencil" [size]="14"></lucide-icon>
+                    </button>
+                    <button class="card-action-btn delete-btn" (click)="confirmDeleteFood(food, $event)" title="Delete food">
+                        <lucide-icon [img]="Trash2" [size]="14"></lucide-icon>
+                    </button>
                 </div>
 
                 <div class="food-card-content">
                     <div class="food-card-header">
                         <h3 class="food-name">{{ food.name }}</h3>
-                        <app-badge [text]="food.isVegetarian ? 'Veg' : 'Non-Veg'"
-                            [variant]="food.isVegetarian ? 'success' : 'danger'"></app-badge>
+                        <div class="header-badges">
+                            <span class="custom-tag">Custom</span>
+                            <app-badge [text]="food.isVegetarian ? 'Veg' : 'Non-Veg'"
+                                [variant]="food.isVegetarian ? 'success' : 'danger'"></app-badge>
+                        </div>
                     </div>
-    
+
                     <div class="food-meta">
                         <div class="meta-row">
                             <span class="calories">{{ food.calories }} kcal</span>
@@ -64,7 +79,66 @@
                             <span class="serving">{{ food.servingSize }} {{ food.servingUnit }}</span>
                         </div>
                     </div>
-    
+                    
+
+
+                    <div class="food-macros-mini">
+                        <div class="macro-pill p">
+                            <span class="label">P</span>
+                            <span class="val">{{ food.protein }}g</span>
+                        </div>
+                        <div class="macro-pill c">
+                            <span class="label">C</span>
+                            <span class="val">{{ food.carbs }}g</span>
+                        </div>
+                        <div class="macro-pill f">
+                            <span class="label">F</span>
+                            <span class="val">{{ food.fat }}g</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Empty custom foods state (only when searching and nothing found) -->
+    <div class="custom-foods-empty" *ngIf="myCustomFoods().length === 0 && !searchQuery()">
+        <div class="custom-empty-inner">
+            <lucide-icon [img]="PlusCircle" [size]="28" class="empty-icon"></lucide-icon>
+            <p>No custom foods yet</p>
+            <button class="btn-create-custom empty-cta" (click)="openCustomFoodModal()">
+                Create your first custom food
+            </button>
+        </div>
+    </div>
+
+    <!-- ── Food Database Section ── -->
+    <div class="database-section">
+        <div class="section-header">
+            <div class="section-title">
+                <h3>Food Database</h3>
+                <span class="section-count" *ngIf="filteredFoods().length > 0">{{ filteredFoods().length }}</span>
+            </div>
+        </div>
+
+        <div class="food-grid" *ngIf="filteredFoods().length > 0; else emptyState">
+            <div *ngFor="let food of filteredFoods()" class="food-card" (click)="selectFood(food)">
+                <div class="food-card-content">
+                    <div class="food-card-header">
+                        <h3 class="food-name">{{ food.name }}</h3>
+                        <app-badge [text]="food.isVegetarian ? 'Veg' : 'Non-Veg'"
+                            [variant]="food.isVegetarian ? 'success' : 'danger'"></app-badge>
+                    </div>
+
+                    <div class="food-meta">
+                        <div class="meta-row">
+                            <span class="calories">{{ food.calories }} kcal</span>
+                            <span class="dot">•</span>
+                            <span class="serving">{{ food.servingSize }} {{ food.servingUnit }}</span>
+                        </div>
+                    </div>
+
                     <div class="food-macros-mini">
                         <div class="macro-pill p">
                             <span class="label">P</span>
@@ -87,26 +161,30 @@
             <div class="empty-state">
                 <lucide-icon [img]="Search" [size]="48"></lucide-icon>
                 <p>No foods found matching "{{ searchQuery() }}"</p>
+                <button class="btn-create-custom empty-cta" (click)="openCustomFoodModal()">
+                    <lucide-icon [img]="PlusCircle" [size]="16"></lucide-icon>
+                    Create "{{ searchQuery() }}" as custom food
+                </button>
             </div>
         </ng-template>
     </div>
 
-    <!-- Compact Inline Modal -->
+    <!-- Compact Inline Modal (Add to meal) -->
     <div class="quick-add-modal" *ngIf="selectedFood()" [@slideIn]>
         <div class="quick-modal-content">
             <button class="quick-close" (click)="closeModal()">×</button>
-            
-            <div class="modal-image-banner" *ngIf="selectedFood()?.image">
-                <img [src]="selectedFood()!.image" [alt]="selectedFood()!.name" (error)="handleImageError(selectedFood()!)">
-            </div>
 
             <div class="quick-header">
                 <h4>{{ selectedFood()!.name }}</h4>
                 <div class="modal-badges">
                     <app-badge [text]="selectedFood()!.isVegetarian ? 'Vegetarian' : 'Non-Veg'" 
                               [variant]="selectedFood()!.isVegetarian ? 'success' : 'danger'"></app-badge>
-                    <span class="source-badge">{{ selectedFood()!.apiSource || 'Internal' }}</span>
+                    <span class="source-badge">{{ selectedFood()!.apiSource === 'user' ? '⭐ My Food' : (selectedFood()!.apiSource || 'Internal') }}</span>
                 </div>
+                
+                <p class="modal-description" *ngIf="selectedFood()?.description">
+                    {{ selectedFood()!.description }}
+                </p>
                 
                 <div class="macros-grid-large">
                     <div class="macro-box">
@@ -142,6 +220,223 @@
                 <div class="quick-actions">
                     <button class="quick-btn cancel" (click)="closeModal()">Cancel</button>
                     <button class="quick-btn add" (click)="addToMeal()">Add to Journal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Create Custom Food Modal ── -->
+    <div class="custom-food-overlay" *ngIf="showCustomFoodModal()" (click)="closeCustomFoodModal()">
+        <div class="custom-food-modal" [@fadeIn] (click)="$event.stopPropagation()">
+            <!-- Header -->
+            <div class="custom-modal-header">
+                <div class="custom-modal-title">
+                    <lucide-icon [img]="PlusCircle" [size]="22" class="title-icon"></lucide-icon>
+                    <h3>Create Custom Food</h3>
+                </div>
+                <button class="custom-close-btn" (click)="closeCustomFoodModal()">
+                    <lucide-icon [img]="X" [size]="20"></lucide-icon>
+                </button>
+            </div>
+
+            <!-- Error -->
+            <div class="custom-error" *ngIf="customFoodError()">
+                ⚠️ {{ customFoodError() }}
+            </div>
+
+            <!-- Form -->
+            <div class="custom-food-form">
+                <!-- Name -->
+                <div class="form-group full-width">
+                    <label class="form-label">Food Name *</label>
+                    <input type="text" class="form-input" [(ngModel)]="customFoodForm.name"
+                        placeholder="e.g., Homemade Protein Bar">
+                </div>
+                
+                <!-- Description -->
+                <div class="form-group full-width">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input" [(ngModel)]="customFoodForm.description"
+                        placeholder="e.g., Made with whey protein, oats, and peanut butter" rows="2"></textarea>
+                </div>
+
+                <!-- Category + Veg toggle -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Category *</label>
+                        <select class="form-input" [(ngModel)]="customFoodForm.category">
+                            <option *ngFor="let cat of foodCategories" [value]="cat.value">{{ cat.label }}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Type</label>
+                        <div class="veg-toggle">
+                            <button class="veg-btn" [class.active]="customFoodForm.isVegetarian"
+                                (click)="customFoodForm.isVegetarian = true">
+                                🥗 Veg
+                            </button>
+                            <button class="veg-btn non-veg" [class.active]="!customFoodForm.isVegetarian"
+                                (click)="customFoodForm.isVegetarian = false">
+                                🍗 Non-Veg
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Macros Section -->
+                <div class="form-section-label">Nutrition (per serving)</div>
+                <div class="macros-grid">
+                    <div class="form-group">
+                        <label class="form-label">🔥 Calories *</label>
+                        <input type="number" class="form-input macro-input cal-input" [(ngModel)]="customFoodForm.calories"
+                            placeholder="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">💪 Protein (g) *</label>
+                        <input type="number" class="form-input macro-input prot-input" [(ngModel)]="customFoodForm.protein"
+                            placeholder="0" min="0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">🌾 Carbs (g) *</label>
+                        <input type="number" class="form-input macro-input carb-input" [(ngModel)]="customFoodForm.carbs"
+                            placeholder="0" min="0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">🥑 Fat (g) *</label>
+                        <input type="number" class="form-input macro-input fat-input" [(ngModel)]="customFoodForm.fat"
+                            placeholder="0" min="0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">🌿 Fiber (g)</label>
+                        <input type="number" class="form-input macro-input" [(ngModel)]="customFoodForm.fiber"
+                            placeholder="0" min="0" step="0.1">
+                    </div>
+                </div>
+
+                <!-- Serving -->
+                <div class="form-section-label">Serving Size</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Amount *</label>
+                        <input type="number" class="form-input" [(ngModel)]="customFoodForm.servingSize"
+                            placeholder="e.g., 100" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Unit *</label>
+                        <select class="form-input" [(ngModel)]="customFoodForm.servingUnit">
+                            <option *ngFor="let unit of servingUnits" [value]="unit">{{ unit }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="custom-form-actions">
+                    <button class="custom-btn cancel" (click)="closeCustomFoodModal()">Cancel</button>
+                    <button class="custom-btn save" (click)="submitCustomFood()" [disabled]="isSubmittingCustomFood()">
+                        <span *ngIf="!isSubmittingCustomFood()">
+                            <lucide-icon [img]="PlusCircle" [size]="16"></lucide-icon>
+                            Save Food
+                        </span>
+                        <span *ngIf="isSubmittingCustomFood()">Saving...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Edit Custom Food Modal ── -->
+    <div class="custom-food-overlay" *ngIf="showEditModal()" (click)="closeEditModal()">
+        <div class="custom-food-modal" [@fadeIn] (click)="$event.stopPropagation()">
+            <div class="custom-modal-header">
+                <div class="custom-modal-title">
+                    <lucide-icon [img]="Pencil" [size]="20" class="title-icon"></lucide-icon>
+                    <h3>Edit Custom Food</h3>
+                </div>
+                <button class="custom-close-btn" (click)="closeEditModal()">
+                    <lucide-icon [img]="X" [size]="20"></lucide-icon>
+                </button>
+            </div>
+
+            <div class="custom-error" *ngIf="editFoodError()">
+                ⚠️ {{ editFoodError() }}
+            </div>
+
+            <div class="custom-food-form">
+                <div class="form-group full-width">
+                    <label class="form-label">Food Name *</label>
+                    <input type="text" class="form-input" [(ngModel)]="editFoodForm.name" placeholder="Food name">
+                </div>
+                
+                <div class="form-group full-width">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input" [(ngModel)]="editFoodForm.description" placeholder="Optional description" rows="2"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Category *</label>
+                        <select class="form-input" [(ngModel)]="editFoodForm.category">
+                            <option *ngFor="let cat of foodCategories" [value]="cat.value">{{ cat.label }}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Type</label>
+                        <div class="veg-toggle">
+                            <button class="veg-btn" [class.active]="editFoodForm.isVegetarian"
+                                (click)="editFoodForm.isVegetarian = true">🥗 Veg</button>
+                            <button class="veg-btn non-veg" [class.active]="!editFoodForm.isVegetarian"
+                                (click)="editFoodForm.isVegetarian = false">🍗 Non-Veg</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section-label">Nutrition (per serving)</div>
+                <div class="macros-grid">
+                    <div class="form-group">
+                        <label class="form-label">🔥 Calories *</label>
+                        <input type="number" class="form-input macro-input cal-input" [(ngModel)]="editFoodForm.calories" placeholder="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">💪 Protein (g) *</label>
+                        <input type="number" class="form-input macro-input prot-input" [(ngModel)]="editFoodForm.protein" placeholder="0" min="0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">🌾 Carbs (g) *</label>
+                        <input type="number" class="form-input macro-input carb-input" [(ngModel)]="editFoodForm.carbs" placeholder="0" min="0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">🥑 Fat (g) *</label>
+                        <input type="number" class="form-input macro-input fat-input" [(ngModel)]="editFoodForm.fat" placeholder="0" min="0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">🌿 Fiber (g)</label>
+                        <input type="number" class="form-input macro-input" [(ngModel)]="editFoodForm.fiber" placeholder="0" min="0" step="0.1">
+                    </div>
+                </div>
+
+                <div class="form-section-label">Serving Size</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Amount *</label>
+                        <input type="number" class="form-input" [(ngModel)]="editFoodForm.servingSize" placeholder="e.g., 100" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Unit *</label>
+                        <select class="form-input" [(ngModel)]="editFoodForm.servingUnit">
+                            <option *ngFor="let unit of servingUnits" [value]="unit">{{ unit }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="custom-form-actions">
+                    <button class="custom-btn cancel" (click)="closeEditModal()">Cancel</button>
+                    <button class="custom-btn save" (click)="submitEditFood()" [disabled]="isSubmittingEdit()">
+                        <span *ngIf="!isSubmittingEdit()">
+                            <lucide-icon [img]="Pencil" [size]="16"></lucide-icon>
+                            Save Changes
+                        </span>
+                        <span *ngIf="isSubmittingEdit()">Saving...</span>
+                    </button>
                 </div>
             </div>
         </div>

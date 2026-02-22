@@ -106,10 +106,10 @@
   --shadow-glow-lg: 0 0 30px rgba(74, 144, 226, 0.4);
   --shadow-colored: 0 10px 40px -10px rgba(74, 144, 226, 0.5);
 
-  /* Transitions - Smooth and Premium */
+  /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: 500ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
   /* Layout */
@@ -139,6 +139,40 @@
   --card-bg: var(--color-surface);
   --bg-secondary: var(--color-surface-hover);
   --border-color: var(--color-border);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Utility Classes */
+.text-gradient {
+  background: var(--color-primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* Dark Mode - True Dark Aesthetic */
@@ -834,4 +868,26 @@ html[data-theme="dark"] {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--color-text-muted);
+}
+
+/* Modal Scroll Lock */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* 
+ * Disable containing block behavior for fixed modals 
+ * When backdrop-filter is applied, the element becomes a containing block
+ * for position: fixed, causing it to scroll with the content and cut off.
+ */
+body.modal-open .diet-main,
+body.modal-open .workout-main,
+body.modal-open .tracker-main,
+body.modal-open .profile-main,
+body.modal-open .admin-main {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transform: none !important;
+  will-change: auto !important;
+  filter: none !important;
 }

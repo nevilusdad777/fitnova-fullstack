@@ -6,10 +6,9 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "seed:foods": "node src/seeds/seedFoods.js",
     "seed:exercises": "node src/seeds/seedExercises.js",
-    "seed:all": "npm run seed:foods && npm run seed:exercises",
-    "seed:krish": "node src/seeds/seedKrishData.js"
+    "seed:krish": "node src/seeds/seedKrishData.js",
+    "seed:indian": "node src/seeds/seedIndianFoods.js"
   },
   "keywords": [
     "fitness",
@@ -27,7 +26,8 @@
     "express-validator": "^7.0.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.3",
-    "multer": "^2.0.2"
+    "multer": "^2.0.2",
+    "nodemailer": "^8.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"

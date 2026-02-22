@@ -20,23 +20,10 @@ import { GoalsComponent } from './components/goals/goals.component';
     styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent {
-    currentView = signal<'details' | 'goals'>('details');
-    
     // Icons
-    readonly User = User;
-    readonly Target = Target;
-    readonly Settings = Settings;
     readonly LogOut = LogOut;
 
     constructor(private authService: AuthService) {}
-
-    showDetails() {
-        this.currentView.set('details');
-    }
-
-    showGoals() {
-        this.currentView.set('goals');
-    }
 
     logout() {
         this.authService.logout();
