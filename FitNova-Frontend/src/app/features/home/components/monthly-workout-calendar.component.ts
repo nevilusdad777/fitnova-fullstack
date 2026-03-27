@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WorkoutService } from '../../workout/workout.service';
-import { LucideAngularModule, Dumbbell, Flame } from 'lucide-angular';
+import { LucideAngularModule, Dumbbell, Flame, Coffee } from 'lucide-angular';
 
 interface CalendarDay {
     date: Date;
@@ -10,6 +10,7 @@ interface CalendarDay {
     hasWorkout: boolean;
     workoutCount: number;
     totalCalories: number;
+    isRestDay: boolean;
 }
 
 @Component({
@@ -42,6 +43,7 @@ interface CalendarDay {
                     *ngFor="let calDay of calendarDays()" 
                     class="calendar-day"
                     [class.has-workout]="calDay.hasWorkout"
+                    [class.is-rest-day]="calDay.isRestDay && !calDay.hasWorkout"
                     [class.other-month]="!calDay.isCurrentMonth"
                     [class.today]="isToday(calDay.date)"
                     [title]="getTooltip(calDay)">
@@ -51,6 +53,12 @@ interface CalendarDay {
                         [img]="Dumbbell" 
                         [size]="12" 
                         class="workout-icon">
+                    </lucide-icon>
+                    <lucide-icon 
+                        *ngIf="calDay.isRestDay && !calDay.hasWorkout" 
+                        [img]="Coffee" 
+                        [size]="12" 
+                        class="rest-icon">
                     </lucide-icon>
                 </div>
             </div>
@@ -180,6 +188,19 @@ interface CalendarDay {
             box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
         }
 
+        .calendar-day.is-rest-day {
+            background: rgba(148, 163, 184, 0.1);
+            border-color: rgba(148, 163, 184, 0.3);
+        }
+
+        .rest-indicator {
+            font-size: 0.6rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            opacity: 0.6;
+            margin-top: 2px;
+        }
+
         .day-number {
             font-size: 0.75rem;
             font-weight: 600;
@@ -226,6 +247,10 @@ interface CalendarDay {
             .workout-icon {
                 display: none;
             }
+
+            .rest-indicator {
+                font-size: 0.5rem;
+            }
         }
     `]
 })
@@ -234,10 +259,12 @@ export class MonthlyWorkoutCalendarComponent implements OnInit {
 
     readonly Dumbbell = Dumbbell;
     readonly Flame = Flame;
+    readonly Coffee = Coffee;
 
     dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     
     workouts = signal<any[]>([]);
+    activePlanDays = signal<number[] | null>(null);
     currentDate = signal(new Date());
     
     calendarDays = computed(() => this.generateCalendarDays());
@@ -257,7 +284,25 @@ export class MonthlyWorkoutCalendarComponent implements OnInit {
     });
 
     ngOnInit() {
+        this.loadActivePlan();
         this.loadMonthlyWorkouts();
+    }
+
+    private loadActivePlan() {
+        this.workoutService.getActiveWorkoutPlan().subscribe({
+            next: (plan) => {
+                if (plan && plan.schedule) {
+                    const workoutDays = plan.schedule.map((s: any) => s.dayOfWeek);
+                    this.activePlanDays.set(workoutDays);
+                } else {
+                    this.activePlanDays.set([]);
+                }
+            },
+            error: (err) => {
+                console.error('Error loading active plan for calendar:', err);
+                this.activePlanDays.set(null); 
+            }
+        });
     }
 
     private loadMonthlyWorkouts() {
@@ -265,9 +310,13 @@ export class MonthlyWorkoutCalendarComponent implements OnInit {
         const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
         const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
 
+        const tzOffset = (new Date()).getTimezoneOffset() * 60000;
+        const localFirst = new Date(firstDay.getTime() - tzOffset).toISOString().split('T')[0];
+        const localLast = new Date(lastDay.getTime() - tzOffset).toISOString().split('T')[0];
+
         const filters = {
-            startDate: firstDay.toISOString().split('T')[0],
-            endDate: lastDay.toISOString().split('T')[0]
+            startDate: localFirst,
+            endDate: localLast
         };
 
         this.workoutService.getWorkoutHistory(filters).subscribe({
@@ -324,13 +373,20 @@ export class MonthlyWorkoutCalendarComponent implements OnInit {
             return workoutDate.toDateString() === date.toDateString();
         });
 
+        let isRestDay = false;
+        const planDays = this.activePlanDays();
+        if (planDays !== null) {
+            isRestDay = !planDays.includes(date.getDay());
+        }
+
         return {
             date,
             day: date.getDate(),
             isCurrentMonth,
             hasWorkout: workoutsOnDay.length > 0,
             workoutCount: workoutsOnDay.length,
-            totalCalories: workoutsOnDay.reduce((sum, w) => sum + (w.totalCaloriesBurned || 0), 0)
+            totalCalories: workoutsOnDay.reduce((sum, w) => sum + (w.totalCaloriesBurned || 0), 0),
+            isRestDay
         };
     }
 
@@ -340,7 +396,9 @@ export class MonthlyWorkoutCalendarComponent implements OnInit {
     }
 
     getTooltip(calDay: CalendarDay): string {
-        if (!calDay.hasWorkout) return '';
+        if (!calDay.hasWorkout) {
+             return calDay.isRestDay ? 'Rest Day' : '';
+        }
         return `${calDay.workoutCount} workout(s) - ${calDay.totalCalories} kcal`;
     }
 

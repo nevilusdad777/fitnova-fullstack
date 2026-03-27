@@ -3,6 +3,24 @@ const Tracker = require('../models/Tracker');
 const Food = require('../models/Food');
 const { getTodayDate, calculateTotalCalories, calculateTotalProtein, calculateTotalCarbs, calculateTotalFat } = require('../utils/calorie.util');
 const { validationResult } = require('express-validator');
+const dietGeneratorService = require('../services/diet-generator.service');
+
+const generateDietPlan = async (req, res) => {
+  try {
+    const { goal, preference, targetCalories, dietType } = req.body;
+    
+    // Validate inputs
+    if (!goal || !preference || !targetCalories) {
+      return res.status(400).json({ message: 'Missing required fields: goal, preference, targetCalories' });
+    }
+
+    const plan = await dietGeneratorService.generateDietPlan(goal, preference, targetCalories, dietType || 'Traditional');
+    res.json(plan);
+  } catch (error) {
+    console.error('Error generating diet plan:', error);
+    res.status(500).json({ message: error.message || 'Failed to generate diet plan' });
+  }
+};
 
 const getTodayMeals = async (req, res) => {
   try {
@@ -367,5 +385,6 @@ module.exports = {
   getFoodById,
   seedFoods,
   toggleMealCompletion,
-  toggleFoodItemCompletion
+  toggleFoodItemCompletion,
+  generateDietPlan
 };

@@ -162,6 +162,10 @@ export const routes: Routes = [
                         ]
                     },
                     {
+                        path: 'landing-content',
+                        loadComponent: () => import('./features/admin/landing-content/landing-content.component').then(m => m.LandingContentComponent)
+                    },
+                    {
                         path: '',
                         redirectTo: 'dashboard',
                         pathMatch: 'full'

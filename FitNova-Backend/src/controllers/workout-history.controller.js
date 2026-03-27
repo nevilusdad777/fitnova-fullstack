@@ -95,10 +95,14 @@ const getWorkoutHistory = async (req, res) => {
         if (startDate || endDate) {
             query.date = {};
             if (startDate) {
-                query.date.$gte = new Date(startDate);
+                const start = new Date(startDate);
+                start.setUTCHours(0, 0, 0, 0);
+                query.date.$gte = start;
             }
             if (endDate) {
-                query.date.$lte = new Date(endDate);
+                const end = new Date(endDate);
+                end.setUTCHours(23, 59, 59, 999);
+                query.date.$lte = end;
             }
         }
 

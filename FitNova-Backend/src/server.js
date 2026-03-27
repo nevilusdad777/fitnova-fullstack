@@ -13,6 +13,8 @@ const dietRoutes = require('./routes/diet.routes');
 const routineRoutes = require('./routes/routine.routes');
 const workoutHistoryRoutes = require('./routes/workout-history.routes');
 const workoutPlanRoutes = require('./routes/workout-plan.routes');
+const landingContentRoutes = require('./routes/landing-content.routes');
+const adminLandingContentRoutes = require('./routes/admin-landing-content.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -38,6 +40,7 @@ app.use('/diet', dietRoutes);
 app.use('/routines', routineRoutes);
 app.use('/workout-history', workoutHistoryRoutes);
 app.use('/workout-plan', workoutPlanRoutes);
+app.use('/landing-content', landingContentRoutes);
 
 // Admin routes
 app.use('/admin/auth', require('./routes/admin-auth.routes'));
@@ -45,6 +48,7 @@ app.use('/admin/users', require('./routes/admin-user.routes'));
 app.use('/admin/foods', require('./routes/admin-food.routes'));
 app.use('/admin/exercises', require('./routes/admin-exercise.routes'));
 app.use('/admin/stats', require('./routes/admin-stats.routes'));
+app.use('/admin/landing-content', adminLandingContentRoutes);
 app.use('/admin', require('./routes/admin.routes'));
 
 

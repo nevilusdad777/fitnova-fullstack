@@ -1,169 +1,186 @@
 <div class="home-container fade-in">
-    <div class="welcome-section">
-        <div class="welcome-content">
-            <h1 class="welcome-title">Welcome back, <span class="user-name text-gradient">{{ userName() }}</span>!</h1>
-            <p class="welcome-subtitle">Track your fitness journey with FitNova</p>
+  <div class="welcome-section">
+    <div class="welcome-content">
+      <h1 class="welcome-title">
+        Welcome back, <span class="user-name text-gradient">{{ userName() }}</span
+        >!
+      </h1>
+      <p class="welcome-subtitle">Track your fitness journey with FitNova</p>
+    </div>
+    <div class="user-avatar-wrapper">
+      <img
+        *ngIf="profilePicture()"
+        [src]="profilePicture()"
+        alt="Profile"
+        class="user-avatar-img"
+      />
+      <div *ngIf="!profilePicture()" class="user-avatar">
+        <span>{{ userInitials() }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Stats Grid -->
+  <div class="stats-grid">
+    <a
+      class="stat-card glass-panel stat-card-link"
+      *ngFor="let stat of stats()"
+      [routerLink]="stat.route"
+      [queryParams]="stat.queryParams"
+    >
+      <div class="stat-icon" [style.background-color]="stat.color">
+        <lucide-icon [img]="stat.icon" [size]="24" [color]="'white'"></lucide-icon>
+      </div>
+      <div class="stat-info">
+        <span class="stat-label">{{ stat.label }}</span>
+        <div class="stat-value" [ngClass]="stat.valueClass">
+          {{ stat.value }} <span class="stat-unit">{{ stat.unit }}</span>
         </div>
-        <div class="user-avatar-wrapper">
-            <img *ngIf="profilePicture()" [src]="profilePicture()" alt="Profile" class="user-avatar-img">
-            <div *ngIf="!profilePicture()" class="user-avatar">
-                <span>{{ userInitials() }}</span>
-            </div>
+      </div>
+    </a>
+  </div>
+
+  <!-- Daily Motivation Card -->
+  <div class="motivation-card">
+    <div class="motivation-icon-wrapper">
+      <lucide-icon [img]="Brain" [size]="32"></lucide-icon>
+    </div>
+    <div class="motivation-content">
+      <div class="motivation-label">Daily Motivation</div>
+      <h3 class="motivation-quote">
+        {{ motivationalQuote() }}
+      </h3>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="actions-section">
+    <h2 class="section-title">Quick Actions</h2>
+    <div class="actions-grid">
+      <a routerLink="/tracker" class="action-card glass-panel">
+        <div class="action-icon">
+          <lucide-icon [img]="Activity" [size]="28"></lucide-icon>
         </div>
+        <div class="action-content">
+          <h3>Track Progress</h3>
+          <p>Log your water, weight, and view charts</p>
+        </div>
+        <lucide-icon [img]="ArrowRight" [size]="20" class="action-arrow"></lucide-icon>
+      </a>
+
+      <a routerLink="/diet" class="action-card glass-panel">
+        <div class="action-icon">
+          <lucide-icon [img]="Utensils" [size]="28"></lucide-icon>
+        </div>
+        <div class="action-content">
+          <h3>Log Meal</h3>
+          <p>Track your daily nutrition intake</p>
+        </div>
+        <lucide-icon [img]="ArrowRight" [size]="20" class="action-arrow"></lucide-icon>
+      </a>
+
+      <a routerLink="/workout" class="action-card glass-panel">
+        <div class="action-icon">
+          <lucide-icon [img]="TrendingUp" [size]="28"></lucide-icon>
+        </div>
+        <div class="action-content">
+          <h3>Start Workout</h3>
+          <p>Begin your exercise session</p>
+        </div>
+        <lucide-icon [img]="ArrowRight" [size]="20" class="action-arrow"></lucide-icon>
+      </a>
+
+      <a routerLink="/goals" class="action-card glass-panel">
+        <div class="action-icon">
+          <lucide-icon [img]="Droplets" [size]="28"></lucide-icon>
+        </div>
+        <div class="action-content">
+          <h3>My Goals</h3>
+          <p>View and update your fitness goals</p>
+        </div>
+        <lucide-icon [img]="ArrowRight" [size]="20" class="action-arrow"></lucide-icon>
+      </a>
+    </div>
+  </div>
+
+  <!-- Workout Sessions Summary -->
+  <div class="workout-sessions-summary">
+    <div class="sessions-header">
+      <h2>Recent Workout Sessions</h2>
+      <a [routerLink]="['/workout']" [state]="{ showHistory: true }" class="view-all-btn">
+        View All Sessions
+        <lucide-icon [img]="ArrowRight" [size]="20"></lucide-icon>
+      </a>
     </div>
 
-    <!-- Quick Stats Grid -->
-    <div class="stats-grid">
-        <a class="stat-card glass-panel stat-card-link" *ngFor="let stat of stats()" [routerLink]="stat.route" [queryParams]="stat.queryParams">
-            <div class="stat-icon" [style.background-color]="stat.color">
-                <lucide-icon [img]="stat.icon" [size]="24" [color]="'white'"></lucide-icon>
-            </div>
-            <div class="stat-info">
-                <span class="stat-label">{{ stat.label }}</span>
-                <div class="stat-value" [ngClass]="stat.valueClass">
-                    {{ stat.value }} <span class="stat-unit">{{ stat.unit }}</span>
-                </div>
-            </div>
-        </a>
+    <div class="sessions-preview glass-panel">
+      <div class="session-stats">
+        <div class="stat-item">
+          <span class="stat-number">{{ totalWorkouts() }}</span>
+          <span class="stat-label">Total Sessions</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">{{ totalCaloriesBurned() }}</span>
+          <span class="stat-label">Calories Burned</span>
+        </div>
+      </div>
+      <p class="view-prompt">
+        Click "View All Sessions" to see detailed workout history with body part filters
+      </p>
     </div>
 
-    <!-- Smart Coach Recommendation -->
-    <div class="smart-coach-card" *ngIf="workoutRecommendation()" [style.background]="workoutRecommendation()?.gradient">
-        <div class="coach-content">
-            <div class="coach-icon-wrapper">
-                <lucide-icon [img]="workoutRecommendation()?.icon" [size]="32" color="white"></lucide-icon>
-            </div>
-            <div class="coach-text">
-                <div class="coach-label">FitNova Smart Recommendation</div>
-                <h3 class="coach-title">Recommended: {{ workoutRecommendation()?.focus }}</h3>
-                <p class="coach-reason">{{ workoutRecommendation()?.reason }}</p>
-            </div>
-            <a [routerLink]="['/workout']" class="coach-action-btn">
-                Start Workout
-                <lucide-icon [img]="ArrowRight" [size]="18"></lucide-icon>
-            </a>
+    <!-- Enhanced Dashboard Elements -->
+    <div class="dashboard-enhancements">
+      <!-- Streak Counter -->
+      <div class="streak-counter glass-panel" *ngIf="currentStreak() > 0">
+        <!-- Confetti particles (only on milestone days) -->
+        <div class="confetti-container" *ngIf="isMilestoneStreak()">
+          <div
+            class="confetti-piece"
+            *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]"
+            [attr.data-index]="i"
+          ></div>
         </div>
-        <div class="coach-particles"></div>
+
+        <!-- Milestone Badge Banner -->
+        <div class="milestone-banner" *ngIf="isMilestoneStreak()">
+          <span class="milestone-badge-icon">🏅</span>
+          <span class="milestone-badge-text"
+            >{{ milestoneTitle() }} — {{ currentStreak() }}-Day Streak!</span
+          >
+        </div>
+
+        <div class="streak-content">
+          <div class="streak-icon-wrapper" [class.milestone-pulse]="isMilestoneStreak()">
+            <lucide-icon [img]="Flame" [size]="40" class="streak-flame"></lucide-icon>
+          </div>
+          <div class="streak-info">
+            <h3>{{ currentStreak() }} Day Streak! 🔥</h3>
+            <p *ngIf="!isMilestoneStreak()">Keep the momentum going! You're on fire!</p>
+            <p *ngIf="isMilestoneStreak()" class="milestone-subtitle">
+              🎉 Milestone reached! Incredible discipline!
+            </p>
+          </div>
+        </div>
+        <div class="streak-progress">
+          <div class="progress-bar">
+            <div
+              class="progress-fill"
+              [class.milestone-fill]="isMilestoneStreak()"
+              [style.width.%]="streakProgressPct()"
+            ></div>
+          </div>
+          <span class="next-milestone" *ngIf="!isMilestoneStreak()">
+            {{ nextMilestoneDays() }} days to next milestone
+          </span>
+          <span class="next-milestone milestone-achieved" *ngIf="isMilestoneStreak()">
+            ✨ {{ currentStreak() }}-day milestone achieved!
+          </span>
+        </div>
+      </div>
+
+      <!-- Monthly Workout Calendar -->
+      <app-monthly-workout-calendar></app-monthly-workout-calendar>
     </div>
-
-    <!-- Quick Actions -->
-    <div class="actions-section">
-        <h2 class="section-title">Quick Actions</h2>
-        <div class="actions-grid">
-            <a routerLink="/tracker" class="action-card glass-panel">
-                <div class="action-icon">
-                    <lucide-icon [img]="Activity" [size]="28"></lucide-icon>
-                </div>
-                <div class="action-content">
-                    <h3>Track Progress</h3>
-                    <p>Log your water, weight, and view charts</p>
-                </div>
-                <lucide-icon [img]="ArrowRight" [size]="20" class="action-arrow"></lucide-icon>
-            </a>
-
-            <a routerLink="/diet" class="action-card glass-panel">
-                <div class="action-icon">
-                    <lucide-icon [img]="Utensils" [size]="28"></lucide-icon>
-                </div>
-                <div class="action-content">
-                    <h3>Log Meal</h3>
-                    <p>Track your daily nutrition intake</p>
-                </div>
-                <lucide-icon [img]="ArrowRight" [size]="20" class="action-arrow"></lucide-icon>
-            </a>
-
-            <a routerLink="/workout" class="action-card glass-panel">
-                <div class="action-icon">
-                    <lucide-icon [img]="TrendingUp" [size]="28"></lucide-icon>
-                </div>
-                <div class="action-content">
-                    <h3>Start Workout</h3>
-                    <p>Begin your exercise session</p>
-                </div>
-                <lucide-icon [img]="ArrowRight" [size]="20" class="action-arrow"></lucide-icon>
-            </a>
-
-            <a routerLink="/goals" class="action-card glass-panel">
-                <div class="action-icon">
-                    <lucide-icon [img]="Droplets" [size]="28"></lucide-icon>
-                </div>
-                <div class="action-content">
-                    <h3>My Goals</h3>
-                    <p>View and update your fitness goals</p>
-                </div>
-                <lucide-icon [img]="ArrowRight" [size]="20" class="action-arrow"></lucide-icon>
-            </a>
-        </div>
-    </div>
-
-    <!-- Workout Sessions Summary -->
-    <div class="workout-sessions-summary">
-        <div class="sessions-header">
-            <h2>Recent Workout Sessions</h2>
-            <a [routerLink]="['/workout']" [state]="{showHistory: true}" class="view-all-btn">
-                View All Sessions
-                <lucide-icon [img]="ArrowRight" [size]="20"></lucide-icon>
-            </a>
-        </div>
-        
-        <div class="sessions-preview glass-panel">
-            <div class="session-stats">
-                <div class="stat-item">
-                    <span class="stat-number">{{ totalWorkouts() }}</span>
-                    <span class="stat-label">Total Sessions</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">{{ totalCaloriesBurned() }}</span>
-                    <span class="stat-label">Calories Burned</span>
-                </div>
-            </div>
-            <p class="view-prompt">Click "View All Sessions" to see detailed workout history with body part filters</p>
-        </div>
-        
-        <!-- Enhanced Dashboard Elements -->
-        <div class="dashboard-enhancements">
-            <!-- Streak Counter -->
-            <div class="streak-counter glass-panel" *ngIf="currentStreak() > 0">
-
-                <!-- Confetti particles (only on milestone days) -->
-                <div class="confetti-container" *ngIf="isMilestoneStreak()">
-                    <div class="confetti-piece" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]"
-                         [attr.data-index]="i"></div>
-                </div>
-
-                <!-- Milestone Badge Banner -->
-                <div class="milestone-banner" *ngIf="isMilestoneStreak()">
-                    <span class="milestone-badge-icon">🏅</span>
-                    <span class="milestone-badge-text">{{ milestoneTitle() }} — {{ currentStreak() }}-Day Streak!</span>
-                </div>
-
-                <div class="streak-content">
-                    <div class="streak-icon-wrapper" [class.milestone-pulse]="isMilestoneStreak()">
-                        <lucide-icon [img]="Flame" [size]="40" class="streak-flame"></lucide-icon>
-                    </div>
-                    <div class="streak-info">
-                        <h3>{{ currentStreak() }} Day Streak! 🔥</h3>
-                        <p *ngIf="!isMilestoneStreak()">Keep the momentum going! You're on fire!</p>
-                        <p *ngIf="isMilestoneStreak()" class="milestone-subtitle">🎉 Milestone reached! Incredible discipline!</p>
-                    </div>
-                </div>
-                <div class="streak-progress">
-                    <div class="progress-bar">
-                        <div class="progress-fill" [class.milestone-fill]="isMilestoneStreak()"
-                             [style.width.%]="streakProgressPct()"></div>
-                    </div>
-                    <span class="next-milestone" *ngIf="!isMilestoneStreak()">
-                        {{ nextMilestoneDays() }} days to next milestone
-                    </span>
-                    <span class="next-milestone milestone-achieved" *ngIf="isMilestoneStreak()">
-                        ✨ {{ currentStreak() }}-day milestone achieved!
-                    </span>
-                </div>
-            </div>
-
-
-            <!-- Monthly Workout Calendar -->
-            <app-monthly-workout-calendar></app-monthly-workout-calendar>
-        </div>
-    </div>
+  </div>
 </div>

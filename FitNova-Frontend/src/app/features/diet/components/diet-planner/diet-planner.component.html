@@ -78,12 +78,12 @@
         Daily Calories: <strong class="calorie-value">{{ dailyCalorieTarget() }}</strong> kcal
       </label>
       <div class="slider-container">
-        <span class="slider-min">1200</span>
-        <input type="range" min="1200" max="4000" step="50"
+        <span class="slider-min">1000</span>
+        <input type="range" min="1000" max="3500" step="50"
                [ngModel]="dailyCalorieTarget()"
                (ngModelChange)="dailyCalorieTarget.set($event)"
                class="modern-slider">
-        <span class="slider-max">4000</span>
+        <span class="slider-max">3500</span>
       </div>
     </div>
 

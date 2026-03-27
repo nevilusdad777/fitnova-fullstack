@@ -1,0 +1,96 @@
+{
+  "trackers": [
+    {
+      "date": "2026-02-24",
+      "cals": 0,
+      "id": "699d543c3188ddc6b71085f0"
+    },
+    {
+      "date": "2026-02-23",
+      "cals": 796,
+      "id": "699be06074a0ff7f8a696d6d"
+    },
+    {
+      "date": "2026-02-23",
+      "cals": 0,
+      "id": "699bf852d8673c0d0f6e89b9"
+    },
+    {
+      "date": "2026-02-23",
+      "cals": 0,
+      "id": "699be31e5fd063a373e603f7"
+    },
+    {
+      "date": "2026-02-22",
+      "cals": 2379,
+      "id": "699a9046f32fb87d68bea41e"
+    },
+    {
+      "date": "2026-02-22",
+      "cals": 0,
+      "id": "699adb34e589c0f2111c81f3"
+    },
+    {
+      "date": "2026-02-21",
+      "cals": 518,
+      "id": "699937a48ee523b2c59965d7"
+    },
+    {
+      "date": "2026-02-21",
+      "cals": 0,
+      "id": "69999c5921663b0534c0e12b"
+    },
+    {
+      "date": "2026-02-20",
+      "cals": 805,
+      "id": "69984640c96b682140144eb6"
+    },
+    {
+      "date": "2026-02-19",
+      "cals": 0,
+      "id": "699712300191848f3f118826"
+    }
+  ],
+  "meals": [
+    {
+      "type": "lunch",
+      "completed": false
+    },
+    {
+      "type": "lunch",
+      "completed": false
+    },
+    {
+      "type": "breakfast",
+      "completed": false
+    },
+    {
+      "type": "lunch",
+      "completed": false
+    },
+    {
+      "type": "breakfast",
+      "completed": false
+    },
+    {
+      "type": "breakfast",
+      "completed": false
+    },
+    {
+      "type": "lunch",
+      "completed": false
+    },
+    {
+      "type": "breakfast",
+      "completed": false
+    },
+    {
+      "type": "breakfast",
+      "completed": false
+    },
+    {
+      "type": "breakfast",
+      "completed": false
+    }
+  ]
+}

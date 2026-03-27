@@ -44,7 +44,6 @@ export class UserListComponent implements OnInit {
   loadUsers(): void {
     this.loading = true;
     this.error = '';
-    this.cdr.detectChanges();
 
     this.adminUserService.getAllUsers(
       this.currentPage,

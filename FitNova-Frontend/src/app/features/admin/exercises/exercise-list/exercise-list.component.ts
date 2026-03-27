@@ -60,7 +60,6 @@ export class ExerciseListComponent implements OnInit, OnDestroy {
   loadExercises(): void {
     this.loading = true;
     this.error = '';
-    this.cdr.detectChanges();
 
     this.adminExerciseService.getAllExercises(
       this.currentPage,

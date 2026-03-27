@@ -59,7 +59,6 @@ export class DashboardComponent implements OnInit {
   loadDashboardStats(): void {
     this.loading = true;
     this.error = '';
-    this.cdr.detectChanges();
 
     this.adminStatsService.getDashboardStats()
       .pipe(

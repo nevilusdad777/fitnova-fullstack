@@ -1,90 +1,171 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const foodSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true
+const foodSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    category: {
+      type: String,
+      required: true,
+      enum: [
+        "protein",
+        "carbs",
+        "vegetables",
+        "fruits",
+        "dairy",
+        "fats",
+        "snacks",
+        "beverages",
+        "grains",
+        "legume",
+        "nuts",
+        "seeds",
+        "protein_primary",
+        "nonveg_protein",
+        "cooked_meal"
+      ],
+    },
+    description: {
+      type: String,
+      maxLength: 500,
+      trim: true,
+      default: "",
+    },
+    isVegetarian: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
+    calories: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    protein: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    carbs: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    fat: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    fiber: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    servingSize: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    servingUnit: {
+      type: String,
+      required: true,
+      enum: [
+        "g",
+        "ml",
+        "cup",
+        "piece",
+        "tbsp",
+        "tsp",
+        "oz",
+        "glass",
+        "pack",
+        "scoop",
+        "serving",
+      ],
+    },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
+    min_serving_g: {
+      type: Number,
+      default: 50,
+    },
+    max_serving_g: {
+      type: Number,
+      default: 300,
+    },
+    meal_allowed: [
+      {
+        type: String,
+        enum: ["breakfast", "lunch", "dinner", "snack"],
+      },
+    ],
+    is_primary_protein: {
+      type: Boolean,
+      default: false,
+    },
+    requires_pairing: {
+      type: Boolean,
+      default: false,
+    },
+    edible_alone: {
+      type: Boolean,
+      default: true,
+    },
+    food_group: {
+      type: String,
+      enum: [
+        "grain",
+        "legume",
+        "dairy",
+        "fruit",
+        "vegetable",
+        "nuts",
+        "seeds",
+        "other",
+      ],
+    },
+    purpose_tag: {
+      type: String,
+      enum: ["base", "protein", "side", "topping", "fat_source"],
+    },
+    image: {
+      type: String, // URL of the food image
+      default: null,
+    },
+    apiId: {
+      type: String, // ID from the external API (e.g., Spoonacular ID)
+      unique: true,
+      sparse: true, // Allows null/undefined values to not conflict
+    },
+    apiSource: {
+      type: String,
+      enum: [
+        "USDA",
+        "Spoonacular",
+        "OpenFoodFacts",
+        "manual",
+        "user",
+        "Curated (Indian)",
+      ],
+      default: "manual",
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
-  category: {
-    type: String,
-    required: true,
-    enum: ['protein', 'carbs', 'vegetables', 'fruits', 'dairy', 'fats', 'snacks', 'beverages', 'grains']
+  {
+    timestamps: true,
   },
-  description: {
-    type: String,
-    maxLength: 500,
-    trim: true,
-    default: ""
-  },
-  isVegetarian: {
-    type: Boolean,
-    required: true,
-    default: true
-  },
-  calories: {
-    type: Number,
-    required: true,
-    min: 0
-  },
-  protein: {
-    type: Number,
-    required: true,
-    min: 0
-  },
-  carbs: {
-    type: Number,
-    required: true,
-    min: 0
-  },
-  fat: {
-    type: Number,
-    required: true,
-    min: 0
-  },
-  fiber: {
-    type: Number,
-    default: 0,
-    min: 0
-  },
-  servingSize: {
-    type: Number,
-    required: true,
-    min: 0
-  },
-  servingUnit: {
-    type: String,
-    required: true,
-    enum: ['g', 'ml', 'cup', 'piece', 'tbsp', 'tsp', 'oz', 'glass', 'pack', 'scoop', 'serving']
-  },
-  verified: {
-    type: Boolean,
-    default: false
-  },
-  image: {
-    type: String, // URL of the food image
-    default: null
-  },
-  apiId: {
-    type: String, // ID from the external API (e.g., Spoonacular ID)
-    unique: true,
-    sparse: true // Allows null/undefined values to not conflict
-  },
-  apiSource: {
-    type: String,
-    enum: ['USDA', 'Spoonacular', 'OpenFoodFacts', 'manual', 'user', 'Curated (Indian)'],
-    default: 'manual'
-  },
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }
-}, {
-  timestamps: true
-});
+);
 
-foodSchema.index({ name: 'text' });
+foodSchema.index({ name: "text" });
 foodSchema.index({ category: 1 });
 foodSchema.index({ isVegetarian: 1 });
 
-module.exports = mongoose.model('Food', foodSchema);
+module.exports = mongoose.model("Food", foodSchema);

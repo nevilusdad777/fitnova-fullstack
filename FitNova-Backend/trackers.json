@@ -1,0 +1,572 @@
+[
+  {
+    "_id": "696506f4ed13b8095dc764bf",
+    "date": "2025-12-14",
+    "caloriesConsumed": 2112,
+    "caloriesBurned": 2486
+  },
+  {
+    "_id": "696506f4ed13b8095dc764be",
+    "date": "2025-12-15",
+    "caloriesConsumed": 1884,
+    "caloriesBurned": 2281
+  },
+  {
+    "_id": "696506f4ed13b8095dc764bd",
+    "date": "2025-12-16",
+    "caloriesConsumed": 1906,
+    "caloriesBurned": 2250
+  },
+  {
+    "_id": "696506f4ed13b8095dc764bc",
+    "date": "2025-12-17",
+    "caloriesConsumed": 1982,
+    "caloriesBurned": 2360
+  },
+  {
+    "_id": "696506f4ed13b8095dc764bb",
+    "date": "2025-12-18",
+    "caloriesConsumed": 1832,
+    "caloriesBurned": 2274
+  },
+  {
+    "_id": "696506f4ed13b8095dc764ba",
+    "date": "2025-12-19",
+    "caloriesConsumed": 2125,
+    "caloriesBurned": 2420
+  },
+  {
+    "_id": "696506f4ed13b8095dc764b9",
+    "date": "2025-12-20",
+    "caloriesConsumed": 2195,
+    "caloriesBurned": 2366
+  },
+  {
+    "_id": "696506f4ed13b8095dc764b8",
+    "date": "2025-12-21",
+    "caloriesConsumed": 1979,
+    "caloriesBurned": 2408
+  },
+  {
+    "_id": "696506f4ed13b8095dc764b7",
+    "date": "2025-12-22",
+    "caloriesConsumed": 2039,
+    "caloriesBurned": 2487
+  },
+  {
+    "_id": "696506f4ed13b8095dc764b6",
+    "date": "2025-12-23",
+    "caloriesConsumed": 2165,
+    "caloriesBurned": 2269
+  },
+  {
+    "_id": "696506f4ed13b8095dc764b5",
+    "date": "2025-12-24",
+    "caloriesConsumed": 1969,
+    "caloriesBurned": 2225
+  },
+  {
+    "_id": "696506f4ed13b8095dc764b4",
+    "date": "2025-12-25",
+    "caloriesConsumed": 1976,
+    "caloriesBurned": 2415
+  },
+  {
+    "_id": "696506f4ed13b8095dc764b3",
+    "date": "2025-12-26",
+    "caloriesConsumed": 2111,
+    "caloriesBurned": 2216
+  },
+  {
+    "_id": "696506f4ed13b8095dc764b2",
+    "date": "2025-12-27",
+    "caloriesConsumed": 1808,
+    "caloriesBurned": 2205
+  },
+  {
+    "_id": "696506f4ed13b8095dc764b1",
+    "date": "2025-12-28",
+    "caloriesConsumed": 2008,
+    "caloriesBurned": 2278
+  },
+  {
+    "_id": "696506f4ed13b8095dc764b0",
+    "date": "2025-12-29",
+    "caloriesConsumed": 1866,
+    "caloriesBurned": 2496
+  },
+  {
+    "_id": "696506f4ed13b8095dc764af",
+    "date": "2025-12-30",
+    "caloriesConsumed": 1887,
+    "caloriesBurned": 2296
+  },
+  {
+    "_id": "696506f4ed13b8095dc764ae",
+    "date": "2025-12-31",
+    "caloriesConsumed": 2192,
+    "caloriesBurned": 2368
+  },
+  {
+    "_id": "696506f4ed13b8095dc764ad",
+    "date": "2026-01-01",
+    "caloriesConsumed": 1975,
+    "caloriesBurned": 2235
+  },
+  {
+    "_id": "696506f4ed13b8095dc764ac",
+    "date": "2026-01-02",
+    "caloriesConsumed": 1967,
+    "caloriesBurned": 2439
+  },
+  {
+    "_id": "696506f4ed13b8095dc764ab",
+    "date": "2026-01-03",
+    "caloriesConsumed": 1931,
+    "caloriesBurned": 2471
+  },
+  {
+    "_id": "696506f4ed13b8095dc764aa",
+    "date": "2026-01-04",
+    "caloriesConsumed": 2002,
+    "caloriesBurned": 2432
+  },
+  {
+    "_id": "696506f4ed13b8095dc764a9",
+    "date": "2026-01-05",
+    "caloriesConsumed": 1943,
+    "caloriesBurned": 2282
+  },
+  {
+    "_id": "696506f4ed13b8095dc764a8",
+    "date": "2026-01-06",
+    "caloriesConsumed": 2065,
+    "caloriesBurned": 2343
+  },
+  {
+    "_id": "696506f4ed13b8095dc764a7",
+    "date": "2026-01-07",
+    "caloriesConsumed": 1938,
+    "caloriesBurned": 2466
+  },
+  {
+    "_id": "696506f4ed13b8095dc764a6",
+    "date": "2026-01-08",
+    "caloriesConsumed": 2045,
+    "caloriesBurned": 2391
+  },
+  {
+    "_id": "696506f4ed13b8095dc764a5",
+    "date": "2026-01-09",
+    "caloriesConsumed": 1990,
+    "caloriesBurned": 2455
+  },
+  {
+    "_id": "696506f4ed13b8095dc764a4",
+    "date": "2026-01-10",
+    "caloriesConsumed": 1871,
+    "caloriesBurned": 2497
+  },
+  {
+    "_id": "696506f4ed13b8095dc764a3",
+    "date": "2026-01-11",
+    "caloriesConsumed": 2031,
+    "caloriesBurned": 2393
+  },
+  {
+    "_id": "696506f4ed13b8095dc764a2",
+    "date": "2026-01-12",
+    "caloriesConsumed": 2113,
+    "caloriesBurned": 2449
+  },
+  {
+    "_id": "6965dca79b4a136939b3e1d6",
+    "date": "2026-01-13",
+    "caloriesConsumed": 0,
+    "caloriesBurned": 0
+  },
+  {
+    "_id": "69674bd8c645bc78231882db",
+    "date": "2026-01-14",
+    "caloriesConsumed": 0,
+    "caloriesBurned": 2950
+  },
+  {
+    "_id": "69689102272a595575c420ba",
+    "date": "2026-01-15",
+    "caloriesConsumed": 0,
+    "caloriesBurned": 0
+  },
+  {
+    "_id": "6969c5a2f4ec88791cc7834d",
+    "date": "2026-01-16",
+    "caloriesConsumed": 108100,
+    "caloriesBurned": 0
+  },
+  {
+    "_id": "69bbfe0a952106c39317fe4f",
+    "date": "2026-01-18",
+    "caloriesBurned": 862,
+    "caloriesConsumed": 1972
+  },
+  {
+    "_id": "69bbfe0a952106c39317fe50",
+    "date": "2026-01-19",
+    "caloriesBurned": 945,
+    "caloriesConsumed": 1895
+  },
+  {
+    "_id": "69bbfe0a952106c39317fe51",
+    "date": "2026-01-20",
+    "caloriesBurned": 962,
+    "caloriesConsumed": 1841
+  },
+  {
+    "_id": "69bbfe0a952106c39317fe52",
+    "date": "2026-01-21",
+    "caloriesBurned": 804,
+    "caloriesConsumed": 1884
+  },
+  {
+    "_id": "69bbfe0a952106c39317fe53",
+    "date": "2026-01-22",
+    "caloriesBurned": 952,
+    "caloriesConsumed": 1862
+  },
+  {
+    "_id": "69bbfe0a952106c39317fe54",
+    "date": "2026-01-23",
+    "caloriesBurned": 884,
+    "caloriesConsumed": 1842
+  },
+  {
+    "_id": "69bbfe0a952106c39317fe55",
+    "date": "2026-01-24",
+    "caloriesBurned": 905,
+    "caloriesConsumed": 1833
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe56",
+    "date": "2026-01-25",
+    "caloriesBurned": 913,
+    "caloriesConsumed": 1849
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe57",
+    "date": "2026-01-26",
+    "caloriesBurned": 817,
+    "caloriesConsumed": 1829
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe58",
+    "date": "2026-01-27",
+    "caloriesBurned": 874,
+    "caloriesConsumed": 1906
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe59",
+    "date": "2026-01-28",
+    "caloriesBurned": 961,
+    "caloriesConsumed": 1879
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe5a",
+    "date": "2026-01-29",
+    "caloriesBurned": 876,
+    "caloriesConsumed": 1991
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe5b",
+    "date": "2026-01-30",
+    "caloriesBurned": 785,
+    "caloriesConsumed": 1950
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe5c",
+    "date": "2026-01-31",
+    "caloriesBurned": 822,
+    "caloriesConsumed": 1880
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe5d",
+    "date": "2026-02-01",
+    "caloriesBurned": 919,
+    "caloriesConsumed": 1860
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe5e",
+    "date": "2026-02-02",
+    "caloriesBurned": 903,
+    "caloriesConsumed": 1912
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe5f",
+    "date": "2026-02-03",
+    "caloriesBurned": 803,
+    "caloriesConsumed": 1905
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe60",
+    "date": "2026-02-04",
+    "caloriesBurned": 957,
+    "caloriesConsumed": 1930
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe61",
+    "date": "2026-02-05",
+    "caloriesBurned": 782,
+    "caloriesConsumed": 1980
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe62",
+    "date": "2026-02-06",
+    "caloriesBurned": 771,
+    "caloriesConsumed": 1901
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe63",
+    "date": "2026-02-07",
+    "caloriesBurned": 799,
+    "caloriesConsumed": 1873
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe64",
+    "date": "2026-02-08",
+    "caloriesBurned": 855,
+    "caloriesConsumed": 1831
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe65",
+    "date": "2026-02-09",
+    "caloriesBurned": 952,
+    "caloriesConsumed": 1884
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe66",
+    "date": "2026-02-10",
+    "caloriesBurned": 889,
+    "caloriesConsumed": 1817
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe67",
+    "date": "2026-02-11",
+    "caloriesBurned": 919,
+    "caloriesConsumed": 1816
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe68",
+    "date": "2026-02-12",
+    "caloriesBurned": 957,
+    "caloriesConsumed": 1881
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe69",
+    "date": "2026-02-13",
+    "caloriesBurned": 969,
+    "caloriesConsumed": 1885
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe6a",
+    "date": "2026-02-14",
+    "caloriesBurned": 817,
+    "caloriesConsumed": 1829
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe6b",
+    "date": "2026-02-15",
+    "caloriesBurned": 805,
+    "caloriesConsumed": 1975
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe6c",
+    "date": "2026-02-16",
+    "caloriesBurned": 932,
+    "caloriesConsumed": 1868
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe6d",
+    "date": "2026-02-17",
+    "caloriesBurned": 837,
+    "caloriesConsumed": 1843
+  },
+  {
+    "_id": "69bbfe0b952106c39317fe6e",
+    "date": "2026-02-18",
+    "caloriesBurned": 961,
+    "caloriesConsumed": 1810
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe6f",
+    "date": "2026-02-19",
+    "caloriesBurned": 951,
+    "caloriesConsumed": 1861
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe70",
+    "date": "2026-02-20",
+    "caloriesBurned": 782,
+    "caloriesConsumed": 1808
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe71",
+    "date": "2026-02-21",
+    "caloriesBurned": 906,
+    "caloriesConsumed": 1956
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe72",
+    "date": "2026-02-22",
+    "caloriesBurned": 822,
+    "caloriesConsumed": 1860
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe73",
+    "date": "2026-02-23",
+    "caloriesBurned": 887,
+    "caloriesConsumed": 1949
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe74",
+    "date": "2026-02-24",
+    "caloriesBurned": 789,
+    "caloriesConsumed": 1896
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe75",
+    "date": "2026-02-25",
+    "caloriesBurned": 836,
+    "caloriesConsumed": 1811
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe76",
+    "date": "2026-02-26",
+    "caloriesBurned": 927,
+    "caloriesConsumed": 1922
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe77",
+    "date": "2026-02-27",
+    "caloriesBurned": 954,
+    "caloriesConsumed": 1831
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe78",
+    "date": "2026-02-28",
+    "caloriesBurned": 931,
+    "caloriesConsumed": 1839
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe79",
+    "date": "2026-03-01",
+    "caloriesBurned": 937,
+    "caloriesConsumed": 1831
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe7a",
+    "date": "2026-03-02",
+    "caloriesBurned": 793,
+    "caloriesConsumed": 1827
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe7b",
+    "date": "2026-03-03",
+    "caloriesBurned": 841,
+    "caloriesConsumed": 1974
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe7c",
+    "date": "2026-03-04",
+    "caloriesBurned": 780,
+    "caloriesConsumed": 1804
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe7d",
+    "date": "2026-03-05",
+    "caloriesBurned": 881,
+    "caloriesConsumed": 1849
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe7e",
+    "date": "2026-03-06",
+    "caloriesBurned": 875,
+    "caloriesConsumed": 1962
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe7f",
+    "date": "2026-03-07",
+    "caloriesBurned": 773,
+    "caloriesConsumed": 1947
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe80",
+    "date": "2026-03-08",
+    "caloriesBurned": 946,
+    "caloriesConsumed": 1807
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe81",
+    "date": "2026-03-09",
+    "caloriesBurned": 842,
+    "caloriesConsumed": 1834
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe82",
+    "date": "2026-03-10",
+    "caloriesBurned": 910,
+    "caloriesConsumed": 1942
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe83",
+    "date": "2026-03-11",
+    "caloriesBurned": 812,
+    "caloriesConsumed": 1855
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe84",
+    "date": "2026-03-12",
+    "caloriesBurned": 783,
+    "caloriesConsumed": 1890
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe85",
+    "date": "2026-03-13",
+    "caloriesBurned": 862,
+    "caloriesConsumed": 1917
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe86",
+    "date": "2026-03-14",
+    "caloriesBurned": 881,
+    "caloriesConsumed": 1867
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe87",
+    "date": "2026-03-15",
+    "caloriesBurned": 903,
+    "caloriesConsumed": 1985
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe88",
+    "date": "2026-03-16",
+    "caloriesBurned": 816,
+    "caloriesConsumed": 1931
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe89",
+    "date": "2026-03-17",
+    "caloriesBurned": 940,
+    "caloriesConsumed": 1969
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe8a",
+    "date": "2026-03-18",
+    "caloriesBurned": 911,
+    "caloriesConsumed": 1832
+  },
+  {
+    "_id": "69bbfe0c952106c39317fe8b",
+    "date": "2026-03-19",
+    "caloriesBurned": 918,
+    "caloriesConsumed": 1811
+  }
+]

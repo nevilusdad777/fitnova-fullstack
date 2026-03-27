@@ -83,7 +83,7 @@ export class WeeklyScheduleComponent implements OnInit {
                     // Fetch recent history to mark completed days
                     this.workoutService.getWorkoutHistory({ limit: 14 }).subscribe({
                         next: (history: any) => {
-                            const workouts = history.workouts || [];
+                            const workouts = history.data || history.workouts || [];
                             this.buildWeekSchedule(plan, workouts);
                             this.isLoading.set(false);
                         },

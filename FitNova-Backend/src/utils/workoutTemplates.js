@@ -113,28 +113,28 @@ const WORKOUT_TEMPLATES = {
                 },
                 { 
                     dayOfWeek: 2, 
+                    name: 'Biceps', 
+                    exercises: ['Dumbbell Curl', 'Hammer Curl', 'Band Bicep Curl', 'Concentration Curl'] 
+                },
+                { 
+                    dayOfWeek: 3, 
                     name: 'Back', 
                     exercises: ['Cable Lat Pulldown', 'Seated Cable Row', 'Dumbbell Row', 'Hyperextension', 'Inverted Row'] 
                 },
                 { 
-                    dayOfWeek: 3, 
+                    dayOfWeek: 4, 
                     name: 'Shoulders', 
                     exercises: ['Dumbbell Shoulder Press', 'Side Lateral Raise', 'Front Raise', 'Rear Delt Fly', 'Dumbbell Shrug'] 
                 },
                 { 
-                    dayOfWeek: 4, 
-                    name: 'Arms', 
-                    exercises: ['Dumbbell Curl', 'Hammer Curl', 'Band Bicep Curl', 'Pushdown', 'Bench Dip', 'Overhead Tricep Extension'] 
-                },
-                { 
                     dayOfWeek: 5, 
-                    name: 'Legs', 
-                    exercises: ['Goblet Squat', 'Dumbbell Lunge', 'Leg Extension', 'Seated Leg Curl', 'Glute Bridge', 'Calf Raise'] 
+                    name: 'Triceps', 
+                    exercises: ['Pushdown', 'Bench Dip', 'Overhead Tricep Extension', 'Cable Kickback'] 
                 },
                 { 
                     dayOfWeek: 6, 
-                    name: 'Full Body', 
-                    exercises: ['Push-up', 'Cable Lat Pulldown', 'Goblet Squat', 'Dumbbell Shoulder Press', 'Crunch', 'Front Plank'] 
+                    name: 'Legs', 
+                    exercises: ['Goblet Squat', 'Dumbbell Lunge', 'Leg Extension', 'Seated Leg Curl', 'Glute Bridge', 'Calf Raise'] 
                 }
             ],
             'intermediate': [
@@ -145,28 +145,28 @@ const WORKOUT_TEMPLATES = {
                 },
                 { 
                     dayOfWeek: 2, 
+                    name: 'Biceps', 
+                    exercises: ['Barbell Curl', 'Incline Dumbbell Curl', 'Preacher Curl', 'Hammer Curl', 'Cable Curl'] 
+                },
+                { 
+                    dayOfWeek: 3, 
                     name: 'Back', 
                     exercises: ['Barbell Deadlift', 'Pull-up', 'Bent Over Barbell Row', 'T-Bar Row', 'Seated Cable Row', 'Face Pull', 'Hyperextension'] 
                 },
                 { 
-                    dayOfWeek: 3, 
+                    dayOfWeek: 4, 
                     name: 'Shoulders', 
                     exercises: ['Overhead Press', 'Seated Dumbbell Press', 'Arnold Press', 'Side Lateral Raise', 'Rear Delt Fly', 'Upright Row', 'Dumbbell Shrug'] 
                 },
                 { 
-                    dayOfWeek: 4, 
-                    name: 'Arms', 
-                    exercises: ['Barbell Curl', 'Incline Dumbbell Curl', 'Preacher Curl', 'Hammer Curl', 'Close-Grip Bench Press', 'Barbell Lying Triceps Extension', 'Pushdown', 'Overhead Tricep Extension'] 
-                },
-                { 
                     dayOfWeek: 5, 
-                    name: 'Legs', 
-                    exercises: ['Barbell Squat', 'Romainian Deadlift', 'Sled 45 Degree Leg Press', 'Bulgarian Split Squat', 'Leg Extension', 'Lying Leg Curls', 'Standing Calf Raise', 'Seated Calf Raise'] 
+                    name: 'Triceps', 
+                    exercises: ['Close-Grip Bench Press', 'Barbell Lying Triceps Extension', 'Pushdown', 'Overhead Tricep Extension', 'Cable Kickback'] 
                 },
                 { 
                     dayOfWeek: 6, 
-                    name: 'Abs & Cardio', 
-                    exercises: ['Hanging Leg Raise', 'Cable Crunch', 'Russian Twist', 'Front Plank', 'Burpees', 'Mountain Climbers'] 
+                    name: 'Legs', 
+                    exercises: ['Barbell Squat', 'Romainian Deadlift', 'Sled 45 Degree Leg Press', 'Bulgarian Split Squat', 'Leg Extension', 'Lying Leg Curls', 'Standing Calf Raise', 'Seated Calf Raise'] 
                 }
             ],
             'advanced': [
@@ -177,28 +177,28 @@ const WORKOUT_TEMPLATES = {
                 },
                 { 
                     dayOfWeek: 2, 
+                    name: 'Biceps', 
+                    exercises: ['Barbell Curl', 'Spider Curl', 'Incline Dumbbell Curl', 'Cable Curl', 'Concentration Curl', 'Preacher Curl'] 
+                },
+                { 
+                    dayOfWeek: 3, 
                     name: 'Back', 
                     exercises: ['Barbell Deadlift', 'Weighted Pull-up', 'Pendlay Row', 'T-Bar Row', 'Meadows Row', 'Cable Lat Pulldown', 'Straight-Arm Pulldown', 'Hyperextension'] 
                 },
                 { 
-                    dayOfWeek: 3, 
+                    dayOfWeek: 4, 
                     name: 'Shoulders', 
                     exercises: ['Seated Barbell Press', 'Military Press', 'Arnold Press', 'Side Lateral Raise', 'Egyptian Lateral Raise', 'Rear Delt Fly', 'Cable Upright Row', 'Dumbbell Shrug'] 
                 },
                 { 
-                    dayOfWeek: 4, 
-                    name: 'Arms', 
-                    exercises: ['Barbell Curl', 'Spider Curl', 'Incline Dumbbell Curl', 'Cable Curl', 'Concentration Curl', 'Close-Grip Bench Press', 'Barbell Lying Triceps Extension', 'Weighted Dips', 'Cable Kickback', 'Single Arm Cable Extension'] 
-                },
-                { 
                     dayOfWeek: 5, 
-                    name: 'Legs', 
-                    exercises: ['Barbell Squat', 'Front Squat', 'Hack Squat', 'Romainian Deadlift', 'Bulgarian Split Squat', 'Leg Extension', 'Lying Leg Curls', 'Sissy Squat', 'Standing Calf Raise', 'Donkey Calf Raise'] 
+                    name: 'Triceps', 
+                    exercises: ['Close-Grip Bench Press', 'Barbell Lying Triceps Extension', 'Weighted Dips', 'Cable Kickback', 'Single Arm Cable Extension', 'Pushdown'] 
                 },
                 { 
                     dayOfWeek: 6, 
-                    name: 'Abs & Conditioning', 
-                    exercises: ['Hanging Leg Raise', 'Cable Crunch', 'Ab Wheel Rollout', 'Dragon Flag', 'Russian Twist', 'Burpees', 'Mountain Climbers'] 
+                    name: 'Legs', 
+                    exercises: ['Barbell Squat', 'Front Squat', 'Hack Squat', 'Romainian Deadlift', 'Bulgarian Split Squat', 'Leg Extension', 'Lying Leg Curls', 'Sissy Squat', 'Standing Calf Raise', 'Donkey Calf Raise'] 
                 }
             ]
         }
