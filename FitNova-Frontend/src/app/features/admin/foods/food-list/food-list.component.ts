@@ -61,7 +61,6 @@ export class FoodListComponent implements OnInit, OnDestroy {
   loadFoods(): void {
     this.loading = true;
     this.error = '';
-    this.cdr.detectChanges();
 
     this.adminFoodService.getAllFoods(
       this.currentPage,

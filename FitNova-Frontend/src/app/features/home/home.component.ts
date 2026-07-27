@@ -5,6 +5,7 @@ import { LucideAngularModule, Activity, Utensils, Droplets, TrendingUp, ArrowRig
 import { AuthService } from '../auth/auth.service';
 import { TrackerService } from '../../services/tracker.service';
 import { HomeService } from './home.service';
+import { WorkoutService } from '../workout/workout.service';
 import { MonthlyWorkoutCalendarComponent } from './components/monthly-workout-calendar.component';
 
 @Component({
@@ -31,6 +32,7 @@ export class HomeComponent implements OnInit {
     private authService = inject(AuthService);
     private trackerService = inject(TrackerService);
     private homeService = inject(HomeService);
+    private workoutService = inject(WorkoutService);
     
     userName = computed(() => this.authService.currentUser()?.name?.split(' ')[0] || 'User');
     userInitials = computed(() => {
@@ -54,7 +56,6 @@ export class HomeComponent implements OnInit {
     recentWorkouts = signal<any[]>([]);
     weeklyActivity = signal<boolean[]>([false, false, false, false, false, false, false]);
     activeWorkoutDays = computed(() => this.weeklyActivity().filter(day => day).length);
-    workoutRecommendation = signal<{focus: string, reason: string, icon: any, color: string, gradient: string} | null>(null);
     currentStreak = signal(0);
     bestStreak = signal(0);
     motivationalQuote = signal('');
@@ -151,78 +152,6 @@ export class HomeComponent implements OnInit {
                 }
                 console.log('Weekly activity:', weekActivity);
                 this.weeklyActivity.set(weekActivity);
-                
-                // Smart Coach Recommendation Logic
-                const bodyPartFreq = response.analytics.bodyPartFrequency || {};
-                
-                // Helper to check days since last workout of a specific type
-                const daysSinceLast = (type: string | null = null) => {
-                    const last = allWorkouts.find((w: any) => 
-                        !type || (w.bodyParts && w.bodyParts.includes(type.toLowerCase()))
-                    );
-                    if (!last) return 999;
-                    const lastDate = new Date(last.date || last.createdAt);
-                    const diffTime = Math.abs(today.getTime() - lastDate.getTime());
-                    return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-                };
-
-                const daysSinceWorkout = daysSinceLast();
-                const daysSinceLegs = daysSinceLast('legs');
-                const daysSincePush = Math.min(daysSinceLast('chest'), daysSinceLast('shoulders'), daysSinceLast('triceps'));
-                const daysSincePull = Math.min(daysSinceLast('back'), daysSinceLast('biceps'));
-                const daysSinceCardio = daysSinceLast('cardio');
-
-                let recommendation = {
-                    focus: 'Full Body',
-                    reason: 'It\'s been a while! Let\'s wake up those muscles with a full body activation.',
-                    icon: this.Activity,
-                    color: 'var(--color-primary)',
-                    gradient: 'linear-gradient(135deg, #4a90e2 0%, #6366f1 100%)'
-                };
-
-                if (daysSinceWorkout === 0) {
-                     recommendation = {
-                        focus: 'Rest & Recovery',
-                        reason: 'You crushed it today! Rest is where the growth happens.',
-                        icon: this.Clock,
-                        color: 'var(--color-success)',
-                        gradient: 'linear-gradient(135deg, #10b981 0%, #0ea5e9 100%)'
-                    };
-                } else if (daysSinceLegs > 4) {
-                    recommendation = {
-                        focus: 'Leg Day',
-                        reason: 'Don\'t skip it! Your legs are fully recovered and ready for gains.',
-                        icon: this.TrendingUp,
-                        color: 'var(--color-calorie)',
-                        gradient: 'linear-gradient(135deg, #4a90e2 0%, #6366f1 100%)'
-                    };
-                } else if (daysSinceCardio > 3) {
-                    recommendation = {
-                        focus: 'Cardio & Core',
-                        reason: 'Boost your endurance and heart health today.',
-                        icon: this.Zap,
-                        color: 'var(--color-water)',
-                        gradient: 'linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%)'
-                    };
-                } else if (daysSincePush > daysSincePull) {
-                     recommendation = {
-                        focus: 'Push (Chest/Shoulders)',
-                        reason: 'Time to build that upper body strength.',
-                         icon: this.Target,
-                        color: 'var(--color-primary)',
-                        gradient: 'linear-gradient(135deg, #6366f1 0%, #4a90e2 100%)'
-                    };
-                } else {
-                     recommendation = {
-                        focus: 'Pull (Back/Biceps)',
-                        reason: 'Strengthen your back and posture today.',
-                         icon: this.Award,
-                        color: 'var(--color-secondary)',
-                        gradient: 'linear-gradient(135deg, #4a90e2 0%, #8dc63f 100%)'
-                    };
-                }
-
-                this.workoutRecommendation.set(recommendation);
             },
             error: (err) => {
                 console.error('Error loading workout summary:', err);

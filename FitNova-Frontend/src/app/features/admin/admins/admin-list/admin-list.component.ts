@@ -69,7 +69,6 @@ export class AdminListComponent implements OnInit, OnDestroy {
   loadAdmins(): void {
     this.loading = true;
     this.error = '';
-    this.cdr.detectChanges();
 
     this.adminService.getAllAdmins(
       this.currentPage,

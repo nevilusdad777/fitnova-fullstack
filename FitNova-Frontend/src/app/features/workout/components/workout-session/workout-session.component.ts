@@ -210,14 +210,15 @@ export class WorkoutSessionComponent implements OnDestroy {
         this.workoutService.saveWorkoutSession(sessionData).subscribe({
             next: () => {
                 console.log('Workout history saved successfully');
+                this.sessionEnded.emit(this.totalCaloriesBurned());
             },
             error: (error) => {
                 console.error('Error saving workout history:', error);
                 console.error('Error details:', error.error);
+                // Emit anyway so user isn't stuck if it fails
+                this.sessionEnded.emit(this.totalCaloriesBurned());
             }
         });
-
-        this.sessionEnded.emit(this.totalCaloriesBurned());
     }
 
     cancelWorkout() {

@@ -108,18 +108,21 @@ const getDashboardStats = async (req, res) => {
     }
 
     // Weekly activity - Get from WorkoutHistory for consistency
+    // Use start of current week (Monday 00:00:00 UTC) so only this week's workouts are counted
     const WorkoutHistory = require('../models/WorkoutHistory');
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 7);
+    const weekNow = new Date();
+    const dayOfWeek = weekNow.getUTCDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    const daysFromMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // days since last Monday
+    const startOfWeek = new Date(Date.UTC(weekNow.getUTCFullYear(), weekNow.getUTCMonth(), weekNow.getUTCDate() - daysFromMonday));
     
     const weeklyWorkoutHistory = await WorkoutHistory.find({
       user: req.user._id,
-      date: { $gte: startDate }
+      date: { $gte: startOfWeek }
     }).sort({ date: -1 });
 
     const weeklyWorkouts = weeklyWorkoutHistory.length;
     
-    // Calculate streak - count consecutive days with workouts.
+    // Calculate streak - count consecutive days with workouts and rest days.
     // IMPORTANT: use Date.UTC() to get today's UTC date regardless of server timezone.
     // setHours(0,0,0,0) uses local timezone (IST on this machine), which would give
     // yesterday's UTC date when converted via toISOString() — causing the loop to
@@ -138,20 +141,51 @@ const getDashboardStats = async (req, res) => {
       });
     };
 
-    // If today has no workout yet (day still in progress), start counting from yesterday
-    const workoutToday = await hasWorkoutOnDay(currentUTC);
-    if (!workoutToday) {
-      currentUTC = new Date(currentUTC.getTime() - 24 * 60 * 60 * 1000); // go to yesterday
+    // Get active WorkoutPlan to check for rest days
+    const WorkoutPlan = require('../models/WorkoutPlan');
+    const activePlan = await WorkoutPlan.findOne({ user: req.user._id, isActive: true });
+    const workoutDays = new Set();
+    if (activePlan && activePlan.schedule) {
+      activePlan.schedule.forEach(s => {
+        if (s.dayOfWeek !== undefined) {
+          workoutDays.add(s.dayOfWeek);
+        }
+      });
     }
 
-    while (streak < 365) {
+    let tempStreak = 0;
+    let foundRealWorkout = false;
+
+    // Check up to 365 days in the past
+    for (let i = 0; i < 365; i++) {
       const workoutOnDay = await hasWorkoutOnDay(currentUTC);
+      const isToday = i === 0;
+      const currentDayOfWeek = currentUTC.getUTCDay(); // 0 (Sunday) to 6 (Saturday)
+      
+      // If the day is NOT in workoutDays, it's a rest day. (If no active plan, we assume every day is a workout day until told otherwise, or assume no rest days. We will assume no rest days if workoutDays is empty to be safe.)
+      const isRestDay = activePlan && activePlan.schedule && activePlan.schedule.length > 0 ? !workoutDays.has(currentDayOfWeek) : false;
+
       if (workoutOnDay) {
-        streak++;
-        currentUTC = new Date(currentUTC.getTime() - 24 * 60 * 60 * 1000); // previous day
+        tempStreak++;
+        foundRealWorkout = true;
+      } else if (isRestDay) {
+        // No workout, but it's a rest day -> continues streak
+        tempStreak++;
       } else {
-        break;
+        // No workout, not a rest day -> breaks streak (unless today and still in progress)
+        if (!isToday) {
+          break;
+        }
       }
+
+      currentUTC = new Date(currentUTC.getTime() - 24 * 60 * 60 * 1000);
+    }
+
+    // Only assign streak if we found an actual workout to avoid infinite rest-day streaks
+    if (foundRealWorkout) {
+      streak = tempStreak;
+    } else {
+      streak = 0;
     }
 
     // Compute today's caloriesConsumed live from completed meals only
@@ -165,10 +199,26 @@ const getDashboardStats = async (req, res) => {
       completedMeals.reduce((sum, m) => sum + (m.totalCalories || 0), 0)
     );
 
+    // Compute today's caloriesBurned live from WorkoutHistory
+    const startOfToday = new Date();
+    startOfToday.setHours(0,0,0,0);
+    const endOfToday = new Date();
+    endOfToday.setHours(23,59,59,999);
+    
+    const todaysWorkouts = await WorkoutHistory.find({
+      user: req.user._id,
+      date: { $gte: startOfToday, $lte: endOfToday }
+    });
+    
+    // Let's add manually logged tracker calories as a fallback, but cap it so we don't duplicate. Actually it's cleaner to just rely on WorkoutHistory now
+    const liveCaloriesBurned = Math.round(
+      todaysWorkouts.reduce((sum, w) => sum + (w.totalCaloriesBurned || 0), 0)
+    );
+
     // Build today object with live calories
     const todayData = {
-      caloriesConsumed: liveCaloriesConsumed,
-      caloriesBurned: todayTracker.caloriesBurned || 0,
+      caloriesConsumed: liveCaloriesConsumed > 0 ? liveCaloriesConsumed : (todayTracker.caloriesConsumed || 0),
+      caloriesBurned: liveCaloriesBurned > 0 ? liveCaloriesBurned : (todayTracker.caloriesBurned || 0),
       waterIntake: todayTracker.waterIntake || 0,
       weight: todayTracker.weight || user.weight
     };
@@ -216,10 +266,25 @@ const getTrackerHistory = async (req, res) => {
       calsByDate[meal.date] = (calsByDate[meal.date] || 0) + (meal.totalCalories || 0);
     }
 
+    // Compute caloriesBurned live from WorkoutHistory records for accuracy
+    const WorkoutHistory = require('../models/WorkoutHistory');
+    const workoutRecords = await WorkoutHistory.find({
+      user: req.user._id,
+      date: { $gte: startDate, $lte: endDate }
+    });
+
+    const burnedByDate = {};
+    for (const w of workoutRecords) {
+      // Convert to local YYYY-MM-DD
+      const localDate = new Date(w.date.getTime() - (w.date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+      burnedByDate[localDate] = (burnedByDate[localDate] || 0) + (w.totalCaloriesBurned || 0);
+    }
+
     // Merge live calories into tracker records
     const result = trackers.map(t => ({
       ...t.toObject(),
-      caloriesConsumed: Math.round(calsByDate[t.date] || 0)
+      caloriesConsumed: calsByDate[t.date] > 0 ? Math.round(calsByDate[t.date]) : (t.caloriesConsumed || 0),
+      caloriesBurned: burnedByDate[t.date] > 0 ? Math.round(burnedByDate[t.date]) : (t.caloriesBurned || 0)
     }));
 
     res.json(result);

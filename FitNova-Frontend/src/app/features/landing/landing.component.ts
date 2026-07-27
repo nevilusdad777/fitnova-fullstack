@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { 
@@ -29,6 +29,28 @@ import {
     Youtube,
     PlayCircle
 } from 'lucide-angular';
+import { LandingService, LandingContent, LandingFeature, LandingTestimonial } from '../../core/services/landing.service';
+
+// Map icon name strings → lucide icon objects
+const ICON_MAP: Record<string, any> = {
+    Activity,
+    Apple,
+    TrendingUp,
+    Target,
+    Calendar,
+    Flame,
+    BarChart3,
+    Heart,
+    Users,
+    Trophy,
+    Shield,
+    Zap,
+    Check,
+    UserPlus,
+    Play,
+    Rocket,
+    CheckCircle
+};
 
 @Component({
     selector: 'app-landing',
@@ -37,10 +59,18 @@ import {
     templateUrl: './landing.component.html',
     styleUrls: ['./landing.component.css']
 })
-export class LandingComponent {
+export class LandingComponent implements OnInit {
     isScrolled = false;
+    isLoading = true;
 
-    // Icons
+    // Landing content from backend
+    landingContent: LandingContent | null = null;
+
+    // Derived arrays for template binding
+    features: (LandingFeature & { icon: any })[] = [];
+    testimonials: LandingTestimonial[] = [];
+
+    // Icons for static template elements
     readonly Activity = Activity;
     readonly Apple = Apple;
     readonly TrendingUp = TrendingUp;
@@ -67,109 +97,7 @@ export class LandingComponent {
     readonly Youtube = Youtube;
     readonly PlayCircle = PlayCircle;
 
-    @HostListener('window:scroll', [])
-    onWindowScroll() {
-        this.isScrolled = window.scrollY > 50;
-    }
-
-    // Smooth scroll to section
-    scrollToSection(sectionId: string): void {
-        const element = document.getElementById(sectionId);
-        if (element) {
-            const offset = 80; // Account for fixed navbar
-            const elementPosition = element.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-            window.scrollTo({
-                top: offsetPosition,  
-                behavior: 'smooth'
-            });
-        }
-    }
-
-    // Features with modern images
-    features = [
-        {
-            icon: Activity,
-            title: 'Workout Tracking',
-            description: 'Track every rep, set, and exercise with precision. Monitor your performance across different muscle groups and visualize your strength gains over time.',
-            image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&q=80',
-            iconBg: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-            points: [
-                'Log exercises with sets and reps',
-                'Track body part workouts',
-                'View detailed workout history',
-                'Monitor calories burned'
-            ]
-        },
-        {
-            icon: Apple,
-            title: 'Nutrition Planning',
-            description: 'Plan your meals with our extensive food database. Track calories, macros, and nutrients to fuel your body optimally for your fitness goals.',
-            image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80',
-            iconBg: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-            points: [
-                'Extensive food database',
-                'Track calories and macros',
-                'Weekly meal planning',
-                'Daily nutrition monitoring'
-            ]
-        },
-        {
-            icon: BarChart3,
-            title: 'Progress Analytics',
-            description: 'Visualize your fitness journey with interactive charts. Track weight changes, workout consistency, and identify patterns to optimize your training.',
-            image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80',
-            iconBg: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
-            points: [
-                'Interactive progress charts',
-                'Weight tracking over time',
-                'Consistency metrics',
-                'Performance analysis'
-            ]
-        },
-        {
-            icon: Heart,
-            title: 'Health Monitoring',
-            description: 'Monitor your overall health metrics including water intake, sleep quality, and body measurements to ensure holistic wellness.',
-            image: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=800&q=80',
-            iconBg: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)',
-            points: [
-                'Track water intake daily',
-                'Monitor body measurements',
-                'Track Calories Intake And Burnt',
-                'Overall wellness score'
-            ]
-        },
-        {
-            icon: Zap,
-            title: 'Seamless Web Access',
-            description: 'Connect directly with our comprehensive web platform. Access your workouts, nutrition plans, and progress from any device, anywhere.',
-            image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
-            iconBg: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-            points: [
-                'Access from any device',
-                'Real-time data synchronization',
-                'Comprehensive dashboard',
-                'No installation required'
-            ]
-        },
-        {
-            icon: Trophy,
-            title: 'Achievement System',
-            description: 'Stay motivated with our achievement and streak system. Celebrate milestones and maintain consistency with gamified tracking.',
-            image: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=800&q=80',
-            iconBg: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
-            points: [
-                'Earn achievements',
-                'Build workout streaks',
-                'Track milestones',
-                'Unlock badges'
-            ]
-        }
-    ];
-
-    // How It Works Steps
+    // How It Works Steps (static)
     steps = [
         {
             icon: UserPlus,
@@ -179,7 +107,7 @@ export class LandingComponent {
         {
             icon: Target,
             title: 'Set Your Goals',
-            description: 'Tell us about your fitness goals and preferences. We\'ll help you create a personalized plan for success.'
+            description: "Tell us about your fitness goals and preferences. We'll help you create a personalized plan for success."
         },
         {
             icon: TrendingUp,
@@ -188,25 +116,52 @@ export class LandingComponent {
         }
     ];
 
-    // Testimonials
-    testimonials = [
-        {
-            text: 'FitNova completely transformed how I approach fitness. The analytics helped me understand my progress and stay motivated!',
-            name: 'Sarah Johnson',
-            role: 'Fitness Enthusiast',
-            initials: 'SJ'
-        },
-        {
-            text: 'The workout tracking is incredibly detailed and the nutrition planning feature is a game-changer. I\'ve lost 15 pounds in 3 months!',
-            name: 'Michael Chen',
-            role: 'Weight Loss Journey',
-            initials: 'MC'
-        },
-        {
-            text: 'As a personal trainer, I recommend FitNova to all my clients. It\'s the most comprehensive fitness app I\'ve ever used.',
-            name: 'Emma Davis',
-            role: 'Personal Trainer',
-            initials: 'ED'
+    constructor(private landingService: LandingService, private cdr: ChangeDetectorRef) {}
+
+    ngOnInit(): void {
+        this.loadLandingContent();
+    }
+
+    loadLandingContent(): void {
+        this.isLoading = true;
+        this.landingService.getLandingContent().subscribe({
+            next: (data) => {
+                this.landingContent = data;
+                // Attach lucide icon objects to features
+                this.features = (data.features || []).map(f => ({
+                    ...f,
+                    icon: ICON_MAP[f.iconName] || Activity
+                }));
+                this.testimonials = data.testimonials || [];
+                this.isLoading = false;
+                this.cdr.markForCheck();
+            },
+            error: () => {
+                this.isLoading = false;
+                this.cdr.markForCheck();
+            }
+        });
+    }
+
+    @HostListener('window:scroll', [])
+    onWindowScroll() {
+        this.isScrolled = window.scrollY > 50;
+    }
+
+    scrollToSection(sectionId: string): void {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            const offset = 80;
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - offset;
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
         }
-    ];
+    }
+
+    getStarArray(rating: number): number[] {
+        return Array.from({ length: rating || 5 }, (_, i) => i + 1);
+    }
 }

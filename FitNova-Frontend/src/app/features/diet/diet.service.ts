@@ -327,7 +327,7 @@ export class DietService {
     const macros = this.computeMacroGrams(targetCalories, this.getMacroTargets(goal, dietType));
 
     // Meal calorie distribution: breakfast 30%, lunch 35%, snack 10%, dinner 25%
-    const mealCalories = {
+    const mealTargets = {
       breakfast: Math.round(targetCalories * 0.30),
       lunch:     Math.round(targetCalories * 0.35),
       snack:     Math.round(targetCalories * 0.10),
@@ -335,13 +335,27 @@ export class DietService {
     };
 
     const meals: DietPlanMeal[] = [
-      this.generateSmartMeal('Breakfast', mealCalories.breakfast, preference, dietType, macros),
-      this.generateSmartMeal('Lunch',     mealCalories.lunch,     preference, dietType, macros),
-      this.generateSmartMeal('Snacks',    mealCalories.snack,     preference, dietType, macros),
-      this.generateSmartMeal('Dinner',    mealCalories.dinner,    preference, dietType, macros),
+      this.generateSmartMeal('Breakfast', mealTargets.breakfast, preference, dietType, macros),
+      this.generateSmartMeal('Lunch',     mealTargets.lunch,     preference, dietType, macros),
+      this.generateSmartMeal('Snacks',    mealTargets.snack,     preference, dietType, macros),
+      this.generateSmartMeal('Dinner',    mealTargets.dinner,    preference, dietType, macros),
     ];
 
-    const totalCalories = meals.reduce((sum, m) => sum + m.calories, 0);
+    let totalCalories = meals.reduce((sum, m) => sum + m.calories, 0);
+
+    // --- RE-BALANCING PASS ---
+    // If we overshoot by more than 5%, or undershoot by more than 5%, try to adjust the snack
+    const diff = totalCalories - targetCalories;
+    if (Math.abs(diff) > targetCalories * 0.05) {
+      const snackIdx = meals.findIndex(m => m.mealType === 'Snacks');
+      if (snackIdx !== -1) {
+        const newSnackTarget = Math.max(50, mealTargets.snack - diff);
+        const newSnack = this.generateSmartMeal('Snacks', newSnackTarget, preference, dietType, macros);
+        meals[snackIdx] = newSnack;
+        totalCalories = meals.reduce((sum, m) => sum + m.calories, 0);
+      }
+    }
+
     const coachTip = this.getCoachTip(goal, dietType, preference, macros, targetCalories);
 
     return { meals, totalCalories, coachTip };
@@ -480,7 +494,89 @@ export class DietService {
   }
 
   // =====================================================================
-  // SMART MEAL BUILDER — macro-aware, strict preference, variety scoring
+  // CUISINE ARCHETYPE ENGINE
+  // Tags food names to detect their culinary style
+  // =====================================================================
+
+  /** Detect cuisine type of a food from its name */
+  private getCuisineTag(food: Food): string {
+    const n = food.name.toLowerCase();
+    if (['idli', 'dosa', 'uttapam', 'appam', 'upma', 'pongal', 'sambhar',
+         'coconut chutney', 'vada', 'rasam', 'avial', 'kootu'].some(k => n.includes(k))) {
+      return 'SOUTH_INDIAN';
+    }
+    if (['roti', 'paratha', 'naan', 'kulcha', 'chapati', 'tandoori roti',
+         'bhatura', 'puri', 'bajra roti', 'jowar roti', 'multigrain roti'].some(k => n.includes(k))) {
+      return 'NORTH_ROTI';
+    }
+    if (['biryani', 'pulao', 'jeera rice', 'brown rice', 'plain rice',
+         'basmati rice', 'fried rice', 'khichdi'].some(k => n.includes(k))) {
+      return 'NORTH_RICE';
+    }
+    if (['oats', 'cornflakes', 'muesli', 'bread', 'toast', 'poha',
+         'egg', 'omelette', 'bhurji', 'sandwich'].some(k => n.includes(k))) {
+      return 'CONTINENTAL';
+    }
+    return 'ANY';
+  }
+
+  /** Protein compatible with a given cuisine tag */
+  private compatibleProtein(food: Food, cuisineTag: string, preference: string): boolean {
+    const n = food.name.toLowerCase();
+    const isVegPref = preference === 'Veg';
+    const isNonVegPref = preference === 'Non-Veg';
+
+    if (isVegPref && !food.isVegetarian) return false;
+    if (isNonVegPref && food.isVegetarian) return false;
+
+    switch (cuisineTag) {
+      case 'SOUTH_INDIAN':
+        // South Indian proteins: sambhar dal, curd, coconut chutney, idli-compatible proteins
+        return ['dal', 'sambar', 'sambhar', 'curd', 'paneer', 'egg',
+                'coconut', 'rajma', 'chana'].some(k => n.includes(k));
+      case 'NORTH_ROTI':
+        // Dal, paneer gravy, chicken curry, rajma, chana masala, bhindi, chole
+        return ['dal', 'paneer', 'chicken', 'mutton', 'fish', 'rajma',
+                'chana', 'chole', 'soya', 'tofu', 'egg'].some(k => n.includes(k));
+      case 'NORTH_RICE':
+        // Full curries like butter chicken, dal makhani, rajma
+        return ['butter chicken', 'dal makhani', 'rajma', 'paneer', 'dal',
+                'chicken curry', 'fish curry', 'mutton', 'chana',
+                'palak paneer', 'matar'].some(k => n.includes(k));
+      case 'CONTINENTAL':
+        // Eggs, chicken breast, protein shake, greek yogurt
+        return ['egg', 'chicken breast', 'tuna', 'protein', 'yogurt',
+                'cottage cheese', 'tofu', 'omelette'].some(k => n.includes(k));
+      default:
+        return true;
+    }
+  }
+
+  /** Vegetable side compatible with a given cuisine tag */
+  private compatibleVeg(food: Food, cuisineTag: string): boolean {
+    const n = food.name.toLowerCase();
+    switch (cuisineTag) {
+      case 'SOUTH_INDIAN':
+        return ['kootu', 'avial', 'beans', 'cabbage', 'raw banana',
+                'drumstick', 'spinach', 'broccoli'].some(k => n.includes(k));
+      case 'NORTH_ROTI':
+        // Dry sabji that goes with roti
+        return ['bhindi', 'aloo', 'gobi', 'baingan', 'palak', 'matar',
+                'beans', 'capsicum', 'carrot', 'lauki'].some(k => n.includes(k));
+      case 'NORTH_RICE':
+        // Vegetables that go in rice meals
+        return ['salad', 'raita', 'cucumber', 'tomato', 'spinach',
+                'broccoli', 'palak', 'beans'].some(k => n.includes(k));
+      case 'CONTINENTAL':
+        return ['salad', 'broccoli', 'spinach', 'cucumber', 'tomato',
+                'capsicum', 'mushroom', 'lettuce'].some(k => n.includes(k));
+      default:
+        return true;
+    }
+  }
+
+  // =====================================================================
+  // SMART MEAL BUILDER — cuisine-archetype aware
   // =====================================================================
 
   private generateSmartMeal(
@@ -497,130 +593,166 @@ export class DietService {
       pool = pool.filter(f => this.isFitnessAppropriate(f));
     }
 
-    // Meal-time filter
-    if (mealType === 'Breakfast') {
-      pool = pool.filter(f => this.isBreakfastAppropriate(f, preference));
-    } else if (mealType === 'Dinner') {
-      pool = pool.filter(f => this.isDinnerAppropriate(f));
-    } else if (mealType === 'Snacks') {
-      pool = pool.filter(f => this.isSnackAppropriate(f));
-    }
-
     const selected: DietPlanFood[] = [];
     let currentCalories = 0;
 
     if (mealType === 'Breakfast') {
+      pool = pool.filter(f => this.isBreakfastAppropriate(f, preference));
       currentCalories = this.buildBreakfast(pool, targetCalories, preference, macros, selected);
     } else if (mealType === 'Lunch' || mealType === 'Dinner') {
+      pool = pool.filter(f => this.isDinnerAppropriate(f));
       currentCalories = this.buildMainMeal(pool, targetCalories, preference, macros, selected);
     } else {
+      pool = pool.filter(f => this.isSnackAppropriate(f));
       currentCalories = this.buildSnack(pool, targetCalories, selected);
     }
 
     return { mealType, calories: currentCalories, foods: selected };
   }
 
-  /** Breakfast: grain + protein + fruit/dairy/beverage */
   private buildBreakfast(
     pool: Food[], targetCal: number, preference: string, macros: MacroTargets, out: DietPlanFood[]
   ): number {
     let cal = 0;
-    const highProtein = macros.proteinPct >= 0.35;
+    let budget = targetCal;
 
-    // Protein pool — strict preference
-    let proteinPool: Food[];
-    if (preference === 'Non-Veg') {
-      // Eggs are the non-veg protein for breakfast
-      proteinPool = pool.filter(f => !f.isVegetarian && f.category === 'protein');
-      if (proteinPool.length === 0) proteinPool = pool.filter(f => f.category === 'protein');
-    } else {
-      proteinPool = pool.filter(f => f.isVegetarian && f.category === 'protein');
+    // -- Step 1: Select anchor grain and detect its cuisine style --
+    const grainPool = pool.filter(f => f.isVegetarian && f.category === 'grains');
+    const grainTarget = budget * 0.50;
+    const grain = this.pickScoredFood(grainPool, grainTarget, 0);
+    let cuisineTag = 'ANY';
+
+    if (grain) {
+      cuisineTag = this.getCuisineTag(grain);
+      out.push(this.foodToPlanFood(grain));
+      cal += grain.calories;
+      budget -= grain.calories;
     }
 
-    // Grains are always veg at breakfast
-    const grainPool = pool.filter(f => f.isVegetarian && f.category === 'grains');
-    const sidePool  = pool.filter(f => f.isVegetarian && ['fruits', 'dairy', 'beverages'].includes(f.category));
+    // -- Step 2: Pick a cuisine-compatible protein/side --
+    // For breakfast: if South Indian, pair with sambhar/coconut chutney/curd
+    // If Continental, pair with eggs/yogurt etc.
+    const proteinPool = pool.filter(f => {
+      if (f.category !== 'protein' && f.category !== 'dairy') return false;
+      return this.compatibleProtein(f, cuisineTag, preference);
+    });
 
-    const grainTarget   = targetCal * (highProtein ? 0.35 : 0.42);
-    const proteinTarget = targetCal * (highProtein ? 0.42 : 0.32);
-
-    const grain = this.pickScoredFood(grainPool, grainTarget, 0);
-    if (grain) { out.push(this.foodToPlanFood(grain)); cal += grain.calories; }
-
+    const proteinTarget = Math.max(20, budget * 0.55);
     const protein = this.pickScoredFood(proteinPool, proteinTarget, 1);
-    if (protein) { out.push(this.foodToPlanFood(protein)); cal += protein.calories; }
+    if (protein) {
+      out.push(this.foodToPlanFood(protein));
+      cal += protein.calories;
+      budget -= protein.calories;
+    }
 
-    const remaining = targetCal - cal;
-    if (remaining > 20) {
-      const side = this.pickScoredFood(sidePool, remaining, 2);
+    // -- Step 3: Add a light fruit or beverage if budget remains --
+    if (budget > 30) {
+      const sidePool = pool.filter(f => ['fruits', 'beverages'].includes(f.category) && f.isVegetarian);
+      const side = this.pickScoredFood(sidePool, budget, 2);
       if (side) { out.push(this.foodToPlanFood(side)); cal += side.calories; }
     }
 
     return cal;
   }
 
-  /** Lunch / Dinner: grain + ENFORCED protein + vegetable + optional dairy */
+  /** Lunch / Dinner: cuisine-archetype aware */
   private buildMainMeal(
     pool: Food[], targetCal: number, preference: string, macros: MacroTargets, out: DietPlanFood[]
   ): number {
     let cal = 0;
-    const highProtein = macros.proteinPct >= 0.35;
+    let budget = targetCal;
 
-    // === PROTEIN — CORE RULE ===
-    // Non-Veg: MUST be non-vegetarian protein (chicken, fish, mutton, eggs)
-    // Veg: MUST be vegetarian protein (dal, paneer, soya, rajma, chana)
-    // Both: any protein
-    let proteinPool: Food[];
-    if (preference === 'Non-Veg') {
-      proteinPool = pool.filter(f => !f.isVegetarian && f.category === 'protein');
-      if (proteinPool.length === 0) proteinPool = pool.filter(f => f.category === 'protein');
-    } else if (preference === 'Veg') {
-      proteinPool = pool.filter(f => f.isVegetarian && f.category === 'protein');
-    } else {
-      proteinPool = pool.filter(f => f.category === 'protein');
+    // -- Step 1: Pick anchor grain and detect cuisine --
+    const grainPool = pool.filter(f => f.isVegetarian && f.category === 'grains');
+    const grainTarget = budget * 0.40;
+    const grain = this.pickScoredFood(grainPool, grainTarget, 10);
+    let cuisineTag = 'ANY';
+
+    if (grain) {
+      cuisineTag = this.getCuisineTag(grain);
+      out.push(this.foodToPlanFood(grain));
+      cal += grain.calories;
+      budget -= grain.calories;
     }
 
-    // Grains and veggies are ALWAYS veg regardless of preference (roti/rice veg is fine for everyone)
-    const grainPool = pool.filter(f => f.isVegetarian && f.category === 'grains');
-    const vegPool   = pool.filter(f => f.isVegetarian && f.category === 'vegetables');
-    const dairyPool = pool.filter(f => f.isVegetarian && f.category === 'dairy');
+    // -- Step 2: Pick a cuisine-compatible protein (dal/curry/meat) --
+    // This is the CURRY/PROTEIN that goes alongside the grain
+    const proteinPool = pool.filter(f => {
+      if (f.category !== 'protein') return false;
+      return this.compatibleProtein(f, cuisineTag, preference);
+    });
+    // Fallback: any protein matching preference
+    const fallbackProteinPool = pool.filter(f => {
+      if (f.category !== 'protein') return false;
+      if (preference === 'Veg') return f.isVegetarian;
+      if (preference === 'Non-Veg') return !f.isVegetarian;
+      return true;
+    });
 
-    const grainTarget   = targetCal * (highProtein ? 0.28 : 0.36);
-    const proteinTarget = targetCal * (highProtein ? 0.40 : 0.30);
-    const vegTarget     = targetCal * 0.18;
+    const proteinTarget = Math.max(40, budget * 0.55);
+    const protein = this.pickScoredFood(
+      proteinPool.length > 0 ? proteinPool : fallbackProteinPool,
+      proteinTarget, 20
+    );
+    if (protein) {
+      out.push(this.foodToPlanFood(protein));
+      cal += protein.calories;
+      budget -= protein.calories;
+    }
 
-    const grain = this.pickScoredFood(grainPool, grainTarget, 10);
-    if (grain) { out.push(this.foodToPlanFood(grain)); cal += grain.calories; }
+    // -- Step 3: Pick a cuisine-compatible dry veggie side --
+    // Only add if we have budget left and the cuisine typically has a dry side
+    if (budget > 50 && ['NORTH_ROTI', 'NORTH_RICE', 'ANY'].includes(cuisineTag)) {
+      const vegPool = pool.filter(f =>
+        f.isVegetarian &&
+        f.category === 'vegetables' &&
+        this.compatibleVeg(f, cuisineTag)
+      );
+      const vegFallback = pool.filter(f => f.isVegetarian && f.category === 'vegetables');
+      const vegTarget = Math.min(budget, targetCal * 0.20);
+      const veg = this.pickScoredFood(
+        vegPool.length > 0 ? vegPool : vegFallback,
+        vegTarget, 30
+      );
+      if (veg) {
+        out.push(this.foodToPlanFood(veg));
+        cal += veg.calories;
+        budget -= veg.calories;
+      }
+    }
 
-    const protein = this.pickScoredFood(proteinPool, proteinTarget, 20);
-    if (protein) { out.push(this.foodToPlanFood(protein)); cal += protein.calories; }
-
-    const veg = this.pickScoredFood(vegPool, vegTarget, 30);
-    if (veg) { out.push(this.foodToPlanFood(veg)); cal += veg.calories; }
-
-    const remaining = targetCal - cal;
-    if (remaining > 40 && remaining < 220) {
-      const dairy = this.pickScoredFood(dairyPool, remaining, 40);
-      if (dairy) { out.push(this.foodToPlanFood(dairy)); cal += dairy.calories; }
+    // -- Step 4: Optional dairy if budget allows (curd/raita with Indian meals) --
+    if (budget > 40 && budget < 200 && ['NORTH_ROTI', 'NORTH_RICE', 'SOUTH_INDIAN'].includes(cuisineTag)) {
+      const dairyPool = pool.filter(f =>
+        f.isVegetarian && f.category === 'dairy' &&
+        ['curd', 'yogurt', 'raita', 'chaas', 'buttermilk', 'lassi'].some(k => f.name.toLowerCase().includes(k))
+      );
+      if (dairyPool.length > 0) {
+        const dairy = this.pickScoredFood(dairyPool, budget, 40);
+        if (dairy) { out.push(this.foodToPlanFood(dairy)); cal += dairy.calories; }
+      }
     }
 
     return cal;
   }
 
-  /** Snack: always veg-friendly — fruit/nut or light snack + optional drink */
   private buildSnack(pool: Food[], targetCal: number, out: DietPlanFood[]): number {
     let cal = 0;
+    let budget = targetCal;
 
     const snackPool = pool.filter(f => f.isVegetarian &&
       ['snacks', 'fruits', 'fats'].includes(f.category));
     const bevPool = pool.filter(f => f.isVegetarian && f.category === 'beverages');
 
-    const snack = this.pickScoredFood(snackPool, targetCal * 0.80, 50);
-    if (snack) { out.push(this.foodToPlanFood(snack)); cal += snack.calories; }
+    const snack = this.pickScoredFood(snackPool, budget, 50);
+    if (snack) { 
+      out.push(this.foodToPlanFood(snack)); 
+      cal += snack.calories;
+      budget -= snack.calories;
+    }
 
-    const bevTarget = targetCal - cal;
-    if (bevTarget > 10) {
-      const bev = this.pickScoredFood(bevPool, bevTarget, 60);
+    if (budget > 10) {
+      const bev = this.pickScoredFood(bevPool, budget, 60);
       if (bev) { out.push(this.foodToPlanFood(bev)); cal += bev.calories; }
     }
 
@@ -635,39 +767,55 @@ export class DietService {
   private pickScoredFood(foods: Food[], targetCal: number, seed: number): Food | null {
     if (foods.length === 0) return null;
 
-    const candidates = targetCal > 20 ? foods.filter(f => f.calories > 5) : foods;
+    // Filter candidates: must be within a reasonable range (30% to 125% of target)
+    // This prevents picking 500 kcal food when we want 200, or vice versa.
+    let candidates = foods.filter(f => 
+       f.calories >= targetCal * 0.30 && 
+       f.calories <= targetCal * 1.25
+    );
+
+    // If no candidates in strict range, use a wider range
+    if (candidates.length === 0) {
+      candidates = foods.filter(f => f.calories > 10);
+    }
+    
     if (candidates.length === 0) return null;
 
-    // Variety: use current timestamp mod to pick different foods on each generate
     const rngBase = (Date.now() + seed * 137) % 1000;
 
     let best: Food | null = null;
     let bestScore = -Infinity;
 
     for (const food of candidates) {
-      // 1. Calorie proximity score (0-1, higher = closer to target)
-      const calDiff  = Math.abs(food.calories - targetCal);
-      const calScore = Math.max(0, 1 - calDiff / Math.max(targetCal, 1));
+      const calDiff = food.calories - targetCal;
+      
+      // Calorie score (0-1). Penalize overshooting more heavily than undershooting.
+      let calScore: number;
+      if (calDiff > 0) {
+        calScore = Math.max(0, 1 - (calDiff * 1.5) / targetCal);
+      } else {
+        calScore = Math.max(0, 1 - Math.abs(calDiff) / targetCal);
+      }
 
-      // 2. Protein density score (0-1, based on g protein per 100 kcal equivalent)
       const proteinScore = Math.min(food.protein / 50, 1);
 
-      // 3. Variety jitter: deterministic per food name but varies per generation
-      const nameHash    = food.name.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+      const nameHash = food.name.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
       const varietyScore = ((nameHash + rngBase) % 100) / 100;
 
-      const totalScore = calScore * 0.40 + proteinScore * 0.40 + varietyScore * 0.20;
+      // Calories given higher weight (60%) to ensure target adherence
+      const totalScore = calScore * 0.60 + proteinScore * 0.25 + varietyScore * 0.15;
 
-      // Only consider foods with at least 25% of target calories
-      if (totalScore > bestScore && food.calories >= targetCal * 0.20) {
+      if (totalScore > bestScore) {
         bestScore = totalScore;
         best = food;
       }
     }
 
-    // Fallback: highest calorie available
+    // Fallback: Pick the one with the literal minimum calorie difference, ignore macros
     if (!best) {
-      best = candidates.reduce((max, f) => f.calories > max.calories ? f : max, candidates[0]);
+      best = candidates.reduce((prev, curr) => 
+        Math.abs(curr.calories - targetCal) < Math.abs(prev.calories - targetCal) ? curr : prev
+      );
     }
 
     return best;

@@ -1,0 +1,285 @@
+<div class="lc-page">
+  <div class="lc-header">
+    <h2>🌐 Landing Page Manager</h2>
+    <p class="lc-subtitle">Control all content shown on the public landing page</p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="lc-loading">
+    <div class="spinner"></div>
+    <p>Loading content...</p>
+  </div>
+
+  <ng-container *ngIf="!loading">
+    <!-- Tabs -->
+    <div class="lc-tabs">
+      <button class="tab-btn" [class.active]="activeTab === 'hero'" (click)="setTab('hero')">
+        🏠 Hero
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'stats'" (click)="setTab('stats')">
+        📊 Stats
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'features'" (click)="setTab('features')">
+        ⚡ Features
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'testimonials'" (click)="setTab('testimonials')">
+        💬 Reviews
+      </button>
+    </div>
+
+    <!-- Alerts -->
+    <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+    <div *ngIf="errorMsg" class="alert alert-error">{{ errorMsg }}</div>
+
+    <!-- ===== HERO TAB ===== -->
+    <div *ngIf="activeTab === 'hero'" class="tab-content">
+      <div class="form-card">
+        <h3 class="section-title">Hero Section</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Badge Text</label>
+            <input type="text" [(ngModel)]="content.hero.badgeText" class="form-input" placeholder="Your Fitness Revolution Starts Here">
+          </div>
+          <div class="form-group">
+            <label>CTA Button Text</label>
+            <input type="text" [(ngModel)]="content.hero.ctaText" class="form-input" placeholder="Start Your Journey">
+          </div>
+          <div class="form-group full-width">
+            <label>Hero Title</label>
+            <input type="text" [(ngModel)]="content.hero.title" class="form-input" placeholder="Unleash Your Strength">
+          </div>
+          <div class="form-group full-width">
+            <label>Description</label>
+            <textarea [(ngModel)]="content.hero.description" class="form-input form-textarea" rows="3" placeholder="Transform your body..."></textarea>
+          </div>
+
+          <!-- Hero Image Picker -->
+          <div class="form-group full-width">
+            <label>Hero Image</label>
+            <ng-container *ngTemplateOutlet="imagePicker; context: { ctx: { type: 'hero' } }"></ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STATS TAB ===== -->
+    <div *ngIf="activeTab === 'stats'" class="tab-content">
+      <div class="form-card">
+        <div class="card-header">
+          <h3 class="section-title">Stats Banner</h3>
+          <button class="btn-add" (click)="addStat()">+ Add Stat</button>
+        </div>
+        <p class="hint">These appear in the banner below the hero section.</p>
+        <div class="stats-list">
+          <div class="stat-row" *ngFor="let stat of content.stats; let i = index; trackBy: trackByIndex">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Value</label>
+                <input type="text" [(ngModel)]="stat.value" class="form-input" placeholder="100% Free">
+              </div>
+              <div class="form-group">
+                <label>Label</label>
+                <input type="text" [(ngModel)]="stat.label" class="form-input" placeholder="No Premium Paywalls">
+              </div>
+              <button class="btn-remove" (click)="removeStat(i)" title="Remove">✕</button>
+            </div>
+          </div>
+          <p *ngIf="content.stats.length === 0" class="empty-hint">No stats yet. Click "+ Add Stat" to add one.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FEATURES TAB ===== -->
+    <div *ngIf="activeTab === 'features'" class="tab-content">
+      <div class="form-card">
+        <div class="card-header">
+          <h3 class="section-title">Feature Cards ({{ content.features.length }})</h3>
+          <button class="btn-add" (click)="addFeature()">+ Add Feature</button>
+        </div>
+
+        <div class="accordion-list">
+          <div class="accordion-item" *ngFor="let feature of content.features; let i = index; trackBy: trackByIndex">
+            <div class="accordion-header" (click)="toggleFeature(i)">
+              <span class="accordion-title">
+                <span class="acc-num">{{ i + 1 }}</span>
+                {{ feature.title || 'Untitled Feature' }}
+              </span>
+              <div class="accordion-actions">
+                <button class="btn-remove sm" (click)="$event.stopPropagation(); removeFeature(i)" title="Remove">🗑</button>
+                <span class="acc-toggle">{{ expandedFeature === i ? '▲' : '▼' }}</span>
+              </div>
+            </div>
+            <div class="accordion-body" *ngIf="expandedFeature === i">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Title</label>
+                  <input type="text" [(ngModel)]="feature.title" class="form-input">
+                </div>
+                <div class="form-group">
+                  <label>Icon Name</label>
+                  <select [(ngModel)]="feature.iconName" class="form-input">
+                    <option *ngFor="let icon of getIconOptions()" [value]="icon">{{ icon }}</option>
+                  </select>
+                </div>
+                <div class="form-group full-width">
+                  <label>Description</label>
+                  <textarea [(ngModel)]="feature.description" class="form-input form-textarea" rows="2"></textarea>
+                </div>
+
+                <!-- Feature Image Picker -->
+                <div class="form-group full-width">
+                  <label>Feature Image</label>
+                  <ng-container *ngTemplateOutlet="imagePicker; context: { ctx: { type: 'feature', featureIndex: i } }"></ng-container>
+                </div>
+
+                <div class="form-group full-width">
+                  <label>Icon Gradient (CSS)</label>
+                  <input type="text" [(ngModel)]="feature.iconBg" class="form-input" placeholder="linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)">
+                </div>
+                <div class="form-group full-width">
+                  <div class="points-header">
+                    <label>Bullet Points</label>
+                    <button class="btn-add sm" (click)="addPoint(i)">+ Add Point</button>
+                  </div>
+                  <div class="points-list">
+                    <div class="point-row" *ngFor="let point of feature.points; let j = index; trackBy: trackByIndex">
+                      <input type="text" [(ngModel)]="feature.points[j]" class="form-input" placeholder="Feature point...">
+                      <button class="btn-remove sm" (click)="removePoint(i, j)">✕</button>
+                    </div>
+                    <p *ngIf="feature.points.length === 0" class="empty-hint">No points yet.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p *ngIf="content.features.length === 0" class="empty-hint">No features yet. Click "+ Add Feature" to add one.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TESTIMONIALS TAB ===== -->
+    <div *ngIf="activeTab === 'testimonials'" class="tab-content">
+      <div class="form-card">
+        <div class="card-header">
+          <h3 class="section-title">Reviews / Testimonials ({{ content.testimonials.length }})</h3>
+          <button class="btn-add" (click)="addTestimonial()">+ Add Review</button>
+        </div>
+
+        <div class="accordion-list">
+          <div class="accordion-item" *ngFor="let t of content.testimonials; let i = index; trackBy: trackByIndex">
+            <div class="accordion-header" (click)="toggleTestimonial(i)">
+              <span class="accordion-title">
+                <span class="acc-num">{{ i + 1 }}</span>
+                {{ t.name || 'Unnamed' }} — {{ t.role || 'No role' }}
+              </span>
+              <div class="accordion-actions">
+                <button class="btn-remove sm" (click)="$event.stopPropagation(); removeTestimonial(i)" title="Remove">🗑</button>
+                <span class="acc-toggle">{{ expandedTestimonial === i ? '▲' : '▼' }}</span>
+              </div>
+            </div>
+            <div class="accordion-body" *ngIf="expandedTestimonial === i">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Name</label>
+                  <input type="text" [(ngModel)]="t.name" class="form-input" (ngModelChange)="onNameChange(t)">
+                </div>
+                <div class="form-group">
+                  <label>Role / Title</label>
+                  <input type="text" [(ngModel)]="t.role" class="form-input" placeholder="Fitness Enthusiast">
+                </div>
+                <div class="form-group">
+                  <label>Initials (auto-filled)</label>
+                  <input type="text" [(ngModel)]="t.initials" class="form-input" maxlength="2" placeholder="SJ">
+                </div>
+                <div class="form-group">
+                  <label>Rating (1–5)</label>
+                  <select [(ngModel)]="t.rating" class="form-input">
+                    <option [value]="1">⭐ 1</option>
+                    <option [value]="2">⭐⭐ 2</option>
+                    <option [value]="3">⭐⭐⭐ 3</option>
+                    <option [value]="4">⭐⭐⭐⭐ 4</option>
+                    <option [value]="5">⭐⭐⭐⭐⭐ 5</option>
+                  </select>
+                </div>
+                <div class="form-group full-width">
+                  <label>Review Text</label>
+                  <textarea [(ngModel)]="t.text" class="form-input form-textarea" rows="3" placeholder="FitNova completely transformed..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p *ngIf="content.testimonials.length === 0" class="empty-hint">No reviews yet. Click "+ Add Review" to add one.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save Button -->
+    <div class="save-bar">
+      <button class="btn-save" (click)="save()" [disabled]="saving">
+        <span *ngIf="!saving">💾 Save Changes</span>
+        <span *ngIf="saving">Saving...</span>
+      </button>
+    </div>
+  </ng-container>
+</div>
+
+<!-- ===== IMAGE PICKER TEMPLATE ===== -->
+<ng-template #imagePicker let-ctx="ctx">
+  <div class="img-picker-widget">
+    <!-- Current image thumbnail -->
+    <div class="img-current" *ngIf="getImageForContext(ctx)">
+      <img [src]="getImageForContext(ctx)" alt="Current image" class="img-thumb" onerror="this.style.display='none'">
+      <button class="img-clear-btn" (click)="clearImage(ctx)" title="Remove image">✕</button>
+    </div>
+    <div class="img-placeholder" *ngIf="!getImageForContext(ctx)">
+      <span>🖼️</span>
+      <span>No image set</span>
+    </div>
+
+    <!-- Picker toggle button -->
+    <button class="btn-pick-image" (click)="openPicker(ctx)">
+      {{ getImageForContext(ctx) ? '🔄 Change Image' : '📸 Set Image' }}
+    </button>
+
+    <!-- Inline Picker Panel -->
+    <div class="picker-panel" *ngIf="pickerOpen && pickerContext.type === ctx.type && pickerContext.featureIndex === ctx.featureIndex">
+      <div class="picker-header">
+        <span class="picker-title">📁 Upload from PC</span>
+        <button class="picker-close" (click)="closePicker()">✕</button>
+      </div>
+
+      <div class="picker-body">
+        <p class="picker-hint">Select an image from your computer. You'll be able to crop it before applying.</p>
+        <label class="upload-dropzone">
+          <span class="upload-icon">📤</span>
+          <span class="upload-label">Click to browse or drag & drop</span>
+          <span class="upload-sub">JPG, PNG, GIF, WebP — max 10MB</span>
+          <input type="file" accept="image/*" (change)="onFileSelected($event)" class="upload-file-input">
+        </label>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- ===== CROP MODAL ===== -->
+<div class="crop-overlay" *ngIf="cropModalOpen" (click)="$event.stopPropagation()">
+  <div class="crop-modal" #cropContainer>
+    <div class="crop-modal-header">
+      <h3>✂️ Crop Image</h3>
+      <p class="crop-hint">Drag to move • Drag corner handles to resize</p>
+    </div>
+    <div class="crop-canvas-wrap" #cropContainer>
+      <canvas #cropCanvas
+        (mousedown)="onCropMouseDown($event)"
+        (mousemove)="onCropMouseMove($event)"
+        (mouseup)="onCropMouseUp()"
+        (mouseleave)="onCropMouseUp()"
+        class="crop-canvas">
+      </canvas>
+    </div>
+    <div class="crop-actions">
+      <button class="btn-crop-cancel" (click)="closeCropModal()">✕ Cancel</button>
+      <button class="btn-crop-apply" (click)="applyCrop()">✓ Crop & Apply</button>
+    </div>
+  </div>
+</div>

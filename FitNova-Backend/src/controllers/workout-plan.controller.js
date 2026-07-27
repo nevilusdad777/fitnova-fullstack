@@ -55,6 +55,37 @@ const generatePlan = async (req, res) => {
                 });
             }
 
+            // Ensure a minimum of 4 exercises per day
+            if (dayExercises.length < 4) {
+                const dayNameLower = day.name.toLowerCase();
+                let bodyParts = ['chest', 'back', 'legs', 'shoulders', 'biceps', 'triceps', 'abs'];
+                if (dayNameLower.includes('chest') || dayNameLower.includes('push')) bodyParts = ['chest', 'shoulders', 'triceps'];
+                else if (dayNameLower.includes('back') || dayNameLower.includes('pull')) bodyParts = ['back', 'biceps'];
+                else if (dayNameLower.includes('leg') || dayNameLower.includes('lower')) bodyParts = ['legs'];
+                else if (dayNameLower.includes('shoulder')) bodyParts = ['shoulders'];
+                else if (dayNameLower.includes('tricep')) bodyParts = ['triceps'];
+                else if (dayNameLower.includes('bicep')) bodyParts = ['biceps'];
+                else if (dayNameLower.includes('arm')) bodyParts = ['biceps', 'triceps'];
+                else if (dayNameLower.includes('abs') || dayNameLower.includes('core')) bodyParts = ['abs'];
+                
+                const existingIds = dayExercises.map(ex => ex.exerciseId);
+                const extraExercises = await Exercise.find({
+                    bodyPart: { $in: bodyParts },
+                    _id: { $nin: existingIds }
+                }).limit(4 - dayExercises.length);
+
+                extraExercises.forEach(foundEx => {
+                    dayExercises.push({
+                        exerciseId: foundEx._id,
+                        name: foundEx.name,
+                        sets: foundEx.defaultSets,
+                        reps: foundEx.defaultReps ? `${foundEx.defaultReps}` : "10-12",
+                        restSeconds: foundEx.name.toLowerCase().includes('barbell') ? 90 : 60,
+                        notes: 'Added to meet minimum 4 exercises'
+                    });
+                });
+            }
+
             schedule.push({
                 dayOfWeek: day.dayOfWeek,
                 name: day.name,
