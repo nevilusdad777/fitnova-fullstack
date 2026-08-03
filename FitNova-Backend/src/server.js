@@ -29,6 +29,13 @@ app.get('/', (req, res) => {
   res.json({ message: 'FitNova API is running' });
 });
 
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'UP',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Routes
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
