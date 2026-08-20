@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://fitnova-fullstack.onrender.com'
+  apiUrl: 'https://fitnova-backend.vercel.app'
 };
+

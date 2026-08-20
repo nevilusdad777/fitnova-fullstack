@@ -1,3 +1,30 @@
+# Environment files (secrets)
 .env
-**/*.env
+.env.*
+!.env.example
+!.env.*.example
+*.env
+**/.env
+**/.env.*
+**/%.env%
+
+# Node modules & logs
 node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs & cache
+/dist
+/tmp
+/out-tsc
+.angular/cache
+.vercel
+*.vercel
+
+# IDEs & System files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
