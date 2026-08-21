@@ -23,16 +23,17 @@ app.use(express.json({ limit: '10mb' })); // Increased limit for profile picture
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Health check
-app.get('/', (req, res) => {
-  res.json({ message: 'FitNova API is running' });
-});
-
-app.get('/api/health', (req, res) => {
+const healthCheckHandler = (req, res) => {
   res.json({
     status: 'UP',
+    message: 'FitNova API is running',
     timestamp: new Date().toISOString()
   });
-});
+};
+
+app.get('/', healthCheckHandler);
+app.get('/health', healthCheckHandler);
+app.get('/api/health', healthCheckHandler);
 
 
 // Routes
