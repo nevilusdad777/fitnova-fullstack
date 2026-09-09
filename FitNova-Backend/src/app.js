@@ -34,6 +34,9 @@ const healthCheckHandler = (req, res) => {
 app.get('/', healthCheckHandler);
 app.get('/health', healthCheckHandler);
 app.get('/api/health', healthCheckHandler);
+app.get('/ping', healthCheckHandler);
+app.get('/api/ping', healthCheckHandler);
+
 
 
 // Routes
