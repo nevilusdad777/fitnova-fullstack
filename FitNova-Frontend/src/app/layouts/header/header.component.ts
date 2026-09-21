@@ -1,7 +1,11 @@
 import { Component, signal, inject, PLATFORM_ID, computed } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { LucideAngularModule, User, Search, Sun, Moon, Menu, X, LogOut } from 'lucide-angular';
+import {
+    LucideAngularModule,
+    User, Sun, Moon, LogOut,
+    LayoutDashboard, Dumbbell, Apple, BarChart2
+} from 'lucide-angular';
 import { AuthService } from '../../features/auth/auth.service';
 
 @Component({
@@ -13,19 +17,15 @@ import { AuthService } from '../../features/auth/auth.service';
 })
 export class HeaderComponent {
     readonly User = User;
-    readonly Search = Search;
     readonly Sun = Sun;
     readonly Moon = Moon;
-    readonly Menu = Menu;
-    readonly X = X;
     readonly LogOut = LogOut;
 
     platformId = inject(PLATFORM_ID);
     authService = inject(AuthService);
-    
-    // Computed signals from AuthService
+
     userName = computed(() => this.authService.currentUser()?.name || 'Guest User');
-    profilePicture = computed(() => this.authService.currentUser()?.profilePicture); // Access dynamic property
+    profilePicture = computed(() => this.authService.currentUser()?.profilePicture);
     userInitials = computed(() => {
         const name = this.userName();
         return name ? name.charAt(0).toUpperCase() : 'G';
@@ -35,10 +35,10 @@ export class HeaderComponent {
     isMobileMenuOpen = signal(false);
 
     navItems = [
-        { label: 'Dashboard', path: '/home' },
-        { label: 'Workouts', path: '/workout' },
-        { label: 'Nutrition', path: '/nutrition' },
-        { label: 'Tracker', path: '/tracker' }
+        { label: 'Dashboard',  shortLabel: 'Home',     path: '/home',      icon: LayoutDashboard },
+        { label: 'Workouts',   shortLabel: 'Workouts', path: '/workout',   icon: Dumbbell        },
+        { label: 'Nutrition',  shortLabel: 'Nutrition',path: '/nutrition', icon: Apple           },
+        { label: 'Tracker',    shortLabel: 'Tracker',  path: '/tracker',   icon: BarChart2       }
     ];
 
     constructor() {

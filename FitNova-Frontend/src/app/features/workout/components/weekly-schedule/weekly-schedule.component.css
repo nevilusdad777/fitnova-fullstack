@@ -13,16 +13,17 @@
 .header-content h2 {
   font-size: 2rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #f97316 0%, #dc2626 100%);
+  background: var(--color-primary-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   margin: 0 0 0.5rem 0;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.03em;
+  font-family: var(--font-family-heading);
 }
 
 .header-content p {
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   font-size: 1rem;
   margin: 0;
 }
@@ -47,11 +48,14 @@
 
 /* Day Card */
 .day-card {
-  background: var(--card-bg);
-  border: 2px solid var(--border-color);
-  border-radius: 20px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-xl);
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--neu-shadow-raised);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   z-index: 1;
   height: 100%;
@@ -66,42 +70,43 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: var(--border-color);
+  height: 3px;
+  background: var(--color-border);
   transition: all 0.3s ease;
 }
 
 /* Today Styling */
 .timeline-day.is-today .day-card {
-  border-color: #f97316;
-  box-shadow: 0 8px 32px rgba(249, 115, 22, 0.2);
-  transform: scale(1.02);
+  border-color: rgba(155, 143, 199, 0.35);
+  box-shadow: var(--neu-shadow-raised-lg), 0 0 0 2px rgba(155, 143, 199, 0.18);
+  transform: scale(1.01);
 }
 
 .timeline-day.is-today .day-card::before {
-  background: linear-gradient(90deg, #f97316 0%, #dc2626 100%);
-  height: 5px;
+  background: var(--color-primary-gradient);
+  height: 4px;
 }
 
 /* Workout Day Hover */
 .timeline-day.is-workout .day-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-  border-color: #f97316;
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(155, 143, 199, 0.30);
+  background: var(--glass-bg-strong);
 }
 
 .timeline-day.is-workout .day-card:hover::before {
-  background: linear-gradient(90deg, #f97316 0%, #dc2626 100%);
+  background: var(--color-primary-gradient);
 }
 
 /* Rest Day */
 .timeline-day.is-rest .day-card {
-  opacity: 0.85;
-  background: var(--bg-secondary);
+  opacity: 0.80;
+  background: var(--glass-bg-subtle);
 }
 
 .timeline-day.is-rest .day-card::before {
-  background: linear-gradient(90deg, #94a3b8 0%, #64748b 100%);
+  background: linear-gradient(90deg, var(--color-text-muted), var(--color-border));
 }
 
 /* Card Header */

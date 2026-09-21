@@ -1,77 +1,91 @@
-/* Clean Profile Page Layout */
+/* ============================================================
+   FitNova — Profile Page
+   Glassmorphism + Neumorphism Design
+   ============================================================ */
+
 .profile-page {
-    min-height: calc(100vh - var(--header-height));
-    overflow-y: auto;
-    background-color: var(--bg-secondary, #f8fafc); /* Light clean background */
-    position: relative;
-    transition: background-color 0.3s ease;
+  min-height: 100vh;
+  background: var(--color-bg-primary);
+  background-image: var(--bg-profile);
+  background-attachment: fixed;
+  position: relative;
+  padding-top: 0;
 }
 
-html[data-theme="dark"] .profile-page {
-    background-color: var(--bg-main, #0f172a);
+.profile-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(212, 165, 165, 0.09) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(155, 143, 199, 0.07) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .layout-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: var(--space-2xl) var(--space-md);
-    position: relative;
-    z-index: 1;
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
 }
 
-/* Main Content */
 .profile-main {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3xl); /* More breathing room */
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
 }
 
 .view-container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2xl);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .section-divider {
-    height: 1px;
-    background-color: var(--color-border);
-    margin: var(--space-xl) 0;
-    opacity: 0.5;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-divider), transparent);
 }
 
+/* Profile Footer */
 .profile-footer {
-    display: flex;
-    justify-content: center;
-    padding: var(--space-xl) 0 var(--space-2xl);
-    border-top: 1px solid var(--color-border);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-divider);
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .btn-logout {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    padding: 0.75rem 2rem;
-    border-radius: 8px; /* Sharper corners */
-    background: transparent;
-    color: var(--color-danger);
-    border: 1px solid var(--color-danger);
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.5rem;
+  border-radius: var(--radius-lg);
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(224, 112, 112, 0.25);
+  color: var(--color-danger);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: var(--neu-shadow-raised);
 }
 
 .btn-logout:hover {
-    background: rgba(239, 68, 68, 0.05);
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(224, 112, 112, 0.20);
 }
 
-/* Responsive */
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .profile-page { padding-top: 60px; }
+}
+
 @media (max-width: 768px) {
-    .layout-container {
-        padding: var(--space-xl) var(--space-md);
-    }
-    
-    .profile-main {
-        gap: var(--space-xl);
-    }
+  .profile-main {
+    padding: 1.5rem 1rem;
+  }
 }

@@ -34,7 +34,9 @@
 .current {
   font-size: var(--font-size-4xl);
   font-weight: var(--font-weight-extrabold);
-  color: var(--color-water);
+  color: var(--color-secondary);
+  font-family: var(--font-family-heading);
+  letter-spacing: -0.04em;
 }
 
 .separator {
@@ -72,19 +74,22 @@
   justify-content: center;
   gap: var(--space-xs);
   padding: var(--space-md);
-  background: var(--color-water);
+  background: var(--color-secondary);
   color: white;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-family-base);
   font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 12px rgba(107, 157, 197, 0.30);
 }
 
 .water-button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-  opacity: 0.9;
+  background: var(--color-secondary-dark);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 18px rgba(107, 157, 197, 0.40);
 }
 
 .water-visualization {
