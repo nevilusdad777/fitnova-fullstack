@@ -1,211 +1,170 @@
 /* ============================================================
    FitNova — Workout Page
-   Glassmorphism + Neumorphism Design
+   Glassmorphism + Neumorphism Redesign (Single Sidebar Layout)
    ============================================================ */
 
 .workout-page {
-  height: calc(100vh - 0px);
-  overflow: hidden;
+  min-height: 100vh;
+  padding: 1.5rem 2rem;
   background: var(--color-bg-primary);
-  background-image: var(--bg-workout);
-  background-attachment: fixed;
   position: relative;
-  transition: background 0.5s ease;
-}
-
-.workout-page::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 20% 30%, rgba(155, 143, 199, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(232, 168, 124, 0.08) 0%, transparent 50%);
-  pointer-events: none;
 }
 
 .layout-container {
-  display: flex;
-  height: 100%;
-  position: relative;
-  z-index: 1;
-}
-
-/* ── Inner Sidebar ── */
-.workout-sidebar {
-  width: 260px;
-  padding: 1.5rem 1rem;
+  max-width: 1320px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  background: var(--sidebar-bg);
+  gap: 1.5rem;
+}
+
+/* ── Page Top Header ── */
+.page-top-header {
+  padding: 1.5rem 2rem;
+  background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
-  border-right: 1px solid var(--sidebar-border);
-  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.04);
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: 100%;
-  flex-shrink: 0;
-}
-
-.workout-sidebar::-webkit-scrollbar { width: 4px; }
-.workout-sidebar::-webkit-scrollbar-track { background: transparent; }
-.workout-sidebar::-webkit-scrollbar-thumb {
-  background: rgba(155, 143, 199, 0.25);
-  border-radius: 99px;
-}
-
-.sidebar-header { margin-bottom: 0.5rem; }
-
-.sidebar-header h2 {
-  font-family: var(--font-family-heading);
-  font-size: 1.35rem;
-  font-weight: 800;
-  margin-bottom: 0.2rem;
-  background: var(--color-primary-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: -0.03em;
-}
-
-.sidebar-header p {
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
-  margin: 0;
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.7rem 0.875rem;
-  border-radius: var(--radius-lg);
-  background: transparent;
-  border: none;
-  color: var(--color-text-secondary);
-  font-family: var(--font-family-base);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
-  transition: all var(--transition-base);
-  text-align: left;
-  position: relative;
-  width: 100%;
-}
-
-.nav-item:hover {
-  background: var(--color-primary-xlight);
-  color: var(--color-primary);
-  transform: translateX(3px);
-}
-
-.nav-item.active {
-  background: var(--color-primary-xlight);
-  color: var(--color-primary-dark);
-  font-weight: var(--font-weight-semibold);
-  box-shadow: var(--neu-shadow-raised);
-  border-left: 3px solid var(--color-primary);
-}
-
-/* Quick Stats Panel */
-.quick-stats {
-  margin-top: auto;
-  padding: 1rem;
-  background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-2xl);
   border: 1px solid var(--color-glass-border);
-  box-shadow: var(--neu-shadow-raised);
-  flex-shrink: 0;
-}
-
-.quick-stats h3 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--color-text-muted);
-  margin-bottom: 0.875rem;
-  font-weight: 700;
-}
-
-.stat-row {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  margin-bottom: 0.625rem;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-primary);
-  font-weight: var(--font-weight-medium);
-}
-
-.stat-row:last-child { margin-bottom: 0; }
-
-.text-primary { color: var(--color-primary); }
-.text-success  { color: var(--color-success); }
-
-/* ── Main Content ── */
-.workout-main {
-  flex: 1;
-  overflow: hidden;
+  box-shadow: var(--shadow-md);
   display: flex;
   flex-direction: column;
-  background: var(--content-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  gap: 1.5rem;
 }
 
-.workout-content-scroll {
-  flex: 1;
-  overflow-y: auto;
-  padding: 2rem 2.5rem;
+.header-main-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
 }
 
-.mobile-only { display: none; }
-
-.content-header {
-  margin-bottom: 1.5rem;
+.header-title-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-.content-header h1 {
+.page-icon-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.12), rgba(132, 204, 22, 0.15));
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--neu-shadow-raised);
+}
+
+.page-title {
   font-family: var(--font-family-heading);
   font-size: 1.75rem;
   font-weight: 800;
   color: var(--color-text-primary);
+  letter-spacing: -0.03em;
+  margin: 0 0 0.2rem 0;
+}
+
+.page-subtitle {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
   margin: 0;
 }
 
-.view-container { animation: fadeIn 0.35s ease-out; }
+.workout-quick-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.badge-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-glass-border);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.icon-accent { color: var(--color-primary); }
+.icon-lime { color: var(--color-lime); }
+
+/* ── Sub-Nav Horizontal Pills ── */
+.subnav-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(15, 23, 42, 0.04);
+  padding: 0.35rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  flex-wrap: wrap;
+}
+
+.pill-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-full);
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.pill-btn:hover {
+  color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.pill-btn.active {
+  background: var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+}
+
+/* ── Main View Container ── */
+.workout-main {
+  width: 100%;
+}
+
+.view-container {
+  width: 100%;
+  animation: fadeIn 0.35s ease-out;
+}
 
 /* ── Responsive ── */
 @media (max-width: 1024px) {
   .workout-page {
-    height: auto;
-    overflow: visible;
-    padding-top: 60px; /* mobile top bar */
+    padding: 1rem;
+    padding-top: 70px;
+  }
+}
+
+@media (max-width: 640px) {
+  .subnav-pills {
+    width: 100%;
+    overflow-x: auto;
+    justify-content: flex-start;
   }
 
-  .layout-container { flex-direction: column; }
-
-  .workout-sidebar { display: none; }
-
-  .workout-main { overflow: visible; }
-
-  .workout-content-scroll {
-    padding: 1.25rem 1rem;
-    overflow: visible;
+  .pill-btn {
+    white-space: nowrap;
   }
 
-  .mobile-only {
-    display: block;
-    margin-bottom: 1rem;
+  .workout-quick-badges {
+    width: 100%;
+    flex-wrap: wrap;
   }
 }

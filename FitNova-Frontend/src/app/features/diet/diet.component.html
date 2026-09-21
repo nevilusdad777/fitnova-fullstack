@@ -1,90 +1,81 @@
 <div class="diet-page fade-in">
   <div class="layout-container">
-    <!-- Sidebar Navigation -->
-    <aside class="diet-sidebar glass-panel">
-      <div class="sidebar-header">
-        <h2>Nutrition<br>Station</h2>
-        <p>Fuel your goals.</p>
-      </div>
-
-      <nav class="sidebar-nav">
-        <button class="nav-item" [class.active]="currentView() === 'meals'" (click)="showMeals()"
-          aria-label="View today's meals">
-          <lucide-icon [img]="Calendar" [size]="20"></lucide-icon>
-          <span>Today's Meals</span>
-        </button>
-        <button class="nav-item" [class.active]="currentView() === 'search'" (click)="showSearch()"
-          aria-label="Add food to log">
-          <lucide-icon [img]="Search" [size]="20"></lucide-icon>
-          <span>Add Food</span>
-        </button>
-        <button class="nav-item" [class.active]="currentView() === 'planner'" (click)="showPlanner()"
-          aria-label="Generate diet plan">
-          <lucide-icon [img]="UtensilsCrossed" [size]="20"></lucide-icon>
-          <span>Plan Generator</span>
-        </button>
-      </nav>
-
-      <!-- Quick Stats -->
-      <div class="quick-stats">
-        <h3>Today's Summary</h3>
-        
-        <div class="stat-item">
-          <div class="stat-info">
-            <span class="stat-label">Calories</span>
-            <span class="stat-numbers">
-              {{ nutritionSummary().calories }} / {{ plannedTotal().calories || dailyGoals().calories }}
-            </span>
+    <!-- Top Header & Horizontal Navigation -->
+    <header class="page-top-header glass-panel">
+      <div class="header-main-info">
+        <div class="header-title-group">
+          <div class="page-icon-badge">
+            <lucide-icon [img]="UtensilsCrossed" [size]="24"></lucide-icon>
           </div>
-          <div class="progress-bar">
-            <div class="progress-fill" [style.width.%]="calorieProgress()"></div>
+          <div>
+            <h1 class="page-title">Nutrition Station</h1>
+            <p class="page-subtitle">Track meals, macros & fuel your fitness goals</p>
           </div>
         </div>
 
-        <div class="stat-item">
-          <div class="stat-info">
-            <span class="stat-label">Protein</span>
-            <span class="stat-numbers">
-              {{ nutritionSummary().protein | number:'1.0-2' }}g / {{ plannedTotal().protein || dailyGoals().protein }}g
-            </span>
+        <!-- Horizontal Navigation Pills -->
+        <nav class="subnav-pills">
+          <button class="pill-btn" [class.active]="currentView() === 'meals'" (click)="showMeals()" aria-label="View today's meals">
+            <lucide-icon [img]="Calendar" [size]="18"></lucide-icon>
+            <span>Today's Meals</span>
+          </button>
+          <button class="pill-btn" [class.active]="currentView() === 'search'" (click)="showSearch()" aria-label="Add food to log">
+            <lucide-icon [img]="Search" [size]="18"></lucide-icon>
+            <span>Add Food</span>
+          </button>
+          <button class="pill-btn" [class.active]="currentView() === 'planner'" (click)="showPlanner()" aria-label="Generate diet plan">
+            <lucide-icon [img]="UtensilsCrossed" [size]="18"></lucide-icon>
+            <span>Plan Generator</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Horizontal Macro Summary Cards -->
+      <div class="macro-summary-grid">
+        <div class="macro-card glass-card">
+          <div class="macro-info">
+            <span class="macro-label">Calories</span>
+            <span class="macro-val">{{ nutritionSummary().calories }} <small>/ {{ plannedTotal().calories || dailyGoals().calories }} kcal</small></span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill calories" [style.width.%]="calorieProgress()"></div>
+          </div>
+        </div>
+
+        <div class="macro-card glass-card">
+          <div class="macro-info">
+            <span class="macro-label">Protein</span>
+            <span class="macro-val">{{ nutritionSummary().protein | number:'1.0-1' }}g <small>/ {{ plannedTotal().protein || dailyGoals().protein }}g</small></span>
           </div>
           <div class="progress-bar">
             <div class="progress-fill protein" [style.width.%]="proteinProgress()"></div>
           </div>
         </div>
 
-        <div class="stat-item">
-          <div class="stat-info">
-            <span class="stat-label">Carbs</span>
-            <span class="stat-numbers">
-              {{ nutritionSummary().carbs | number:'1.0-2' }}g / {{ plannedTotal().carbs || dailyGoals().carbs }}g
-            </span>
+        <div class="macro-card glass-card">
+          <div class="macro-info">
+            <span class="macro-label">Carbs</span>
+            <span class="macro-val">{{ nutritionSummary().carbs | number:'1.0-1' }}g <small>/ {{ plannedTotal().carbs || dailyGoals().carbs }}g</small></span>
           </div>
           <div class="progress-bar">
             <div class="progress-fill carbs" [style.width.%]="carbsProgress()"></div>
           </div>
         </div>
 
-        <div class="stat-item">
-          <div class="stat-info">
-            <span class="stat-label">Fat</span>
-            <span class="stat-numbers">
-              {{ nutritionSummary().fat | number:'1.0-2' }}g / {{ plannedTotal().fat || dailyGoals().fat }}g
-            </span>
+        <div class="macro-card glass-card">
+          <div class="macro-info">
+            <span class="macro-label">Fat</span>
+            <span class="macro-val">{{ nutritionSummary().fat | number:'1.0-1' }}g <small>/ {{ plannedTotal().fat || dailyGoals().fat }}g</small></span>
           </div>
           <div class="progress-bar">
             <div class="progress-fill fat" [style.width.%]="fatProgress()"></div>
           </div>
         </div>
       </div>
-    </aside>
+    </header>
 
     <!-- Main Content Area -->
     <main class="diet-main">
-      <div class="content-header mobile-only">
-        <h1>{{ currentView() === 'meals' ? 'Today\'s Meals' : currentView() === 'search' ? 'Add Food' : 'Plan Generator' }}</h1>
-      </div>
-
       <div class="view-container fade-in">
         <app-meal-log *ngIf="currentView() === 'meals'" (mealsUpdated)="refreshNutrition()"></app-meal-log>
         <app-food-search *ngIf="currentView() === 'search'" (foodAdded)="onFoodAdded()"></app-food-search>

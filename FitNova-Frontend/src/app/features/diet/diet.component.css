@@ -1,250 +1,226 @@
 /* ============================================================
    FitNova — Diet / Nutrition Page
-   Glassmorphism + Neumorphism Design
+   Glassmorphism + Neumorphism Redesign (Single Sidebar Grid)
    ============================================================ */
 
 .diet-page {
-  height: calc(100vh - 0px);
-  overflow: hidden;
+  min-height: 100vh;
+  padding: 1.5rem 2rem;
   background: var(--color-bg-primary);
-  background-image: var(--bg-diet);
-  background-attachment: fixed;
   position: relative;
-}
-
-.diet-page::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 15% 25%, rgba(107, 157, 197, 0.09) 0%, transparent 50%),
-    radial-gradient(circle at 85% 75%, rgba(155, 143, 199, 0.07) 0%, transparent 50%);
-  pointer-events: none;
 }
 
 .layout-container {
-  display: flex;
-  height: 100%;
-  position: relative;
-  z-index: 1;
-}
-
-/* ── Inner Sidebar ── */
-.diet-sidebar {
-  width: 260px;
-  padding: 1.5rem 1rem;
+  max-width: 1320px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  background: var(--sidebar-bg);
+  gap: 1.5rem;
+}
+
+/* ── Page Top Header ── */
+.page-top-header {
+  padding: 1.5rem 2rem;
+  background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
-  border-right: 1px solid var(--sidebar-border);
-  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.04);
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: 100%;
-  flex-shrink: 0;
-}
-
-.diet-sidebar::-webkit-scrollbar { width: 4px; }
-.diet-sidebar::-webkit-scrollbar-track { background: transparent; }
-.diet-sidebar::-webkit-scrollbar-thumb {
-  background: rgba(107, 157, 197, 0.25);
-  border-radius: 99px;
-}
-
-.sidebar-header { margin-bottom: 0.5rem; }
-
-.sidebar-header h2 {
-  font-family: var(--font-family-heading);
-  font-size: 1.35rem;
-  font-weight: 800;
-  margin-bottom: 0.2rem;
-  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: -0.03em;
-}
-
-.sidebar-header p {
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
-  margin: 0;
-}
-
-/* ── Nav Items ── */
-.sidebar-nav {
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--color-glass-border);
+  box-shadow: var(--shadow-md);
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 1.5rem;
 }
 
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.7rem 0.875rem;
-  border-radius: var(--radius-lg);
-  background: transparent;
-  border: none;
-  color: var(--color-text-secondary);
-  font-family: var(--font-family-base);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
-  transition: all var(--transition-base);
-  text-align: left;
-  width: 100%;
-}
-
-.nav-item:hover {
-  background: var(--color-secondary-xlight);
-  color: var(--color-secondary-dark);
-  transform: translateX(3px);
-}
-
-.nav-item.active {
-  background: var(--color-secondary-xlight);
-  color: var(--color-secondary-dark);
-  font-weight: var(--font-weight-semibold);
-  box-shadow: var(--neu-shadow-raised);
-  border-left: 3px solid var(--color-secondary);
-}
-
-/* ── Quick Stats ── */
-.quick-stats {
-  margin-top: auto;
-  padding: 1rem;
-  background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--color-glass-border);
-  box-shadow: var(--neu-shadow-raised);
-  flex-shrink: 0;
-}
-
-.quick-stats h3 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--color-text-muted);
-  margin-bottom: 1rem;
-  font-weight: 700;
-}
-
-/* Stat Items */
-.stat-item {
-  margin-bottom: 0.875rem;
-}
-
-.stat-item:last-child { margin-bottom: 0; }
-
-.stat-info {
+.header-main-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.35rem;
+  flex-wrap: wrap;
+  gap: 1.25rem;
 }
 
-.stat-label {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  font-weight: var(--font-weight-medium);
-}
-
-.stat-numbers {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-primary);
-  font-weight: var(--font-weight-semibold);
-  font-family: var(--font-family-heading);
-}
-
-/* Progress Bars */
-.progress-bar {
-  height: 6px;
-  background: var(--color-border);
-  border-radius: var(--radius-full);
-  overflow: hidden;
-  box-shadow: var(--neu-shadow-inset);
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
-  border-radius: var(--radius-full);
-  transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.progress-fill.protein {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
-}
-
-.progress-fill.carbs {
-  background: linear-gradient(135deg, var(--color-secondary), var(--color-secondary-light));
-}
-
-.progress-fill.fat {
-  background: linear-gradient(135deg, var(--color-pink), var(--color-pink-light));
-}
-
-/* ── Main Content ── */
-.diet-main {
-  flex: 1;
-  overflow: hidden;
+.header-title-group {
   display: flex;
-  flex-direction: column;
-  background: var(--content-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  align-items: center;
+  gap: 1rem;
 }
 
-.content-header {
-  padding: 1.25rem 1.5rem 0;
-  margin-bottom: 0;
+.page-icon-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.12), rgba(132, 204, 22, 0.15));
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--neu-shadow-raised);
 }
 
-.content-header h1 {
+.page-title {
   font-family: var(--font-family-heading);
   font-size: 1.75rem;
   font-weight: 800;
   color: var(--color-text-primary);
+  letter-spacing: -0.03em;
+  margin: 0 0 0.2rem 0;
+}
+
+.page-subtitle {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
   margin: 0;
 }
 
-.view-container {
-  flex: 1;
-  overflow-y: auto;
-  padding: 1.5rem 2rem;
-  animation: fadeIn 0.35s ease-out;
+/* ── Sub-Nav Horizontal Pills ── */
+.subnav-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(15, 23, 42, 0.04);
+  padding: 0.35rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(15, 23, 42, 0.06);
 }
 
-.mobile-only { display: none; }
+.pill-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-full);
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.pill-btn:hover {
+  color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.pill-btn.active {
+  background: var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+}
+
+/* ── Horizontal Macro Summary Grid ── */
+.macro-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.macro-card {
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-glass-border);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.macro-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.macro-label {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+}
+
+.macro-val {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-md);
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.macro-val small {
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+/* Progress Bars */
+.progress-bar {
+  height: 8px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  box-shadow: var(--neu-shadow-inset-sm);
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-fill.calories {
+  background: linear-gradient(90deg, #0284C7, #2563EB);
+}
+
+.progress-fill.protein {
+  background: linear-gradient(90deg, #84CC16, #65A30D);
+}
+
+.progress-fill.carbs {
+  background: linear-gradient(90deg, #06B6D4, #0891B2);
+}
+
+.progress-fill.fat {
+  background: linear-gradient(90deg, #F59E0B, #D97706);
+}
+
+/* ── Main View Container ── */
+.diet-main {
+  width: 100%;
+}
+
+.view-container {
+  width: 100%;
+  animation: fadeIn 0.35s ease-out;
+}
 
 /* ── Responsive ── */
 @media (max-width: 1024px) {
   .diet-page {
-    height: auto;
-    overflow: visible;
-    padding-top: 60px;
-  }
-
-  .layout-container { flex-direction: column; }
-
-  .diet-sidebar { display: none; }
-
-  .diet-main { overflow: visible; }
-
-  .view-container {
-    overflow: visible;
     padding: 1rem;
+    padding-top: 70px;
   }
 
-  .mobile-only {
-    display: block;
-    padding: 1rem 1rem 0;
+  .macro-summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .subnav-pills {
+    width: 100%;
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+
+  .pill-btn {
+    white-space: nowrap;
+  }
+
+  .macro-summary-grid {
+    grid-template-columns: 1fr;
   }
 }
