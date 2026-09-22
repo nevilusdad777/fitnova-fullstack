@@ -58,7 +58,7 @@
 .exercise-card:hover {
     border-color: var(--color-calorie);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.15);
+    box-shadow: 0 4px 12px rgba(155, 143, 199, 0.15);
 }
 
 .exercise-header {
@@ -320,11 +320,11 @@
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    background-color: rgba(249, 115, 22, 0.1); /* Orange with opacity */
+    background-color: rgba(155, 143, 199, 0.1); /* Orange with opacity */
     padding: 12px 16px;
     border-radius: 8px;
     margin-bottom: 20px;
-    border: 1px solid rgba(249, 115, 22, 0.2);
+    border: 1px solid rgba(155, 143, 199, 0.2);
 }
 
 .benefit-box lucide-icon {
@@ -412,7 +412,7 @@
 
 .add-to-routine-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+    box-shadow: 0 4px 12px rgba(155, 143, 199, 0.3);
 }
 
 @keyframes fadeIn {

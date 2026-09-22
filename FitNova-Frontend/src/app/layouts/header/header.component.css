@@ -45,19 +45,19 @@
 .brand-link:hover { transform: scale(1.02); }
 
 .brand-logo {
-    height: 38px;
+    height: 36px;
     width: auto;
     object-fit: contain;
-    filter: drop-shadow(0 4px 10px rgba(2, 132, 199, 0.35));
+    filter: drop-shadow(0 2px 6px rgba(155, 143, 199, 0.25));
     flex-shrink: 0;
 }
 
 .brand-name {
     font-family: var(--font-family-heading);
-    font-size: 1.45rem;
+    font-size: 1.4rem;
     font-weight: 800;
     letter-spacing: -0.03em;
-    background: linear-gradient(135deg, #0284C7 0%, #2563EB 50%, #84CC16 100%);
+    background: linear-gradient(135deg, #9B8FC7 0%, #7B6FAF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -148,7 +148,7 @@
 .nav-item:hover .nav-icon-wrapper,
 .nav-item.active .nav-icon-wrapper {
     background: white;
-    box-shadow: 0 4px 12px rgba(155, 143, 199, 0.20);
+    box-shadow: 0 4px 12px rgba(155, 143, 199, 0.25);
 }
 
 .nav-item.active .nav-icon-wrapper {

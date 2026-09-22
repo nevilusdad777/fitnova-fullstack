@@ -529,7 +529,7 @@
     background: rgba(239, 68, 68, 0.1);
     border: 1px solid rgba(239, 68, 68, 0.3);
     border-radius: 10px;
-    color: #ef4444;
+    color: #E07070;
     font-size: var(--font-size-sm);
     font-weight: 500;
 }
@@ -609,7 +609,7 @@
 .cal-input:focus  { border-color: #f59e0b; box-shadow: 0 0 0 4px rgba(245,158,11,0.12); }
 .prot-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59,130,246,0.12); }
 .carb-input:focus { border-color: #10b981; box-shadow: 0 0 0 4px rgba(16,185,129,0.12); }
-.fat-input:focus  { border-color: #f97316; box-shadow: 0 0 0 4px rgba(249,115,22,0.12); }
+.fat-input:focus  { border-color: #9B8FC7; box-shadow: 0 0 0 4px rgba(249,115,22,0.12); }
 
 /* Veg Toggle */
 .veg-toggle {
@@ -637,9 +637,9 @@
 }
 
 .veg-btn.non-veg.active {
-    border-color: #ef4444;
+    border-color: #E07070;
     background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
+    color: #E07070;
 }
 
 /* Actions */
@@ -842,12 +842,12 @@
 
 .card-action-btn.delete-btn {
     background: rgba(239, 68, 68, 0.12);
-    color: #ef4444;
+    color: #E07070;
     border: 1px solid rgba(239, 68, 68, 0.25);
 }
 
 .card-action-btn.delete-btn:hover {
-    background: #ef4444;
+    background: #E07070;
     color: white;
     transform: scale(1.1);
 }

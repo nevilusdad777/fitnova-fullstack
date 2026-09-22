@@ -22,7 +22,7 @@
     width: 450px;
     height: 450px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(2, 132, 199, 0.22), transparent 70%);
+    background: radial-gradient(circle, rgba(155, 143, 199, 0.20), transparent 70%);
     top: -160px;
     right: -120px;
     animation: float 8s ease-in-out infinite;
@@ -34,7 +34,7 @@
     width: 380px;
     height: 380px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(132, 204, 22, 0.20), transparent 70%);
+    background: radial-gradient(circle, rgba(107, 157, 197, 0.16), transparent 70%);
     bottom: -140px;
     left: -100px;
     animation: float 10s ease-in-out infinite;
@@ -50,7 +50,7 @@
     position: relative;
     z-index: 10;
     object-fit: contain;
-    filter: drop-shadow(0 4px 14px rgba(2, 132, 199, 0.35));
+    filter: drop-shadow(0 4px 12px rgba(155, 143, 199, 0.30));
     animation: float 4s ease-in-out infinite;
 }
 

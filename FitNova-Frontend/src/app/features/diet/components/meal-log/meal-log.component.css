@@ -172,7 +172,7 @@ html:not([data-theme="dark"]) .meal-card:hover {
 .btn-delete:hover {
   background: rgba(239, 68, 68, 0.2);
   border-color: rgba(239, 68, 68, 0.3);
-  color: #ef4444;
+  color: #E07070;
 }
 
 .btn-edit-meal:hover {
@@ -283,7 +283,7 @@ html:not([data-theme="dark"]) .food-item {
 .btn-icon-small:hover {
   background: rgba(239, 68, 68, 0.2);
   border-color: rgba(239, 68, 68, 0.3);
-  color: #ef4444;
+  color: #E07070;
   transform: scale(1.1);
 }
 

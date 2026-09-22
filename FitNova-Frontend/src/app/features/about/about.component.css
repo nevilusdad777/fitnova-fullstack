@@ -12,12 +12,12 @@
     /* Vibrant Gradients */
     --gradient-primary: linear-gradient(135deg, #4A90E2 0%, #8DC63F 100%);
     --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-    --gradient-electric: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    --gradient-electric: linear-gradient(135deg, #D4A5A5 0%, #3b82f6 100%);
     
     /* Colors */
-    --text-dark: #0f172a;
-    --text-gray: #64748b;
-    --text-light: #f8fafc;
+    --text-dark: #2C3E50;
+    --text-gray: #7A8195;
+    --text-light: #F8F9FB;
     
     /* Shadows */
     --shadow-premium: 0 20px 60px rgba(0, 0, 0, 0.15);
@@ -25,7 +25,7 @@
 }
 
 .about-container {
-    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    background: linear-gradient(180deg, #ffffff 0%, #F8F9FB 100%);
     min-height: 100vh;
     color: var(--text-dark);
 }
@@ -426,7 +426,7 @@
 
 .mission-vision-section {
     padding: 100px 2rem;
-    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    background: linear-gradient(180deg, #F8F9FB 0%, #ffffff 100%);
 }
 
 .mission-vision-grid {
@@ -503,7 +503,7 @@
 }
 
 .value-card {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #F8F9FB 100%);
     padding: 2.5rem;
     border-radius: 25px;
     border: 2px solid rgba(74, 144, 226, 0.1);
@@ -551,7 +551,7 @@
 
 .differentiators-section {
     padding: 100px 2rem;
-    background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+    background: linear-gradient(135deg, #F8F9FB 0%, #EAE7F5 100%);
 }
 
 .diff-grid {
@@ -675,7 +675,7 @@
 
 .stats-section {
     padding: 80px 2rem;
-    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    background: linear-gradient(180deg, #F8F9FB 0%, #ffffff 100%);
 }
 
 .stats-grid {

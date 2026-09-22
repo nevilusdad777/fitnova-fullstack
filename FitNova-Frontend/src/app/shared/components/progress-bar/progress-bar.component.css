@@ -30,11 +30,11 @@
 }
 
 .progress-danger {
-    background: linear-gradient(90deg, #ef4444, #dc2626);
+    background: linear-gradient(90deg, #ef4444, #E07070);
 }
 
 .progress-info {
-    background: linear-gradient(90deg, #3b82f6, #2563eb);
+    background: linear-gradient(90deg, #3b82f6, #6B9DC5);
 }
 
 .progress-label {

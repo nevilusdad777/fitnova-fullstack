@@ -1,6 +1,6 @@
 /* ============================================================
    FitNova — Tracker Page
-   Glassmorphism + Neumorphism Redesign (Single Sidebar Layout)
+   Glassmorphism + Neumorphism Design
    ============================================================ */
 
 .tracker-page {
@@ -21,12 +21,12 @@
 /* ── Page Top Header ── */
 .page-top-header {
   padding: 1.5rem 2rem;
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border-radius: var(--radius-2xl);
-  border: 1px solid var(--color-glass-border);
-  box-shadow: var(--shadow-md);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.30);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -49,137 +49,71 @@
 .page-icon-badge {
   width: 52px;
   height: 52px;
-  border-radius: var(--radius-xl);
-  background: linear-gradient(135deg, rgba(2, 132, 199, 0.12), rgba(132, 204, 22, 0.15));
-  color: var(--color-primary);
+  border-radius: 14px;
+  background: rgba(107, 157, 197, 0.12);
+  color: #6B9DC5;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--neu-shadow-raised);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
 .page-title {
   font-family: var(--font-family-heading);
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: var(--color-text-primary);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2C3E50;
   letter-spacing: -0.03em;
   margin: 0 0 0.2rem 0;
 }
 
 .page-subtitle {
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
+  color: #7A8195;
+  font-size: 0.875rem;
+  font-family: var(--font-family-base);
+  font-weight: 400;
   margin: 0;
 }
 
-/* ── Sub-Nav Horizontal Pills ── */
-.subnav-pills {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(15, 23, 42, 0.04);
-  padding: 0.35rem;
-  border-radius: var(--radius-full);
-  border: 1px solid rgba(15, 23, 42, 0.06);
-}
-
-.pill-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.25rem;
-  border-radius: var(--radius-full);
-  border: none;
-  background: transparent;
-  color: var(--color-text-secondary);
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  cursor: pointer;
-  transition: all var(--transition-base);
-}
-
-.pill-btn:hover {
-  color: var(--color-primary);
-  background: rgba(255, 255, 255, 0.6);
-}
-
-.pill-btn.active {
-  background: var(--color-primary);
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
-}
-
-/* ── Main View Container ── */
-.tracker-main {
-  width: 100%;
-}
-
-.view-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.dashboard-view {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-/* ── Key Metrics Cards Grid ── */
-.metrics-grid {
+/* ── Quick Stats Metric Cards ── */
+.quick-stat-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.25rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
 }
 
 .metric-card {
-  padding: 1.5rem;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(15px);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.30);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border-radius: var(--radius-2xl);
-  border: 1px solid var(--color-glass-border);
-  box-shadow: var(--shadow-sm);
-  transition: all var(--transition-base);
+  gap: 1rem;
+  transition: all 0.2s ease;
 }
 
 .metric-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-  border-color: rgba(2, 132, 199, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-.metric-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: var(--radius-xl);
+.metric-icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 
-.water-icon {
-  background: rgba(6, 182, 212, 0.12);
-  color: #06B6D4;
-}
-
-.weight-icon {
-  background: rgba(2, 132, 199, 0.12);
-  color: #0284C7;
-}
-
-.bmi-icon {
-  background: rgba(132, 204, 22, 0.15);
-  color: #84CC16;
-}
+.metric-icon-circle.weight { background: rgba(155, 143, 199, 0.12); color: #9B8FC7; }
+.metric-icon-circle.water { background: rgba(107, 157, 197, 0.12); color: #6B9DC5; }
+.metric-icon-circle.sleep { background: rgba(212, 165, 165, 0.12); color: #D4A5A5; }
+.metric-icon-circle.steps { background: rgba(232, 168, 124, 0.12); color: #E8A87C; }
 
 .metric-info {
   display: flex;
@@ -187,86 +121,75 @@
 }
 
 .metric-label {
-  font-size: var(--font-size-xs);
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #7A8195;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-text-secondary);
-  margin-bottom: 0.25rem;
 }
 
 .metric-value {
   font-family: var(--font-family-heading);
-  font-size: 1.85rem;
-  font-weight: 800;
-  color: var(--color-text-primary);
-  line-height: 1.1;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2C3E50;
+  letter-spacing: -0.02em;
 }
 
 .metric-value small {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  margin-left: 0.2rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #7A8195;
 }
 
-.metric-sub {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-  font-weight: 500;
-  margin-top: 0.2rem;
-}
-
-.text-success { color: #10B981 !important; }
-.text-danger { color: #EF4444 !important; }
-
-/* ── Quick Links Grid ── */
-.quick-links-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
-}
-
-.quick-link-card {
-  padding: 1.25rem 1.5rem;
-  background: var(--glass-bg);
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--color-glass-border);
-  box-shadow: var(--shadow-sm);
+/* ── Sub-Nav Horizontal Pills ── */
+.subnav-pills {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 0.5rem;
+  background: #F8F9FB;
+  padding: 0.35rem;
+  border-radius: 99px;
+  border: 1px solid #E8EAED;
+}
+
+.pill-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: 99px;
+  border: none;
+  background: transparent;
+  color: #7A8195;
+  font-family: var(--font-family-base);
+  font-size: 0.875rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all 0.22s ease;
 }
 
-.quick-link-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+.pill-btn:hover {
+  color: #9B8FC7;
+  background: rgba(155, 143, 199, 0.08);
 }
 
-.link-content h3 {
-  font-family: var(--font-family-heading);
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  margin: 0 0 0.25rem 0;
+.pill-btn.active {
+  background: #9B8FC7;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(155, 143, 199, 0.30);
+  font-weight: 600;
 }
 
-.link-content p {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  margin: 0;
-}
-
-/* ── Tool Views ── */
-.tool-view {
+/* ── Main Content ── */
+.tracker-main {
   width: 100%;
 }
 
-.mt-xl { margin-top: 2rem; }
+.view-container {
+  width: 100%;
+  animation: fadeIn 0.35s ease-out;
+}
 
 /* ── Responsive ── */
 @media (max-width: 1024px) {
@@ -274,23 +197,20 @@
     padding: 1rem;
     padding-top: 70px;
   }
-
-  .metrics-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .quick-links-grid {
-    grid-template-columns: 1fr;
+  .quick-stat-cards {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 640px) {
+  .quick-stat-cards {
+    grid-template-columns: 1fr;
+  }
   .subnav-pills {
     width: 100%;
     overflow-x: auto;
     justify-content: flex-start;
   }
-
   .pill-btn {
     white-space: nowrap;
   }
