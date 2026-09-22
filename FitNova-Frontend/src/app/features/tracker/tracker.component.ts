@@ -1,7 +1,7 @@
 import { Component, signal, computed, inject, OnInit, ViewChild, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { LucideAngularModule, BarChart2, Droplets, Scale, Calculator, Activity, ChevronRight } from 'lucide-angular';
+import { LucideAngularModule, BarChart2, Droplets, Scale, Calculator, Activity, ChevronRight, Plus, ArrowUpRight, Sparkles, TrendingUp, Target, Flame, RefreshCw } from 'lucide-angular';
 import { WaterTrackerComponent } from './components/water-tracker/water-tracker.component';
 import { WeightTrackerComponent } from './components/weight-tracker/weight-tracker.component';
 import { ProgressChartsComponent } from './components/progress-charts/progress-charts.component';
@@ -40,6 +40,13 @@ export class TrackerComponent implements OnInit {
     readonly Calculator = Calculator;
     readonly Activity = Activity;
     readonly ChevronRight = ChevronRight;
+    readonly Plus = Plus;
+    readonly ArrowUpRight = ArrowUpRight;
+    readonly Sparkles = Sparkles;
+    readonly TrendingUp = TrendingUp;
+    readonly Target = Target;
+    readonly Flame = Flame;
+    readonly RefreshCw = RefreshCw;
 
     currentView = signal<TrackerView>('overview');
     todayWater = signal(0);

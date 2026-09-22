@@ -1,15 +1,20 @@
 <div class="tracker-page fade-in">
     <div class="layout-container">
-        <!-- Top Header & Horizontal Navigation -->
+        <!-- Top Header & Navigation Bar -->
         <header class="page-top-header glass-panel">
             <div class="header-main-info">
                 <div class="header-title-group">
                     <div class="page-icon-badge">
-                        <lucide-icon [img]="BarChart2" [size]="24"></lucide-icon>
+                        <lucide-icon [img]="BarChart2" [size]="28"></lucide-icon>
                     </div>
                     <div>
-                        <h1 class="page-title">Tracker Station</h1>
-                        <p class="page-subtitle">Monitor hydration, weight progress & body composition</p>
+                        <div class="title-with-tag">
+                            <h1 class="page-title">Tracker Station</h1>
+                            <span class="live-tag">
+                                <span class="pulse-dot"></span> LIVE STATS
+                            </span>
+                        </div>
+                        <p class="page-subtitle">Monitor hydration, weight velocity & body composition metrics</p>
                     </div>
                 </div>
 
@@ -40,62 +45,142 @@
             <div class="view-container fade-in">
                 <!-- DASHBOARD OVERVIEW -->
                 <div class="dashboard-view" *ngIf="currentView() === 'overview'">
-                    <!-- Key Metrics Cards -->
+                    <!-- Key Hero Metrics Cards Grid -->
                     <div class="metrics-grid">
-                        <div class="metric-card glass-panel">
-                            <div class="metric-icon water-icon">
-                                <lucide-icon [img]="Droplets" [size]="24"></lucide-icon>
+                        <!-- Water Card -->
+                        <div class="hero-metric-card water-card glass-panel" (click)="currentView.set('water')">
+                            <div class="card-header">
+                                <div class="metric-icon-badge water-badge">
+                                    <lucide-icon [img]="Droplets" [size]="24"></lucide-icon>
+                                </div>
+                                <span class="metric-category">Hydration Goal</span>
                             </div>
-                            <div class="metric-info">
-                                <span class="metric-label">Water Intake</span>
-                                <span class="metric-value">{{ todayWater() }}<small>L</small></span>
-                                <span class="metric-sub">Goal: {{ waterGoal() }}L</span>
+                            <div class="card-body">
+                                <div class="primary-value-group">
+                                    <span class="large-value">{{ todayWater() }}</span>
+                                    <span class="unit-label">/ {{ waterGoal() }} L</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-fill water-fill" [style.width.%]="(todayWater() / (waterGoal() || 3.0)) * 100"></div>
+                                </div>
+                                <div class="card-footer">
+                                    <span class="status-subtext">
+                                        <lucide-icon [img]="Target" [size]="14"></lucide-icon>
+                                        {{ (todayWater() >= waterGoal() && waterGoal() > 0) ? 'Daily Target Completed!' : 'Keep hydrating today' }}
+                                    </span>
+                                    <span class="action-arrow">
+                                        <lucide-icon [img]="ChevronRight" [size]="18"></lucide-icon>
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="metric-card glass-panel">
-                            <div class="metric-icon weight-icon">
-                                <lucide-icon [img]="Scale" [size]="24"></lucide-icon>
+                        <!-- Weight Card -->
+                        <div class="hero-metric-card weight-card glass-panel" (click)="currentView.set('weight')">
+                            <div class="card-header">
+                                <div class="metric-icon-badge weight-badge">
+                                    <lucide-icon [img]="Scale" [size]="24"></lucide-icon>
+                                </div>
+                                <span class="metric-category">Body Weight</span>
                             </div>
-                            <div class="metric-info">
-                                <span class="metric-label">Current Weight</span>
-                                <span class="metric-value">{{ currentWeight() }}<small>kg</small></span>
-                                <span class="metric-sub" [class.text-success]="weekChange() < 0" [class.text-danger]="weekChange() > 0">
-                                    {{ weekChange() > 0 ? '+' : '' }}{{ weekChange() }}kg this week
-                                </span>
+                            <div class="card-body">
+                                <div class="primary-value-group">
+                                    <span class="large-value">{{ currentWeight() || '--' }}</span>
+                                    <span class="unit-label">kg</span>
+                                </div>
+                                <div class="trend-pill-row">
+                                    <span class="trend-pill" [class.trend-down]="weekChange() <= 0" [class.trend-up]="weekChange() > 0">
+                                        <lucide-icon [img]="TrendingUp" [size]="14"></lucide-icon>
+                                        {{ weekChange() > 0 ? '+' : '' }}{{ weekChange() }} kg this week
+                                    </span>
+                                </div>
+                                <div class="card-footer">
+                                    <span class="status-subtext">
+                                        <lucide-icon [img]="Sparkles" [size]="14"></lucide-icon>
+                                        Tracked 7 days history
+                                    </span>
+                                    <span class="action-arrow">
+                                        <lucide-icon [img]="ChevronRight" [size]="18"></lucide-icon>
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="metric-card glass-panel">
-                            <div class="metric-icon bmi-icon">
-                                <lucide-icon [img]="Activity" [size]="24"></lucide-icon>
+                        <!-- BMI Card -->
+                        <div class="hero-metric-card bmi-card glass-panel" (click)="currentView.set('bmi')">
+                            <div class="card-header">
+                                <div class="metric-icon-badge bmi-badge">
+                                    <lucide-icon [img]="Activity" [size]="24"></lucide-icon>
+                                </div>
+                                <span class="metric-category">Body Mass Index</span>
                             </div>
-                            <div class="metric-info">
-                                <span class="metric-label">BMI Score</span>
-                                <span class="metric-value">{{ bmiScore() || '--' }}</span>
-                                <span class="metric-sub" [style.color]="bmiColor()">{{ bmiCategory() }}</span>
+                            <div class="card-body">
+                                <div class="primary-value-group">
+                                    <span class="large-value">{{ bmiScore() || '--' }}</span>
+                                    <span class="bmi-status-badge" [style.background-color]="bmiColor() + '20'" [style.color]="bmiColor()">
+                                        {{ bmiCategory() }}
+                                    </span>
+                                </div>
+                                <div class="card-footer mt-auto">
+                                    <span class="status-subtext">
+                                        <lucide-icon [img]="Calculator" [size]="14"></lucide-icon>
+                                        Calculated from height ({{ userHeight() }}cm)
+                                    </span>
+                                    <span class="action-arrow">
+                                        <lucide-icon [img]="ChevronRight" [size]="18"></lucide-icon>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Main Charts Area -->
-                    <app-progress-charts class="dashboard-chart"></app-progress-charts>
-
-                    <!-- Quick Links Grid -->
-                    <div class="quick-links-grid">
-                        <div class="quick-link-card glass-panel" (click)="currentView.set('bmi')">
-                            <div class="link-content">
-                                <h3>Calculate BMI</h3>
-                                <p>Check your body mass index manually.</p>
+                    <!-- Main Progress Charts Card -->
+                    <div class="chart-section-card glass-panel">
+                        <div class="chart-section-header">
+                            <div class="chart-title-box">
+                                <div class="chart-icon-ring">
+                                    <lucide-icon [img]="TrendingUp" [size]="20"></lucide-icon>
+                                </div>
+                                <div>
+                                    <h3 class="chart-section-title">Progress Analytics</h3>
+                                    <p class="chart-section-sub">Historical trend of your water & weight records</p>
+                                </div>
                             </div>
-                            <lucide-icon [img]="ChevronRight" [size]="20"></lucide-icon>
+                            <button class="btn-refresh" (click)="refreshDashboard()" title="Refresh Data">
+                                <lucide-icon [img]="RefreshCw" [size]="16"></lucide-icon>
+                                <span>Refresh</span>
+                            </button>
+                        </div>
+                        <app-progress-charts class="dashboard-chart"></app-progress-charts>
+                    </div>
+
+                    <!-- Quick Hub Actions Grid -->
+                    <div class="quick-links-grid">
+                        <div class="quick-link-card glass-panel" (click)="currentView.set('water')">
+                            <div class="quick-icon-circle water-glow">
+                                <lucide-icon [img]="Droplets" [size]="22"></lucide-icon>
+                            </div>
+                            <div class="link-content">
+                                <h3>Hydration Station</h3>
+                                <p>Log daily water intake with quick-add buttons</p>
+                            </div>
+                            <div class="link-action-btn">
+                                <span>Log Water</span>
+                                <lucide-icon [img]="ArrowUpRight" [size]="18"></lucide-icon>
+                            </div>
                         </div>
                         <div class="quick-link-card glass-panel" (click)="currentView.set('weight')">
-                            <div class="link-content">
-                                <h3>Log Weight</h3>
-                                <p>Update your latest weight entry.</p>
+                            <div class="quick-icon-circle weight-glow">
+                                <lucide-icon [img]="Scale" [size]="22"></lucide-icon>
                             </div>
-                            <lucide-icon [img]="ChevronRight" [size]="20"></lucide-icon>
+                            <div class="link-content">
+                                <h3>Weight Logger</h3>
+                                <p>Record body weight and update progress goals</p>
+                            </div>
+                            <div class="link-action-btn">
+                                <span>Log Weight</span>
+                                <lucide-icon [img]="ArrowUpRight" [size]="18"></lucide-icon>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -82,10 +82,10 @@ export class ProgressChartsComponent implements OnInit {
         {
           data: data.map(d => d.weight),
           label: 'Weight (kg)',
-          borderColor: '#3b82f6',
-          backgroundColor: 'rgba(59, 130, 246, 0.2)',
+          borderColor: '#0284C7',
+          backgroundColor: 'rgba(2, 132, 199, 0.15)',
           pointBackgroundColor: '#ffffff',
-          pointBorderColor: '#3b82f6',
+          pointBorderColor: '#0284C7',
           pointBorderWidth: 2,
           pointRadius: 4,
           pointHoverRadius: 6,
@@ -103,7 +103,7 @@ export class ProgressChartsComponent implements OnInit {
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        backgroundColor: 'rgba(15, 23, 42, 0.9)',
         padding: 10,
         titleFont: { size: 13 },
         bodyFont: { size: 14, weight: 'bold' }
@@ -134,10 +134,10 @@ export class ProgressChartsComponent implements OnInit {
           backgroundColor: (context: any) => {
             const chart = context.chart;
             const {ctx, chartArea} = chart;
-            if (!chartArea) return '#f093fb';
+            if (!chartArea) return '#10B981';
             let gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-            gradient.addColorStop(0, '#f5576c');
-            gradient.addColorStop(1, '#f093fb');
+            gradient.addColorStop(0, '#10B981');
+            gradient.addColorStop(1, '#84CC16');
             return gradient as any;
           },
           borderRadius: 6,

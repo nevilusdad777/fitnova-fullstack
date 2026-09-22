@@ -8,8 +8,8 @@
 }
 
 .summary-card {
-  background: linear-gradient(135deg, rgba(212, 165, 165, 0.1), rgba(59, 130, 246, 0.1));
-  border: 1px solid rgba(212, 165, 165, 0.2);
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.08), rgba(16, 185, 129, 0.08));
+  border: 1px solid rgba(2, 132, 199, 0.18);
   border-radius: var(--radius-lg);
   padding: 1rem;
   text-align: center;
@@ -33,7 +33,7 @@
   gap: 0.25rem;
 }
 
-.summary-value.primary { color: #3b82f6; }
+.summary-value.primary { color: #0284C7; }
 .summary-value.success { color: var(--color-success); }
 .summary-value.danger { color: var(--color-danger); }
 

@@ -42,8 +42,8 @@ import { LucideAngularModule, Calculator, RefreshCw } from 'lucide-angular';
         <div class="info-card glass-panel">
             <h4>BMI Categories</h4>
             <div class="category-list">
-                <div class="cat-item"><span class="dot" style="background: #3b82f6"></span> Underweight (< 18.5)</div>
-                <div class="cat-item"><span class="dot" style="background: #22c55e"></span> Normal (18.5 - 24.9)</div>
+                <div class="cat-item"><span class="dot" style="background: #0284C7"></span> Underweight (< 18.5)</div>
+                <div class="cat-item"><span class="dot" style="background: #10B981"></span> Normal (18.5 - 24.9)</div>
                 <div class="cat-item"><span class="dot" style="background: #eab308"></span> Overweight (25 - 29.9)</div>
                 <div class="cat-item"><span class="dot" style="background: #ef4444"></span> Obese (> 30)</div>
             </div>

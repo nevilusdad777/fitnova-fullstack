@@ -22,7 +22,7 @@ import { ProfileService } from '../../../../services/profile.service';
 
       <div class="card-header relative-z">
         <h3 class="card-title flex-center gap-sm">
-          <lucide-icon [img]="Droplet" [size]="20" style="color: #3b82f6"></lucide-icon>
+          <lucide-icon [img]="Droplet" [size]="20" style="color: #0284C7"></lucide-icon>
             Hydration Tracker
         </h3>
       </div>
@@ -145,7 +145,7 @@ import { ProfileService } from '../../../../services/profile.service';
             <!-- Header + Period Toggle -->
             <div class="history-header">
                 <div class="history-title-group">
-                    <lucide-icon [img]="BarChart2" [size]="20" style="color:#3b82f6"></lucide-icon>
+                    <lucide-icon [img]="BarChart2" [size]="20" style="color:#0284C7"></lucide-icon>
                     <h4 class="history-title">Intake History</h4>
                 </div>
                 <div class="period-toggle">
@@ -180,7 +180,7 @@ import { ProfileService } from '../../../../services/profile.service';
 
             <ng-template #historyEmpty>
                 <div class="history-empty" *ngIf="!historyLoading()">
-                    <lucide-icon [img]="BarChart2" [size]="40" style="opacity:0.2;color:#3b82f6"></lucide-icon>
+                    <lucide-icon [img]="BarChart2" [size]="40" style="opacity:0.2;color:#0284C7"></lucide-icon>
                     <p>No history data available yet.</p>
                 </div>
                 <div class="history-loading" *ngIf="historyLoading()">
@@ -263,7 +263,7 @@ import { ProfileService } from '../../../../services/profile.service';
         font-size: 3.5rem; 
         font-weight: 800; 
         line-height: 1.1;
-        background: linear-gradient(135deg, #3b82f6, #2563eb, #1d4ed8);
+        background: linear-gradient(135deg, #0284C7, #2563eb, #1d4ed8);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -274,7 +274,7 @@ import { ProfileService } from '../../../../services/profile.service';
     
     .unit { 
         font-size: 1.5rem; 
-        color: #3b82f6; 
+        color: #0284C7; 
         font-weight: 700;
         margin-left: 0.5rem;
         vertical-align: middle;
@@ -343,7 +343,7 @@ import { ProfileService } from '../../../../services/profile.service';
     
     .progress-bar {
         height: 100%;
-        background: linear-gradient(90deg, #3b82f6, #2563eb);
+        background: linear-gradient(90deg, #0284C7, #2563eb);
         border-radius: var(--radius-full);
         transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 0 0 16px rgba(59, 130, 246, 0.5);
@@ -417,7 +417,7 @@ import { ProfileService } from '../../../../services/profile.service';
 
     .y-label {
         font-size: 0.8rem;
-        color: #3b82f6;
+        color: #0284C7;
         font-weight: 600;
         text-align: right;
     }
@@ -435,7 +435,7 @@ import { ProfileService } from '../../../../services/profile.service';
 
     .level-bar {
         width: 100%;
-        background: linear-gradient(180deg, #3b82f6, #2563eb);
+        background: linear-gradient(180deg, #0284C7, #2563eb);
         transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         border-radius: 8px 8px 0 0;
@@ -448,7 +448,7 @@ import { ProfileService } from '../../../../services/profile.service';
     }
 
     .level-bar.medium {
-        background: linear-gradient(180deg, #3b82f6, #2563eb);
+        background: linear-gradient(180deg, #0284C7, #2563eb);
     }
 
     .level-bar.high {
@@ -495,7 +495,7 @@ import { ProfileService } from '../../../../services/profile.service';
         border-radius: 16px;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        color: #3b82f6;
+        color: #0284C7;
         position: relative;
         overflow: hidden;
     }
@@ -520,7 +520,7 @@ import { ProfileService } from '../../../../services/profile.service';
 
     .btn-quick-add:hover {
         background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.15));
-        border-color: #3b82f6;
+        border-color: #0284C7;
         transform: translateY(-4px);
         box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
     }
@@ -562,7 +562,7 @@ import { ProfileService } from '../../../../services/profile.service';
 
     .form-input:focus {
         outline: none;
-        border-color: #3b82f6;
+        border-color: #0284C7;
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
@@ -586,7 +586,7 @@ import { ProfileService } from '../../../../services/profile.service';
         height: 40px;
         border-radius: 50%;
         background: rgba(59, 130, 246, 0.1);
-        color: #3b82f6;
+        color: #0284C7;
     }
 
     .insight-title {
@@ -711,12 +711,12 @@ import { ProfileService } from '../../../../services/profile.service';
         font-weight: 600;
         cursor: pointer;
         background: transparent;
-        color: #3b82f6;
+        color: #0284C7;
         transition: all 0.2s;
     }
 
     .period-btn.active {
-        background: #3b82f6;
+        background: #0284C7;
         color: white;
         box-shadow: 0 2px 8px rgba(59,130,246,0.35);
     }
@@ -739,7 +739,7 @@ import { ProfileService } from '../../../../services/profile.service';
 
     .chart-y-label {
         font-size: 0.7rem;
-        color: #3b82f6;
+        color: #0284C7;
         font-weight: 600;
         text-align: right;
     }
@@ -807,12 +807,12 @@ import { ProfileService } from '../../../../services/profile.service';
         width: 100%;
         border-radius: 6px 6px 0 0;
         transition: height 0.7s cubic-bezier(0.4,0,0.2,1);
-        background: linear-gradient(180deg, #3b82f6, #2563eb);
+        background: linear-gradient(180deg, #0284C7, #2563eb);
         min-height: 2px;
     }
 
     .bar-fill.bar-low { background: linear-gradient(180deg, #f59e0b, #d97706); }
-    .bar-fill.bar-med { background: linear-gradient(180deg, #3b82f6, #2563eb); }
+    .bar-fill.bar-med { background: linear-gradient(180deg, #0284C7, #2563eb); }
     .bar-fill.bar-high { background: linear-gradient(180deg, #10b981, #059669); }
 
     .bar-label {
@@ -842,7 +842,7 @@ import { ProfileService } from '../../../../services/profile.service';
     .hstat-value {
         font-size: 1.25rem;
         font-weight: 800;
-        color: #3b82f6;
+        color: #0284C7;
     }
 
     .hstat-label {
@@ -908,11 +908,11 @@ import { ProfileService } from '../../../../services/profile.service';
         height: 100%;
         border-radius: 99px;
         transition: width 0.5s ease;
-        background: #3b82f6;
+        background: #0284C7;
     }
 
     .log-bar-fill.bar-low { background: #f59e0b; }
-    .log-bar-fill.bar-med { background: #3b82f6; }
+    .log-bar-fill.bar-med { background: #0284C7; }
     .log-bar-fill.bar-high { background: #10b981; }
 
     .log-amount {
@@ -1159,3 +1159,4 @@ export class WaterTrackerComponent implements OnInit {
         }
     }
 }
+

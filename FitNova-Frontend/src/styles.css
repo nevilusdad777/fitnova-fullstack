@@ -13,54 +13,66 @@
    ============================================ */
 :root {
   /* ── Core Background ── */
-  --color-bg-primary:       #F8F9FB;
-  --color-bg-secondary:     #FAFBFC;
-  --color-background:       #F8F9FB;
+  --color-bg-primary:       #F8FAFC;
+  --color-bg-secondary:     #F1F5F9;
+  --color-background:       #F8FAFC;
   --color-surface:          rgba(255, 255, 255, 0.92);
   --color-surface-solid:    #ffffff;
   --color-surface-hover:    rgba(255, 255, 255, 0.96);
 
-  /* ── Primary Accent — Soft Purple/Lavender ── */
-  --color-primary:          #9B8FC7;
-  --color-primary-light:    #B3A9D9;
-  --color-primary-dark:     #8B7DB7;
-  --color-primary-xlight:   #EAE7F5;
-  --color-primary-gradient: linear-gradient(135deg, #9B8FC7 0%, #7B6FAF 100%);
+  /* ── Primary Accent — FitNova Logo Ocean Blue ── */
+  --color-primary:          #0284C7;
+  --color-primary-light:    #38BDF8;
+  --color-primary-dark:     #0369A1;
+  --color-primary-xlight:   #E0F2FE;
+  --color-primary-gradient: linear-gradient(135deg, #0284C7 0%, #00B4D8 100%);
 
-  /* ── Secondary Accent — Soft Blue ── */
-  --color-secondary:        #6B9DC5;
-  --color-secondary-light:  #8DB5D4;
-  --color-secondary-dark:   #4F84B0;
-  --color-secondary-xlight: #E3EEF6;
+  /* ── Secondary Accent — FitNova Logo Energy Green ── */
+  --color-secondary:        #10B981;
+  --color-secondary-light:  #34D399;
+  --color-secondary-dark:   #059669;
+  --color-secondary-xlight: #D1FAE5;
 
-  /* ── Motivation — Warm Gold/Apricot ── */
-  --color-gold:             #E8A87C;
-  --color-gold-light:       #F2C4A0;
-  --color-gold-dark:        #D9964E;
-  --color-gold-xlight:      #FFF3E0;
+  /* ── Lime Energy — FitNova Logo Leaf Tip ── */
+  --color-lime:             #84CC16;
+  --color-lime-light:       #A3E635;
+  --color-lime-dark:        #65A30D;
+  --color-lime-xlight:      #ECFDF5;
 
-  /* ── Wellness — Soft Pink ── */
-  --color-pink:             #D4A5A5;
-  --color-pink-light:       #E5C5C5;
-  --color-pink-dark:        #BE8585;
-  --color-pink-xlight:      #FAEAEA;
+  /* ── Cyan Water Accent — FitNova Logo Droplet ── */
+  --color-cyan:             #00B4D8;
+  --color-cyan-light:       #70E000;
+  --color-cyan-dark:        #0077B6;
+  --color-cyan-xlight:      #E0F2FE;
+
+  /* ── Motivation & Gold Highlights ── */
+  --color-gold:             #F59E0B;
+  --color-gold-light:       #FBBF24;
+  --color-gold-dark:        #D97706;
+  --color-gold-xlight:      #FEF3C7;
+
+  /* ── Wellness Touch ── */
+  --color-pink:             #EC4899;
+  --color-pink-light:       #F472B6;
+  --color-pink-dark:        #DB2777;
+  --color-pink-xlight:      #FCE7F3;
 
   /* ── Semantic Colors ── */
-  --color-success:          #6DBE8B;
-  --color-success-light:    #8FD0A5;
-  --color-success-bg:       #E8F5EE;
-  --color-warning:          #E8A87C;
-  --color-warning-bg:       #FFF3E0;
-  --color-danger:           #E07070;
-  --color-danger-light:     #EFA0A0;
-  --color-danger-bg:        #FAEAEA;
+  --color-success:          #10B981;
+  --color-success-light:    #34D399;
+  --color-success-bg:       #D1FAE5;
+  --color-warning:          #F59E0B;
+  --color-warning-bg:       #FEF3C7;
+  --color-danger:           #EF4444;
+  --color-danger-light:     #F87171;
+  --color-danger-bg:        #FEE2E2;
 
   /* ── Text ── */
-  --color-text-primary:     #2C3E50;
-  --color-text-secondary:   #7A8195;
-  --color-text-muted:       #9CA3AF;
-  --text-primary:           #2C3E50;
-  --text-secondary:         #7A8195;
+  --color-text-primary:     #0F172A;
+  --color-text-secondary:   #475569;
+  --color-text-muted:       #94A3B8;
+  --text-primary:           #0F172A;
+  --text-secondary:         #475569;
 
   /* ── Borders & Dividers ── */
   --color-border:           #E8EAED;
