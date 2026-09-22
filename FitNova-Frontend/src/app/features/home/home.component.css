@@ -35,7 +35,7 @@
   right: -40px;
   width: 180px;
   height: 180px;
-  background: radial-gradient(circle, rgba(155, 143, 199, 0.18), transparent 70%);
+  background: radial-gradient(circle, rgba(2, 132, 199, 0.18), transparent 70%);
   border-radius: 50%;
   pointer-events: none;
 }
@@ -100,7 +100,7 @@
   font-size: 1.75rem;
   font-weight: 800;
   color: white;
-  box-shadow: 0 8px 24px rgba(155, 143, 199, 0.40);
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.40);
   animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
   font-family: var(--font-family-heading);
 }
@@ -110,7 +110,7 @@
   height: 72px;
   border-radius: var(--radius-full);
   object-fit: cover;
-  box-shadow: 0 8px 24px rgba(155, 143, 199, 0.35);
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.35);
   border: 3px solid rgba(255, 255, 255, 0.8);
   animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
 }
@@ -146,7 +146,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(155, 143, 199, 0.04), transparent);
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.04), transparent);
   opacity: 0;
   transition: opacity var(--transition-base);
 }
@@ -154,7 +154,7 @@
 .stat-card:hover {
   transform: translateY(-3px);
   box-shadow: var(--neu-shadow-raised-lg);
-  border-color: rgba(155, 143, 199, 0.25);
+  border-color: rgba(2, 132, 199, 0.25);
 }
 
 .stat-card:hover::before { opacity: 1; }
@@ -308,7 +308,7 @@
 .action-card:hover {
   transform: translateX(4px);
   box-shadow: var(--neu-shadow-raised-lg);
-  border-color: rgba(155, 143, 199, 0.30);
+  border-color: rgba(2, 132, 199, 0.30);
   background: var(--glass-bg-strong);
 }
 
@@ -329,7 +329,7 @@
 .action-card:hover .action-icon {
   background: var(--color-primary);
   color: white;
-  box-shadow: 0 4px 14px rgba(155, 143, 199, 0.40);
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.40);
 }
 
 .action-content { flex: 1; }
@@ -390,7 +390,7 @@
   padding: 0.4rem 0.875rem;
   border-radius: var(--radius-full);
   background: var(--color-primary-xlight);
-  border: 1px solid rgba(155, 143, 199, 0.25);
+  border: 1px solid rgba(2, 132, 199, 0.25);
 }
 
 .view-all-btn:hover {
@@ -665,3 +665,4 @@
     gap: 1rem;
   }
 }
+

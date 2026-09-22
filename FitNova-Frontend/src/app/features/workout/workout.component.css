@@ -50,8 +50,8 @@
   width: 52px;
   height: 52px;
   border-radius: 14px;
-  background: rgba(155, 143, 199, 0.12);
-  color: #9B8FC7;
+  background: rgba(2, 132, 199, 0.12);
+  color: #0284C7;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -97,7 +97,7 @@
 
 .badge-item strong { color: #2C3E50; }
 
-.icon-accent { color: #9B8FC7; }
+.icon-accent { color: #0284C7; }
 .icon-lime { color: #6DBE8B; }
 
 /* ── Sub-Nav Horizontal Pills ── */
@@ -129,14 +129,14 @@
 }
 
 .pill-btn:hover {
-  color: #9B8FC7;
-  background: rgba(155, 143, 199, 0.08);
+  color: #0284C7;
+  background: rgba(2, 132, 199, 0.08);
 }
 
 .pill-btn.active {
-  background: #9B8FC7;
+  background: #0284C7;
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(155, 143, 199, 0.30);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.30);
   font-weight: 600;
 }
 
@@ -174,3 +174,4 @@
     flex-wrap: wrap;
   }
 }
+

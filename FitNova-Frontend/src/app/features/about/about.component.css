@@ -551,7 +551,7 @@
 
 .differentiators-section {
     padding: 100px 2rem;
-    background: linear-gradient(135deg, #F8F9FB 0%, #EAE7F5 100%);
+    background: linear-gradient(135deg, #F8F9FB 0%, #E0F2FE 100%);
 }
 
 .diff-grid {
@@ -1007,3 +1007,4 @@
         justify-content: center;
     }
 }
+

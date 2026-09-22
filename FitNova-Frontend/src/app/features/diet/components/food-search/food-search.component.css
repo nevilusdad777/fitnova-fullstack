@@ -609,7 +609,7 @@
 .cal-input:focus  { border-color: #f59e0b; box-shadow: 0 0 0 4px rgba(245,158,11,0.12); }
 .prot-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59,130,246,0.12); }
 .carb-input:focus { border-color: #10b981; box-shadow: 0 0 0 4px rgba(16,185,129,0.12); }
-.fat-input:focus  { border-color: #9B8FC7; box-shadow: 0 0 0 4px rgba(249,115,22,0.12); }
+.fat-input:focus  { border-color: #0284C7; box-shadow: 0 0 0 4px rgba(249,115,22,0.12); }
 
 /* Veg Toggle */
 .veg-toggle {
@@ -851,5 +851,6 @@
     color: white;
     transform: scale(1.1);
 }
+
 
 
